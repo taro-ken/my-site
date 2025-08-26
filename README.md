@@ -1,62 +1,110 @@
-# Astro Starter Kit: Blog
+# Personal Hub
 
-```sh
-npm create astro@latest -- --template blog
-```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+[![Version](https://img.shields.io/github/package-json/v/itsteddydev/hub-itsteddydev)](https://github.com/itsteddydev/hub-itsteddydev) [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Astro Theme](https://img.shields.io/badge/Astro-Theme-blue?logo=astro)](https://astro.build/themes/details/personal-hub-a-customizable-personal-link/)
 
-Features:
+![Project Logo](public/img/cover/personal_hub.jpg)
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+## Description
 
-## 🚀 Project Structure
+Personal Hub is a template designed to centralize and organize personal or professional information in one place. This tool allows users to manage and access their data, projects, important links, and more, all from a unified interface.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Table of Contents
 
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
-```
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Screenshots](#screenshots)
+- [License](#license)
+- [Contact](#contact)
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Features
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- **Centralized Management**: Access all your information from a single place.
+- **Customization**: Configure and adapt the interface to your needs.
+- **Integrations**: Connect with various platforms and external services.
+- **Security**: Protect your data with proper authentication and authorization.
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+## Technologies Used
 
-Any static assets, like images, can be placed in the `public/` directory.
+- **Astro**: Main framework for building the interface.
+- **Tailwind CSS**: Styling and responsive design.
+- **Vercel**: Deployment and hosting of the application.
 
-## 🧞 Commands
+## Installation
 
-All commands are run from the root of the project, from a terminal:
+You can use this template in two ways:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### 1. Quick Start (Recommended)
 
-## 👀 Want to learn more?
+Create a new project using this template with:
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+   ```bash
+npm create astro@latest -- --template itsteddydev/hub-itsteddydev
+   ```
 
-## Credit
+### 2. Manual Installation
+Follow these steps to install and run the project locally:
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/itsteddydev/hub-itsteddydev.git
+   ```
+
+2. **Navigate to the project directory**:
+
+   ```bash
+   cd hub-itsteddydev
+   ```
+
+3. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+4. **Start the development server**:
+
+   ```bash
+   npm run dev
+   ```
+
+5. Open your browser and visit `http://localhost:4321` to see the application in action.
+
+
+## Usage
+
+Once the application is running, you can:
+
+- **Customize your profile**: Add, edit, or remove personal information.
+- **Add links**: Include links to your projects, social media, or any relevant resources.
+- **Configure widgets**: Enable or disable modules according to your preferences.
+
+## Screenshots
+
+![Main View](public/img/cover/personal_hub01.webp)
+
+![Main View Dark](public/img/cover/personal_hub02.webp)
+
+![Main View Dark](public/img/cover/personal_hub03.webp)
+
+![Main View Dark](public/img/cover/personal_hub04.webp)
+
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more details.
+
+## Contact
+
+For inquiries, suggestions, or feedback, you can reach me through:
+
+
+- **LinkedIn**: [itsteddydev](https://www.linkedin.com/in/itsteddydev/)
+- **Twitter**: [@itsteddydev](https://twitter.com/itsteddydev)
+
+---
+
+Thank you for using Personal Hub! We hope this tool helps you efficiently organize and centralize your information.

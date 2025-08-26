@@ -1,27 +1,61 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* ---- Base ---- */
-@layer base {
-  :root{
-    --bg: #ffffff;
-    --fg: #0f172a;     /* slate-900 */
-    --muted: #475569;  /* slate-600 */
-    --line: #e2e8f0;   /* slate-200 */
-  }
-  html { font-feature-settings: "palt"; }
-  body { @apply bg-[var(--bg)] text-[var(--fg)] antialiased; }
-  a { @apply text-[var(--fg)] no-underline border-b border-transparent hover:border-[var(--fg)] transition; }
-  h1,h2,h3 { @apply tracking-tight; }
+/* @font-face {
+  font-family: 'SF Pro Display';
+  src: url('/public/fonts/SFPro/SFProDisplayRegular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
 }
 
-/* ---- Components ---- */
-@layer components {
-  .container { @apply mx-auto max-w-3xl px-5; }              /* 細め中央カラム */
-  .pill { @apply inline-flex items-center rounded-full border border-[var(--line)] px-2.5 py-1 text-xs text-[var(--muted)]; }
-  .muted { @apply text-[var(--muted)]; }
-  .card { @apply rounded-xl border border-[var(--line)] p-4 hover:shadow-sm transition; }
-  .grid-works { @apply grid gap-4 sm:grid-cols-2; }
-  .btn { @apply inline-flex items-center rounded-full border border-[var(--fg)] px-3 py-1.5 text-sm hover:bg-[var(--fg)] hover:text-white transition; }
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/public/fonts/SFPro/SFProDisplayBold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
 }
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/public/fonts/SFPro/SFProDisplayItalic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+} */
+
+/* Estilos globales */
+/* html {
+  font-family: 'SF Pro Display', sans-serif;
+} */
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE y Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, y Opera */
+}
+
+/* body {
+  margin: 0;
+  padding: 0;
+  background-color: hsl(218, 28%, 13%);
+  color: hsl(0, 0%, 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+} */
+
+/* h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+}
+
+p {
+  font-weight: 400;
+} */
