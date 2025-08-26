@@ -1,49 +1,49 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Base from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
 ---
+<Base title="KENTARO | Portfolio">
+  <Header />
+  <main>
+    <!-- HERO -->
+    <section class="bg-gradient-to-b from-gray-50 to-white py-16">
+      <div class="container">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
+          iOS / Flutter エンジニア
+        </h1>
+        <p class="mt-4 text-lg text-gray-600">
+          ガジェット×生産性×健康の交差点でプロダクトをつくっています。
+        </p>
+        <div class="mt-6 flex gap-3">
+          <a href="/projects/" class="btn-primary">Portfolio</a>
+          <a href="/blog/" class="btn-ghost">Blog</a>
+        </div>
+      </div>
+    </section>
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+    <!-- ピックアップ（ダミー） -->
+    <section class="py-10">
+      <div class="container">
+        <h2 class="text-xl font-semibold mb-4">主なプロジェクト</h2>
+        <div class="grid gap-6 sm:grid-cols-2">
+          <article class="card">
+            <img src="/og-cover.jpg" alt="" class="aspect-[16/9] w-full rounded-lg object-cover mb-3" />
+            <h3 class="text-lg font-semibold">HaveToDo / Focusy</h3>
+            <p class="text-sm text-gray-700 mt-1">“やること完了までアプリ封印”。ScreenTime × HealthKit。</p>
+            <div class="mt-2 flex gap-2 flex-wrap">
+              <span class="tag">SwiftUI</span><span class="tag">StoreKit2</span><span class="tag">ScreenTime</span>
+            </div>
+          </article>
+          <article class="card">
+            <img src="/og-cover.jpg" alt="" class="aspect-[16/9] w-full rounded-lg object-cover mb-3" />
+            <h3 class="text-lg font-semibold">Kindley</h3>
+            <p class="text-sm text-gray-700 mt-1">Kindle引用を保存・整理。Share拡張 × Firestore。</p>
+            <div class="mt-2 flex gap-2 flex-wrap">
+              <span class="tag">iOS</span><span class="tag">CloudKit</span><span class="tag">Firestore</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
