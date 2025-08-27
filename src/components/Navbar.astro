@@ -1,11 +1,10 @@
 ---
 import BooksMarks from "./BooksMarks.astro";
-import Projects from "./Projects.astro";
+import Works from "./Works.astro";
 import Articles from "./Articles.astro";
 import NavButton from "./index/NavButton.astro";
 import SectionContainer from "./SectionContainer.astro";
-import EducationHub from "./EducationHub.astro";
-import FunHobbies from "./FunHobbies.astro";
+import Contact from "./Contact.astro";
 import ShopNow from "./ShopNow.astro";
 import { getI18N } from "@/i18n";
 
@@ -18,47 +17,47 @@ const i18n = getI18N({ currentLocale });
   <nav
     class="flex gap-1 text-hub-inactive rounded-full border-[1px] p-[2px] border-hub-border dark:border-hub-border-dark bg-hub-background-nav dark:bg-hub-background-nav whitespace-nowrap overflow-x-auto scrollbar-hide"
   >
-    <NavButton class="tab-btn" aria-label="btn-projects" data-target="projects"
-      >{i18n.NAVBAR.PROJECTS}</NavButton
+    <NavButton class="tab-btn" aria-label="btn-about" data-target="about"
+      >About</NavButton
     >
-    <NavButton class="tab-btn" aria-label="btn-Articles" data-target="articles"
-      >{i18n.NAVBAR.ARTICLES}</NavButton
-    >
-    <NavButton
-      class="tab-btn"
-      aria-label="btn-projects"
-      data-target="booksMarks">{i18n.NAVBAR.BOOKSMARKS}</NavButton
+    <NavButton class="tab-btn" aria-label="btn-works" data-target="works"
+      >Works</NavButton
     >
     <NavButton
       class="tab-btn"
-      aria-label="btn-projects"
-      data-target="educationHub">{i18n.NAVBAR.EDUCATION_HUB}</NavButton
+      aria-label="btn-essential-items"
+      data-target="essentialItems">Essential Items</NavButton
     >
     <NavButton
       class="tab-btn"
-      aria-label="btn-projects"
-      data-target="funHobbies">{i18n.NAVBAR.FUN_HOBBIES}</NavButton
+      aria-label="btn-contact"
+      data-target="contact">Contact</NavButton
     >
-    <NavButton class="tab-btn" aria-label="btn-funHobbies" data-target="shopNow"
-      >{i18n.NAVBAR.SHOP_NOW}</NavButton
+    <NavButton class="tab-btn" aria-label="btn-services" data-target="shopNow"
+      >Services</NavButton
     >
   </nav>
 
   <main class="mt-6">
-    <SectionContainer id="projects" class="tab-content mt-0 mb-0">
-      <Projects />
+    <SectionContainer id="about" class="tab-content mt-0 mb-0">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-hub-title dark:text-hub-title-dark font-semibold text-xl">自己紹介</h2>
+        <p class="text-hub-subtitle dark:text-hub-subtitle-dark">
+          東京在住のソフトウェアエンジニア。モバイル（iOS/Flutter）を中心に、ガジェット×生産性×健康の交差点でプロダクトづくりと発信を行っています。
+        </p>
+        <p class="text-hub-subtitle dark:text-hub-subtitle-dark">
+          最近は個人開発アプリやUIライブラリ、ツールづくりに注力。好きなものは筋トレとカメラ、快適なデスク環境づくり。
+        </p>
+      </div>
     </SectionContainer>
-    <SectionContainer id="articles" class="tab-content hidden mt-0 mb-0">
-      <Articles />
+    <SectionContainer id="works" class="tab-content hidden mt-0 mb-0">
+      <Works />
     </SectionContainer>
-    <SectionContainer id="booksMarks" class="tab-content hidden mt-0 mb-0">
+    <SectionContainer id="essentialItems" class="tab-content hidden mt-0 mb-0">
       <BooksMarks />
     </SectionContainer>
-    <SectionContainer id="educationHub" class="tab-content hidden mt-0 mb-0">
-      <EducationHub />
-    </SectionContainer>
-    <SectionContainer id="funHobbies" class="tab-content hidden mt-0 mb-0">
-      <FunHobbies />
+    <SectionContainer id="contact" class="tab-content hidden mt-0 mb-0">
+      <Contact />
     </SectionContainer>
     <SectionContainer id="shopNow" class="tab-content hidden mt-0 mb-0">
       <ShopNow />
@@ -71,7 +70,7 @@ const i18n = getI18N({ currentLocale });
   const contents = document.querySelectorAll(".tab-content");
 
   // Establece el botón activo por defecto
-  const defaultActive = document.querySelector('[data-target="projects"]');
+  const defaultActive = document.querySelector('[data-target="about"]');
   if (defaultActive) {
     defaultActive.classList.add(
       "bg-hub-background",
@@ -81,9 +80,9 @@ const i18n = getI18N({ currentLocale });
       "dark:text-hub-title-dark",
       "dark:bg-hub-background-dark",
     );
-    const projectsSection = document.getElementById("projects");
-    if (projectsSection) {
-      projectsSection.classList.remove("hidden");
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.classList.remove("hidden");
     }
   }
 

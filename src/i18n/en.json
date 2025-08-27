@@ -18,9 +18,7 @@
   "NAVBAR": {
     "PROJECTS": "Projects",
     "ARTICLES": "Articles",
-    "BOOKSMARKS": "BooksMarks",
-    "EDUCATION_HUB": "Education Hub",
-    "FUN_HOBBIES": "Fun Hobbies",
+    "ESSENTIAL_ITEMS": "Essential Items",
     "SHOP_NOW": "Shop Now"
   },
   "PROJECTS": {
@@ -38,21 +36,9 @@
       "message2": "But don't worry, there's always something interesting waiting for you!"
     }
   },
-  "BOOKSMARKS": {
+  "ESSENTIAL_ITEMS": {
     "empty": {
-      "message": "Oops, there are no bookmarks to display.",
-      "message2": "But don't worry, there's always something interesting waiting for you!"
-    }
-  },
-  "EDUCATION_HUB": {
-    "empty": {
-      "message": "Oops, there are no educational resources to display.",
-      "message2": "But don't worry, there's always something interesting waiting for you!"
-    }
-  },
-  "FUN_HOBBIES": {
-    "empty": {
-      "message": "Oops, there are no fun hobbies to display.",
+      "message": "Oops, no essential items to display.",
       "message2": "But don't worry, there's always something interesting waiting for you!"
     }
   },

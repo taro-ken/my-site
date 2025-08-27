@@ -6,6 +6,7 @@ import Instagram from "../../icons/Instagram.astro";
 import LinkedIn from "../../icons/LinkedIn.astro";
 import SocialPill from "../../icons/SocialPill.astro";
 import Web from "../../icons/Web.astro";
+import YouTube from "../../icons/YouTube.astro";
 
 import {
   getLangFromUrl,
@@ -23,16 +24,15 @@ const translatePath = useTranslatedPath(lang);
 <!-- Aside para links secundarios -->
 <aside>
   <div class="flex gap-2 flex-wrap">
-    <SocialPill
-      class="px-4 gap-1 font-medium text-sm text-white dark:text-white bg-sky-500 hover:bg-sky-400 w-auto group"
-      href={translatePath("/")}
-      target="_self"
-    >
-      Resume
-      <ArrowUpRight
-        class="size-4 transition-transform duration-300 ease-in-out group-hover:rotate-45"
-      />
-    </SocialPill>
+    <Tooltip tooltip="YouTube">
+      <SocialPill
+        href="https://www.youtube.com/"
+        class=""
+        target="_blank"
+      >
+        <YouTube class="size-4" />
+      </SocialPill>
+    </Tooltip>
     <Tooltip tooltip="Portfolio">
       <SocialPill
         href="https://itsteddydev.vercel.app/"

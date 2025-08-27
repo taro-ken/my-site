@@ -18,9 +18,7 @@
   "NAVBAR": {
     "PROJECTS": "Projectos",
     "ARTICLES": "Artículos",
-    "BOOKSMARKS": "Marcadores",
-    "EDUCATION_HUB": "Hub Educativo",
-    "FUN_HOBBIES": "Pasatiempos",
+    "ESSENTIAL_ITEMS": "Elementos Esenciales",
     "SHOP_NOW": "Comprar Ahora"
   },
   "PROJECTS": {
@@ -38,21 +36,9 @@
       "message2": "¡Pero no te preocupes, siempre hay algo interesante esperándote!"
     }
   },
-  "BOOKSMARKS": {
+  "ESSENTIAL_ITEMS": {
     "empty": {
-      "message": "Vaya, no hay marcadores para mostrar.",
-      "message2": "¡Pero no te preocupes, siempre hay algo interesante esperándote!"
-    }
-  },
-  "EDUCATION_HUB": {
-    "empty": {
-      "message": "Vaya, no hay recursos educativos para mostrar.",
-      "message2": "¡Pero no te preocupes, siempre hay algo interesante esperándote!"
-    }
-  },
-  "FUN_HOBBIES": {
-    "empty": {
-      "message": "Vaya, no hay pasatiempos divertidos para mostrar.",
+      "message": "Vaya, no hay elementos esenciales para mostrar.",
       "message2": "¡Pero no te preocupes, siempre hay algo interesante esperándote!"
     }
   },

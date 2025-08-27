@@ -1,20 +1,14 @@
 export const languages = {
-  en: 'English',
-  es: 'Español',
+  ja: '日本語',
 };
 
-export const defaultLang = 'en';
-export const showDefaultLang = false;
+export const defaultLang = 'ja';
+export const showDefaultLang = true;
 
 export const ui = {
-  en: {
-    'nav.index': 'Home',
-    'nav.about': 'About',
-    'nav.404': '404-Not-Found',
-  },
-  es: {
-    'nav.index': 'Inicio',
-    'nav.about': 'Acerca de',
-    'nav.404': '404-No-Encontrado',
+  ja: {
+    'nav.index': 'ホーム',
+    'nav.about': 'プロフィール',
+    'nav.404': '404-ページが見つかりません',
   },
 } as const;

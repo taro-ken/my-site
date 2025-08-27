@@ -1,33 +1,109 @@
 ---
 import { getI18N } from "@/i18n";
-import CardDocuments from "../components/CardDocuments.astro";
-import NoDataCard from "../components/NoDataCard.astro";
-// import { cardsData } from "../data/educationhub.js";
-const cardsData: any[] = [];
 //Para cambiar idioma de textos
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 ---
 
-<div class="flex flex-col gap-y-3">
-  {
-    cardsData.length > 0 ? (
-      cardsData.map((card) => (
-        <CardDocuments
-          id={card.id}
-          href={card.href}
-          title={card.title}
-          subtitle={card.subtitle}
-          imageSrc={card.imageSrc}
-          imageAlt={card.imageAlt}
-        />
-      ))
-    ) : (
-      <NoDataCard
-        message={i18n.SHOP_NOW.empty.message}
-        subtitle={i18n.SHOP_NOW.empty.message2}
-        imageSrc="/img/notion/white/my-notion-face-transparent_15.png"
-      />
-    )
-  }
+<div class="flex flex-col gap-y-8 max-w-6xl mx-auto">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- コンサルティングサービスカード -->
+    <div class="border border-hub-border dark:border-hub-border-dark rounded-xl p-6 bg-white dark:bg-hub-background-dark shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div class="flex flex-col gap-6">
+        <!-- 画像セクション -->
+        <div class="w-full">
+          <img 
+            src="/images/kindley.jpg" 
+            alt="コンサルティングセッション" 
+            class="w-full h-48 object-cover rounded-lg"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- サービス詳細セクション -->
+        <div class="flex flex-col gap-4">
+          <h3 class="text-xl font-bold text-hub-title dark:text-hub-title-dark">コンサルティング</h3>
+          
+          <div class="space-y-3">
+            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-sm leading-relaxed">
+              人生と表現を整理したい人向けの1対1コンサルティングサービスです。ミニマリズム、習慣の見直し、働き方、コミュニケーションに焦点を当て、やりたいことに集中できる環境づくりをサポートします。
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-sm font-semibold text-hub-title dark:text-hub-title-dark">サービス内容</h4>
+            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-sm">
+              1回のオンラインセッション(60分)、1ヶ月のメールサポート付き。
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-sm font-semibold text-hub-title dark:text-hub-title-dark">料金</h4>
+            <div class="space-y-1">
+              <p class="text-lg font-bold text-hub-title dark:text-hub-title-dark">25,000円</p>
+              <p class="text-sm text-hub-subtitle dark:text-hub-subtitle-dark">会員 15,000円</p>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <a 
+              href="#" 
+              class="inline-block px-6 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
+            >
+              詳細を見る
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 追加サービスカードの例 -->
+    <div class="border border-hub-border dark:border-hub-border-dark rounded-xl p-6 bg-white dark:bg-hub-background-dark shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div class="flex flex-col gap-6">
+        <!-- 画像セクション -->
+        <div class="w-full">
+          <img 
+            src="/images/havetodo.jpg" 
+            alt="追加サービス" 
+            class="w-full h-48 object-cover rounded-lg"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- サービス詳細セクション -->
+        <div class="flex flex-col gap-4">
+          <h3 class="text-xl font-bold text-hub-title dark:text-hub-title-dark">追加サービス</h3>
+          
+          <div class="space-y-3">
+            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-sm leading-relaxed">
+              追加のサービス内容をここに記載します。必要に応じて新しいサービスカードを追加できます。
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-sm font-semibold text-hub-title dark:text-hub-title-dark">サービス内容</h4>
+            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-sm">
+              サービス詳細を記載してください。
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-sm font-semibold text-hub-title dark:text-hub-title-dark">料金</h4>
+            <div class="space-y-1">
+              <p class="text-lg font-bold text-hub-title dark:text-hub-title-dark">料金を設定</p>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <a 
+              href="#" 
+              class="inline-block px-6 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
+            >
+              詳細を見る
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

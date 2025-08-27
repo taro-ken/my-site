@@ -10,7 +10,7 @@ const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 ---
 
-<div class="flex flex-col-reverse gap-y-3">
+<div class="flex flex-col gap-y-3">
   {
     cardsData.length > 0 ? (
       cardsData.map((card) => (
