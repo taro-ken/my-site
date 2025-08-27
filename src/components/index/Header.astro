@@ -1,29 +1,30 @@
 ---
-import {
-  getLangFromUrl,
-  useTranslations,
-  useTranslatedPath,
-} from "@/i18n/utils";
-
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
-const translatePath = useTranslatedPath(lang);
+import YouTube from "@/icons/YouTube.astro";
+import Instagram from "@/icons/Instagram.astro";
+import Note from "@/icons/Note.astro";
+import GitHub from "@/icons/GitHub.astro";
 ---
 
-<ul>
-  <li>
-    <a href={translatePath("/")}>
-      {t("nav.index")}
-    </a>
-  </li>
-  <li>
-    <a href={translatePath("/about/")}>
-      {t("nav.about")}
-    </a>
-  </li>
-  <li>
-    <a href={translatePath("/404/")}>
-      {t("nav.404")}
-    </a>
-  </li>
-</ul>
+<header class="border-b bg-white/80 backdrop-blur">
+  <div class="container h-14 flex items-center justify-between">
+    <a href="/" class="font-extrabold tracking-tight text-lg no-underline">KENTARO</a>
+    <nav class="flex gap-6 text-sm">
+      <a href="https://www.youtube.com/" class="muted hover:text-[var(--fg)] flex items-center gap-2" target="_blank" rel="noreferrer noopener">
+        <YouTube class="w-4 h-4" />
+        YouTube
+      </a>
+      <a href="https://www.instagram.com/" class="muted hover:text-[var(--fg)] flex items-center gap-2" target="_blank" rel="noreferrer noopener">
+        <Instagram class="w-4 h-4" />
+        Instagram
+      </a>
+      <a href="https://note.com/" class="muted hover:text-[var(--fg)] flex items-center gap-2" target="_blank" rel="noreferrer noopener">
+        <Note class="w-4 h-4" />
+        Note
+      </a>
+      <a href="https://github.com/" class="muted hover:text-[var(--fg)] flex items-center gap-2" target="_blank" rel="noreferrer noopener">
+        <GitHub class="w-4 h-4" />
+        Github
+      </a>
+    </nav>
+  </div>
+</header>

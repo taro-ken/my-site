@@ -1,55 +1,55 @@
 {
-  "SEO_TITLE": "ItsTeddyDev Hub - Resource and Content Center",
-  "SEO_DESCRIPTION": "Explore books, articles, hobbies, and educational resources at Justcoddev's personal hub. Discover the best of my career and my recommendations.",
+  "SEO_TITLE": "KENTARO Hub - リソースとコンテンツセンター",
+  "SEO_DESCRIPTION": "KENTAROの個人ハブで、本、記事、趣味、教育リソースを探索してください。キャリアのベストとおすすめを発見しましょう。",
   "ERROR_404": {
-    "TITLE": "404 - Not Found",
-    "DESCRIPTION": "Not Found",
-    "BACK_HOMEPAGE_BTN": "Go Back"
+    "TITLE": "404 - ページが見つかりません",
+    "DESCRIPTION": "ページが見つかりません",
+    "BACK_HOMEPAGE_BTN": "ホームに戻る"
   },
   "HERO": {
-    "NAME": "Teddy Summers",
-    "TITLE": "Software Engineer",
-    "DESCRIPTION": "I'm a software engineer who loves to learn and share knowledge. I'm passionate about technology, programming, and software development. I'm always looking for new challenges and opportunities to grow."
+    "NAME": "KENTARO",
+    "TITLE": "ソフトウェアエンジニア / デザイナー / インディーアプリクリエイター",
+    "DESCRIPTION": "モバイル（iOS/Flutter）を中心に、ガジェット×生産性×健康の交差点でプロダクトづくりと発信を行っているソフトウェアエンジニアです。"
   },
   "ABOUT": {
-    "TITLE": "about",
-    "DESCRIPTION": "About DESCRIPTION"
+    "TITLE": "About",
+    "DESCRIPTION": "自己紹介"
   },
   "NAVBAR": {
-    "PROJECTS": "Projects",
-    "ARTICLES": "Articles",
-    "ESSENTIAL_ITEMS": "Essential Items",
-    "SHOP_NOW": "Shop Now"
+    "PROJECTS": "About",
+    "ARTICLES": "Works",
+    "ESSENTIAL_ITEMS": "Items",
+    "SHOP_NOW": "Services"
   },
   "PROJECTS": {
     "empty": {
-      "message": "Oops, no projects to display.",
-      "message2": "But don't worry, there's always something interesting waiting for you!"
+      "message": "申し訳ございません、プロジェクトが表示できません。",
+      "message2": "でも心配いりません、いつも何か面白いものが待っています！"
     },
     "BADGE": {
-      "NEW": "New"
+      "NEW": "新着"
     }
   },
   "ARTICLES": {
     "empty": {
-      "message": "Oops, there are no articles to display.",
-      "message2": "But don't worry, there's always something interesting waiting for you!"
+      "message": "申し訳ございません、記事が表示できません。",
+      "message2": "でも心配いりません、いつも何か面白いものが待っています！"
     }
   },
   "ESSENTIAL_ITEMS": {
     "empty": {
-      "message": "Oops, no essential items to display.",
-      "message2": "But don't worry, there's always something interesting waiting for you!"
+      "message": "申し訳ございません、Itemsが表示できません。",
+      "message2": "でも心配いりません、いつも何か面白いものが待っています！"
     }
   },
   "SHOP_NOW": {
     "empty": {
-      "message": "Oops, there are no products to display.",
-      "message2": "But don't worry, there's always something interesting waiting for you!"
+      "message": "申し訳ございません、サービスが表示できません。",
+      "message2": "でも心配いりません、いつも何か面白いものが待っています！"
     }
   },
   "NOT_DATA": {
-    "message": "Oops, no data to display.",
-    "message2": "But don't worry, there's always something interesting waiting for you!"
+    "message": "申し訳ございません、データが表示できません。",
+    "message2": "でも心配いりません、いつも何か面白いものが待っています！"
   }
 }

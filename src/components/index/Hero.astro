@@ -4,9 +4,8 @@ import IconChevronDown from "../../icons/IconChevronDown.astro";
 // import IconShare2 from "../../icons/IconShare2.astro";
 import HeroButton from "../HeroButton.astro";
 
-//Para cambiar idioma de textos
-const { currentLocale } = Astro;
-const i18n = getI18N({ currentLocale });
+// 日本語のみのi18nシステム
+const i18n = getI18N({ currentLocale: 'ja' });
 ---
 
 <div>
@@ -17,7 +16,7 @@ const i18n = getI18N({ currentLocale });
       dark:border-hub-border-dark
       dark:bg-hub-background-nav-dark
       hover:dark:bg-hub-background-nav"
-      src="/img/notion/white/my-notion-face-transparent.png"
+      src="/images/profile-icon.jpg"
       alt="Descripción de la imagen"
     />
     <div class="flex gap-2 flex-wrap">
@@ -30,7 +29,7 @@ const i18n = getI18N({ currentLocale });
     <h1 class="font-medium text-2xl text-hub-title dark:text-hub-title-dark">
       {i18n.HERO.NAME}
     </h1>
-    <p class="text-base text-hub-subtitle dark:text-hub-subtitle-dark">
+    <p class="text-sm text-hub-subtitle dark:text-hub-subtitle-dark">
       {i18n.HERO.TITLE}
     </p>
   </div>
