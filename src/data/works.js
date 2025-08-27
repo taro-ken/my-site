@@ -4,7 +4,7 @@ export const worksData = [
         title: '筋トレ記録アプリ - MUSCLY(マスリー)',
         description: 'A simple Volume-based workout tracker.',
         techs: ['Flutter', 'Dart', 'iOS', 'Android'],
-        images: ['/images/havetodo.jpg', '/images/kindley.jpg'],
+        images: ['/images/works/focusy_1.png', '/images/works/focusy_2.png'],
         stores: [
             { label: 'App Store', href: 'https://apps.apple.com/app/muscle-tracker/id1234567890' },
         ],
