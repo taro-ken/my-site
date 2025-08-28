@@ -15,7 +15,7 @@ const i18n = getI18N({ currentLocale });
 
 <div class="flex flex-col">
   <nav
-    class="flex gap-1 text-hub-inactive rounded-full border-[0.5px] p-1 border-hub-border dark:border-hub-border-dark bg-hub-background-nav dark:bg-hub-background-nav whitespace-nowrap overflow-x-auto scrollbar-hide text-xs md:text-sm lg:text-base origin-left w-full"
+    class="flex gap-1 text-hub-inactive rounded-full border-[0.5px] p-1 border-hub-border dark:border-hub-border-dark bg-hub-background-nav dark:bg-hub-background-nav whitespace-nowrap overflow-x-auto scrollbar-hide text-[10px] md:text-xs lg:text-xs origin-left w-full"
   >
     <NavButton class="tab-btn" aria-label="btn-about" data-target="about"
       >About</NavButton
@@ -37,32 +37,6 @@ const i18n = getI18N({ currentLocale });
       >Services</NavButton
     >
   </nav>
-
-  <style>
-    /* タブボタンの強調効果を完全に無効化 */
-    .tab-btn {
-      background: transparent !important;
-      box-shadow: none !important;
-      font-weight: normal !important;
-      color: inherit !important;
-    }
-    
-    .tab-btn:hover {
-      background: transparent !important;
-      color: inherit !important;
-    }
-    
-    .tab-btn:active {
-      background: transparent !important;
-      color: inherit !important;
-    }
-    
-    .tab-btn:focus {
-      background: transparent !important;
-      color: inherit !important;
-      outline: none !important;
-    }
-  </style>
 
   <main class="mt-6">
     <SectionContainer id="about" class="tab-content mt-0 mb-0">
@@ -94,15 +68,34 @@ const i18n = getI18N({ currentLocale });
   const buttons = document.querySelectorAll(".tab-btn");
   const contents = document.querySelectorAll(".tab-content");
 
-  // デフォルトでAboutタブを表示
-  const aboutSection = document.getElementById("about");
-  if (aboutSection) {
-    aboutSection.classList.remove("hidden");
+  // アクティブ状態のクラスを定義
+  const activeClasses = [
+    "bg-white",
+    "text-gray-700",
+    "shadow-sm"
+  ];
+
+  // デフォルトでAboutタブをアクティブにする
+  const defaultActive = document.querySelector('[data-target="about"]');
+  if (defaultActive) {
+    defaultActive.classList.add(...activeClasses);
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.classList.remove("hidden");
+    }
   }
 
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
       const target = button.getAttribute("data-target");
+
+      // 全てのボタンからアクティブ状態を削除
+      buttons.forEach((btn) => {
+        btn.classList.remove(...activeClasses);
+      });
+
+      // クリックされたボタンをアクティブにする
+      button.classList.add(...activeClasses);
 
       // 全てのセクションを非表示
       contents.forEach((content) => content.classList.add("hidden"));

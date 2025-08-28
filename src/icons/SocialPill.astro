@@ -8,32 +8,9 @@ const { class: className } = Astro.props;
   hover:drop-shadow-md 
   hover:bg-hub-background-nav
    hover:dark:bg-hub-background-nav-dark
-    dark:text-hub-inactive 
-    transition-all duration-200
-    active:scale-95
-    focus:outline-none
-    focus-visible:outline-none`}
+    dark:text-hub-inactive`}
   {...Astro.props}
   rel="noopener noreferrer"
 >
   <slot />
 </a>
-
-<style>
-  /* ホバー状態をリセット */
-  a:active {
-    transform: scale(0.95);
-  }
-  
-  /* フォーカス状態をリセット */
-  a:focus {
-    outline: none;
-  }
-  
-  /* タップ後のホバー状態を防ぐ */
-  a:active:hover {
-    background-color: inherit;
-    color: inherit;
-    transform: scale(0.95);
-  }
-</style>
