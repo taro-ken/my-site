@@ -8,21 +8,21 @@ import AppStoreBadge from "./AppStoreBadge.astro";
     worksData.map((w) => (
       <section id={w.id} class="flex flex-col gap-4">
         <div class="rounded-2xl border-[1px] border-hub-border dark:border-hub-border-dark p-6 md:p-10 bg-hub-background-nav/30 dark:bg-hub-background-nav-dark/30">
-          <h3 class="text-3xl md:text-4xl font-extrabold text-hub-title dark:text-hub-title-dark text-center">{w.title}</h3>
+          <h3 class="text-lg md:text-xl font-extrabold text-hub-title dark:text-hub-title-dark text-center" set:html={w.title}></h3>
           {w.description && (
-            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-base md:text-lg text-center mt-3">{w.description}</p>
+            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-xs md:text-xs text-center mt-3">{w.description}</p>
           )}
           {w.techs?.length > 0 && (
             <div class="flex justify-center mt-4">
               <ul class="flex flex-wrap gap-2 justify-center">
                 {w.techs.map(t => (
-                  <li class="px-3 py-1 rounded-full border-[1px] text-xs md:text-sm border-hub-border dark:border-hub-border-dark text-hub-inactive">{t}</li>
+                  <li class="px-2 py-1 rounded-full border-[1px] text-xs border-hub-border dark:border-hub-border-dark text-hub-inactive">{t}</li>
                 ))}
               </ul>
             </div>
           )}
           {w.images?.length > 0 && (
-            <div class="mt-6 grid grid-cols-2 gap-6 md:gap-10 items-center max-w-4xl mx-auto">
+            <div class="mt-6 grid gap-2 md:gap-4 items-center max-w-4xl mx-auto" class:list={w.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}>
               {w.images.map(src => (
                 <img src={src} alt="screenshot" class="w-full rounded-xl border-[1px] border-hub-border dark:border-hub-border-dark" loading="lazy" />
               ))}
@@ -36,7 +36,7 @@ import AppStoreBadge from "./AppStoreBadge.astro";
           {w.actions?.length > 0 && (
             <div class="mt-4 flex items-center justify-center gap-4">
               {w.actions.map(a => (
-                <a href={a.href} target={a.target || '_self'} class="underline">{a.label}</a>
+                <a href={a.href} target={a.target || '_self'} class="underline text-xs">{a.label}</a>
               ))}
             </div>
           )}

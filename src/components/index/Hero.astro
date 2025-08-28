@@ -8,7 +8,6 @@ import Instagram from "../../icons/Instagram.astro";
 import Note from "../../icons/Note.astro";
 import GitHub from "../../icons/GitHub.astro";
 import SocialPill from "../../icons/SocialPill.astro";
-import Tooltip from "../Tooltip.astro";
 
 // 日本語のみのi18nシステム
 const i18n = getI18N({ currentLocale: 'ja' });
@@ -43,42 +42,34 @@ const i18n = getI18N({ currentLocale: 'ja' });
   <!-- ソーシャルメディアアイコン -->
   <div class="mt-6">
     <div class="flex gap-2 flex-wrap">
-      <Tooltip tooltip="YouTube">
-        <SocialPill
-          href="https://www.youtube.com/@kentaro_life_lab"
-          class=""
-          target="_blank"
-        >
-          <YouTube class="size-4" />
-        </SocialPill>
-      </Tooltip>
-      <Tooltip tooltip="Instagram">
-        <SocialPill
-          href="https://www.instagram.com/kentaro_life_lab/"
-          class=""
-          target="_blank"
-        >
-          <Instagram class="size-4" />
-        </SocialPill>
-      </Tooltip>
-      <Tooltip tooltip="Note">
-        <SocialPill
-          href="https://note.com/taroken2411"
-          class=""
-          target="_blank"
-        >
-          <Note class="size-4" />
-        </SocialPill>
-      </Tooltip>
-      <Tooltip tooltip="GitHub">
-        <SocialPill
-          href="https://github.com/taro-ken"
-          class=""
-          target="_blank"
-        >
-          <GitHub class="size-4" />
-        </SocialPill>
-      </Tooltip>
+      <SocialPill
+        href="https://www.youtube.com/@kentaro_life_lab"
+        class=""
+        target="_blank"
+      >
+        <YouTube class="size-4" />
+      </SocialPill>
+      <SocialPill
+        href="https://www.instagram.com/kentaro_life_lab/"
+        class=""
+        target="_blank"
+      >
+        <Instagram class="size-4" />
+      </SocialPill>
+      <SocialPill
+        href="https://note.com/taroken2411"
+        class=""
+        target="_blank"
+      >
+        <Note class="size-4" />
+      </SocialPill>
+      <SocialPill
+        href="https://github.com/taro-ken"
+        class=""
+        target="_blank"
+      >
+        <GitHub class="size-4" />
+      </SocialPill>
     </div>
   </div>
 </div>
