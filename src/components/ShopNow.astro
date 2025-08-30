@@ -7,99 +7,256 @@ const i18n = getI18N({ currentLocale });
 
 <div class="flex flex-col gap-y-8 max-w-6xl mx-auto">
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-    <!-- コンサルティングサービスカード -->
+    <!-- オンラインダイエットコーチング -->
     <div class="border border-hub-border dark:border-hub-border-dark rounded-xl p-6 bg-white dark:bg-hub-background-dark shadow-sm hover:shadow-md transition-shadow duration-200">
       <div class="flex flex-col gap-6">
         <!-- 画像セクション -->
         <div class="w-full">
           <img 
-            src="/images/kindley.jpg" 
-            alt="コンサルティングセッション" 
+            src="/images/services/diet.png" 
+            alt="オンラインダイエットコーチング" 
             class="w-full h-48 object-cover rounded-lg"
             loading="lazy"
           />
         </div>
 
         <!-- サービス詳細セクション -->
-        <div class="flex flex-col gap-4">
-          <h3 class="text-xl font-bold text-hub-title dark:text-hub-title-dark">コンサルティング</h3>
+        <div class="flex flex-col gap-3">
+          <h3 class="text-base font-bold text-hub-title dark:text-hub-title-dark">オンラインダイエットコーチング</h3>
           
-          <div class="space-y-3">
-            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-sm leading-relaxed">
-              人生と表現を整理したい人向けの1対1コンサルティングサービスです。ミニマリズム、習慣の見直し、働き方、コミュニケーションに焦点を当て、やりたいことに集中できる環境づくりをサポートします。
-            </p>
-          </div>
-
           <div class="space-y-2">
-            <h4 class="text-sm font-semibold text-hub-title dark:text-hub-title-dark">サービス内容</h4>
-            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-sm">
-              1回のオンラインセッション(60分)、1ヶ月のメールサポート付き。
-            </p>
-          </div>
-
-          <div class="space-y-2">
-            <h4 class="text-sm font-semibold text-hub-title dark:text-hub-title-dark">料金</h4>
             <div class="space-y-1">
-              <p class="text-lg font-bold text-hub-title dark:text-hub-title-dark">25,000円</p>
-              <p class="text-sm text-hub-subtitle dark:text-hub-subtitle-dark">会員 15,000円</p>
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">サービス内容（1ヶ月）</h4>
+              <ul class="text-hub-subtitle dark:text-hub-subtitle-dark text-xs space-y-2">
+                <li>
+                  <div class="font-medium">• 初回ヒアリング（無料）</div>
+                  <div class="ml-4 mt-1 text-[10px]">目標・体質・生活リズム・既往歴を確認し、到達指標を設定</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 毎日の食事レビュー＆代替提案</div>
+                  <div class="ml-4 mt-1 text-[10px]">写真OK・24時間以内に返信</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 月1回オンラインミーティング</div>
+                  <div class="ml-4 mt-1 text-[10px]">（任意・30分）</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 運動プラン</div>
+                  <div class="ml-4 mt-1 text-[10px]">自宅／ジムのどちらにも対応（レベル別メニュー）</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 停滞時の再計算</div>
+                  <div class="ml-4 mt-1 text-[10px]">体重・見た目・食欲の変化に合わせてPFC/カロリーを再設計</div>
+                </li>
+              </ul>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark mt-1">
+                ※連絡手段は LINE／メール 等から選択可能。
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">料金</h4>
+              <p class="text-sm font-bold text-hub-title dark:text-hub-title-dark">月額：¥9,800</p>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark">（毎日レビュー／質問無制限）</p>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">キャンセル</h4>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark">
+                月額：次回更新日前までの連絡で翌月課金を停止（日割り返金なし）
+              </p>
             </div>
           </div>
 
-          <div class="pt-2">
+          <div class="pt-2 text-center">
             <a 
-              href="#" 
-              class="inline-block px-6 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
+              href="https://forms.gle/vFYqrMMcsk2cqQGc6" 
+              class="inline-block px-6 py-2 bg-black text-white text-[10px] font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
             >
-              詳細を見る
+              まずは無料カウンセリング
             </a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 追加サービスカードの例 -->
+    <!-- パーソナルトレーニング -->
     <div class="border border-hub-border dark:border-hub-border-dark rounded-xl p-6 bg-white dark:bg-hub-background-dark shadow-sm hover:shadow-md transition-shadow duration-200">
       <div class="flex flex-col gap-6">
         <!-- 画像セクション -->
         <div class="w-full">
           <img 
-            src="/images/havetodo.jpg" 
-            alt="追加サービス" 
+            src="/images/services/personal.jpg" 
+            alt="パーソナルトレーニング" 
             class="w-full h-48 object-cover rounded-lg"
             loading="lazy"
           />
         </div>
 
         <!-- サービス詳細セクション -->
-        <div class="flex flex-col gap-4">
-          <h3 class="text-xl font-bold text-hub-title dark:text-hub-title-dark">追加サービス</h3>
+        <div class="flex flex-col gap-3">
+          <h3 class="text-base font-bold text-hub-title dark:text-hub-title-dark">パーソナルトレーニング</h3>
           
-          <div class="space-y-3">
-            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-sm leading-relaxed">
-              追加のサービス内容をここに記載します。必要に応じて新しいサービスカードを追加できます。
-            </p>
-          </div>
-
           <div class="space-y-2">
-            <h4 class="text-sm font-semibold text-hub-title dark:text-hub-title-dark">サービス内容</h4>
-            <p class="text-hub-subtitle dark:text-hub-subtitle-dark text-sm">
-              サービス詳細を記載してください。
-            </p>
-          </div>
-
-          <div class="space-y-2">
-            <h4 class="text-sm font-semibold text-hub-title dark:text-hub-title-dark">料金</h4>
             <div class="space-y-1">
-              <p class="text-lg font-bold text-hub-title dark:text-hub-title-dark">料金を設定</p>
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">サービス内容（60分／回）</h4>
+              <ul class="text-hub-subtitle dark:text-hub-subtitle-dark text-xs space-y-2">
+                <li>
+                  <div class="font-medium">• 初回ヒアリング</div>
+                  <div class="ml-4 mt-1 text-[10px]">目標・体調・既往歴を確認</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 姿勢／可動域チェック</div>
+                  <div class="ml-4 mt-1 text-[10px]">→ 安全なフォーム指導</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 目的別メニュー提案</div>
+                </li>
+                <li>
+                  <div class="font-medium">• セッション中の重量・回数管理と微調整</div>
+                </li>
+              </ul>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark mt-1">
+                ※場所は東京都内のレンタルジムで実施（応相談）。※ウェア／室内シューズ／タオル／飲み物はご持参ください。
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">料金（ジム利用料込み）</h4>
+              <p class="text-sm font-bold text-hub-title dark:text-hub-title-dark">60分：¥8,000</p>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark">
+                ※ 支払いはカードまたはQRコード決済が利用可能です。
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">キャンセル</h4>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark">
+                前日21:00まで無料／当日100%（ジム枠確保のため）
+              </p>
             </div>
           </div>
 
-          <div class="pt-2">
+          <div class="pt-2 text-center">
             <a 
-              href="#" 
-              class="inline-block px-6 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
+              href="https://forms.gle/vFYqrMMcsk2cqQGc6" 
+              class="inline-block px-6 py-2 bg-black text-white text-[10px] font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
             >
-              詳細を見る
+              申し込む
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- キャリアチェンジカウンセリング -->
+    <div class="border border-hub-border dark:border-hub-border-dark rounded-xl p-6 bg-white dark:bg-hub-background-dark shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div class="flex flex-col gap-6">
+        <!-- 画像セクション -->
+        <div class="w-full">
+          <img 
+            src="/images/services/coaching.png" 
+            alt="キャリアチェンジカウンセリング" 
+            class="w-full h-48 object-cover rounded-lg"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- サービス詳細セクション -->
+        <div class="flex flex-col gap-3">
+          <h3 class="text-base font-bold text-hub-title dark:text-hub-title-dark">キャリアチェンジカウンセリング</h3>
+          
+          <div class="space-y-2">
+            <div class="space-y-1">
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">サービス内容（60分／回）</h4>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark leading-relaxed">
+                飲食業から未経験でエンジニアに転身し、現在フリーランスとして活動している私の経験と知識をもとに、キャリアに関するヒアリング／アドバイスを行います。
+              </p>
+              <ul class="text-hub-subtitle dark:text-hub-subtitle-dark text-xs space-y-2 mt-2">
+                <li>
+                  <div class="font-medium">• 現状整理と強みの棚卸し</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 学習ロードマップ提案</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 職務経歴書・ポートフォリオの方向性アドバイス</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 面接対策（想定質問・回答の組み立て）</div>
+                </li>
+                <li>
+                  <div class="font-medium">• 企業・案件の探し方（社員／副業／フリーランスの進め方の違い）</div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">料金</h4>
+              <p class="text-sm font-bold text-hub-title dark:text-hub-title-dark">無料</p>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark">
+                ※継続サポートは別途相談可（回数・内容に応じて個別見積もり）
+              </p>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark">
+                ※実施形式：オンライン（Google Meet）
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-2 text-center">
+            <a 
+              href="https://forms.gle/vFYqrMMcsk2cqQGc6" 
+              class="inline-block px-6 py-2 bg-black text-white text-[10px] font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
+            >
+              申し込む
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- システム開発支援 -->
+    <div class="border border-hub-border dark:border-hub-border-dark rounded-xl p-6 bg-white dark:bg-hub-background-dark shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div class="flex flex-col gap-6">
+        <!-- 画像セクション -->
+        <div class="w-full">
+          <img 
+            src="/images/services/system.jpg" 
+            alt="システム開発支援" 
+            class="w-full h-48 object-cover rounded-lg"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- サービス詳細セクション -->
+        <div class="flex flex-col gap-3">
+          <h3 class="text-base font-bold text-hub-title dark:text-hub-title-dark">システム開発支援</h3>
+          
+          <div class="space-y-2">
+            <div class="space-y-1">
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">サービス内容</h4>
+              <p class="text-xs text-hub-subtitle dark:text-hub-subtitle-dark leading-relaxed">
+                スマホアプリ・Webサイトの開発支援を行います。
+              </p>
+              <ul class="text-hub-subtitle dark:text-hub-subtitle-dark text-xs space-y-2 mt-2">
+                <li>
+                  <div class="font-medium">• 企画/要件整理/実装</div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs font-semibold text-hub-title dark:text-hub-title-dark">料金</h4>
+              <p class="text-sm font-bold text-hub-title dark:text-hub-title-dark">応相談</p>
+            </div>
+          </div>
+
+          <div class="pt-2 text-center">
+            <a 
+              href="https://forms.gle/vFYqrMMcsk2cqQGc6" 
+              class="inline-block px-6 py-2 bg-black text-white text-[10px] font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
+            >
+              お問い合わせ
             </a>
           </div>
         </div>
