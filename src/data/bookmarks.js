@@ -170,7 +170,7 @@ export const cardsData = [
         href: "https://amzn.to/41Z539H",
         title: "Anker USB-C カードリーダー",
         subtitle: "カメラからPCに取り込む時に使用",
-        imageSrc: "/images/essential-item/item_20.jpg",
+        imageSrc: "/images/essential-item/anker.JPG",
         imageAlt: "MagSafe Wallet",
       },
       {
