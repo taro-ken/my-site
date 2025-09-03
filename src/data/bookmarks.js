@@ -343,7 +343,7 @@ export const cardsData = [
       {
         id: "mobile-3",
         url: "amazon.com",
-        href: "",
+        href: "https://amzn.to/45KH6p5",
         title: "Slim Alive ラグトップ",
         subtitle: "トレーニングしやすい",
         imageSrc: "/images/essential-item/rag.jpg",
