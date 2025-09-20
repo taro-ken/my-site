@@ -37,15 +37,12 @@ const { selectedItem } = Astro.props;
         <div>Home</div>
       </a>
       <a
-        href="/all-item-list"
+        href="/personal-projects"
         class={`nav-link-container w-inline-block ${
-          selectedItem === 'all-item-list' ? 'w--current' : ''
+          selectedItem === 'personal-projects' ? 'w--current' : ''
         }`}
-        aria-current={
-          selectedItem === 'all-item-list' ? 'page' : undefined
-        }
       >
-        <div>All Item List</div>
+        <div>Personal projects</div>
       </a>
       <a
         href="/services"
@@ -56,12 +53,15 @@ const { selectedItem } = Astro.props;
         <div>Services</div>
       </a>
       <a
-        href="/personal-projects"
+        href="/all-item-list"
         class={`nav-link-container w-inline-block ${
-          selectedItem === 'personal-projects' ? 'w--current' : ''
+          selectedItem === 'all-item-list' ? 'w--current' : ''
         }`}
+        aria-current={
+          selectedItem === 'all-item-list' ? 'page' : undefined
+        }
       >
-        <div>Personal projects</div>
+        <div>All Item List</div>
       </a>
       <a
         href="/contact"
