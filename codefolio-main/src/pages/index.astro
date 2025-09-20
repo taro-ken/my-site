@@ -1,0 +1,177 @@
+---
+import Header from "../components/Header.astro";
+import Sidebar from "../components/Sidebar.astro";
+---
+
+
+<!DOCTYPE html>
+<html
+>
+  <Header title="KENTARO" />
+  <body>
+    <div class="content">
+      <Sidebar selectedItem="home" />
+      <nav class="main">
+        <div class="container">
+          <div class="projects-section">
+            <!-- iOS Development -->
+            <div class="projects-container">
+              <div class="single-projects-category">
+                <div class="projects-category-image-container profile-image-container">
+                  <img src="./assets/profile-icon.jpg" loading="lazy" alt="" class="projects-category-image profile-image" />
+                </div>
+              </div>
+              <div class="single-projects-content">
+                <h4>KENTARO</h4>
+                <p class="lead">
+                  東京在住のフリーランスエンジニア/クリエイター/ミニマリスト。飲食業からエンジニアへ転身し、複数の大手企業案件で実務経験を重ねる。個人ではiOSアプリを開発。YouTubeではガジェットと生産性の実践を発信している。
+                </p>
+                <div class="tech-tools-container">
+                  <div class="mini-label-white gray-color">Skills</div>
+                  <div class="chips-container chips-container-small-width">
+                    <div class="single-chip small-chip">Swift</div>
+                    <div class="single-chip small-chip">Flutter</div>
+                    <div class="single-chip small-chip">Shopify</div>
+                    <div class="single-chip small-chip">Node.js</div>
+                    <div class="single-chip small-chip">AWS</div>
+                  </div>
+                </div>
+                <div class="links-container">
+                  <div class="mini-label-white gray-color">Links</div>
+                  <p style="color: red; font-size: 20px;">テスト：Linksセクションが表示されています</p>
+                  <div class="links-icons-container">
+                    <a href="https://www.youtube.com/@taroken2411" target="_blank" class="link-icon">
+                      <img src="/assets/youtube-icon.svg" alt="YouTube" class="social-icon" />
+                    </a>
+                    <a href="https://www.instagram.com/taroken2411/" target="_blank" class="link-icon">
+                      <img src="/assets/instagram-icon.svg" alt="Instagram" class="social-icon" />
+                    </a>
+                    <a href="https://note.com/taroken2411" target="_blank" class="link-icon">
+                      <img src="/assets/note-icon.svg" alt="Note" class="social-icon" />
+                    </a>
+                    <a href="https://github.com/taroken2411" target="_blank" class="link-icon">
+                      <img src="/assets/github-icon.svg" alt="GitHub" class="social-icon" />
+                    </a>
+                  </div>
+                </div>
+                <p style="color: blue; font-size: 24px; background: yellow;">TEST: ここにLinksセクションが表示されるはず</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+  </body>
+</html>
+
+<style>
+  .profile-image-container {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+  
+  .single-projects-content h4 {
+    font-size: 1.5rem;
+  }
+  
+  .single-projects-content .lead {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .chips-container-small-width .single-chip {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .mini-label-white {
+    font-size: 0.7rem;
+  }
+  
+  .links-container {
+    margin-top: 1rem;
+    background-color: #f0f0f0;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .links-icons-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .link-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .link-icon:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+    transform: translateY(-2px);
+  }
+  
+  .social-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .profile-image-container {
+      width: 80px;
+      height: 80px;
+    }
+    
+    .single-projects-content h4 {
+      font-size: 1.2rem;
+    }
+    
+    .single-projects-content .lead {
+      font-size: 0.8rem;
+      line-height: 1.3;
+      color: #666;
+    }
+    
+    .chips-container-small-width .single-chip {
+      font-size: 0.6rem;
+      padding: 0.15rem 0.3rem;
+    }
+    
+    .mini-label-white {
+      font-size: 0.6rem;
+    }
+    
+    .links-icons-container {
+      gap: 0.8rem;
+    }
+    
+    .link-icon {
+      width: 36px;
+      height: 36px;
+    }
+    
+    .social-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+</style>
