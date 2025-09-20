@@ -7,7 +7,7 @@ import Sidebar from "../components/Sidebar.astro";
 <!DOCTYPE html>
 <html
 >
-  <Header title="木本健太郎" />
+  <Header title="KENTARO" />
   <body>
     <div class="content">
       <Sidebar selectedItem="home" />
@@ -34,6 +34,23 @@ import Sidebar from "../components/Sidebar.astro";
                     <div class="single-chip small-chip">Shopify</div>
                     <div class="single-chip small-chip">Node.js</div>
                     <div class="single-chip small-chip">AWS</div>
+                  </div>
+                </div>
+                <div class="links-container">
+                  <div class="mini-label-white gray-color">Links</div>
+                  <div class="links-icons-container">
+                    <a href="https://www.youtube.com/channel/UCuEiSkWRxlzYiagZKhTpb2A" target="_blank" class="link-icon">
+                      <img src="/assets/youtube-icon.svg" alt="YouTube" class="social-icon" />
+                    </a>
+                    <a href="https://www.instagram.com/kentaro_ntc/" target="_blank" class="link-icon">
+                      <img src="/assets/instagram-icon.svg" alt="Instagram" class="social-icon" />
+                    </a>
+                    <a href="https://note.com/taroken2411" target="_blank" class="link-icon">
+                      <img src="/assets/note-icon.svg" alt="Note" class="social-icon" />
+                    </a>
+                    <a href="https://github.com/taro-ken" target="_blank" class="link-icon">
+                      <img src="/assets/github-icon.svg" alt="GitHub" class="social-icon" />
+                    </a>
                   </div>
                 </div>
               </div>
@@ -78,6 +95,41 @@ import Sidebar from "../components/Sidebar.astro";
     font-size: 0.7rem;
   }
   
+  .links-container {
+    margin-top: 1rem;
+  }
+  
+  .links-icons-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .link-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .link-icon:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+    transform: translateY(-2px);
+  }
+  
+  .social-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
   @media (max-width: 768px) {
     .profile-image-container {
       width: 80px;
@@ -101,6 +153,20 @@ import Sidebar from "../components/Sidebar.astro";
     
     .mini-label-white {
       font-size: 0.6rem;
+    }
+    
+    .links-icons-container {
+      gap: 0.8rem;
+    }
+    
+    .link-icon {
+      width: 36px;
+      height: 36px;
+    }
+    
+    .social-icon {
+      width: 18px;
+      height: 18px;
     }
   }
 </style>
