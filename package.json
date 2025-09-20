@@ -1,18 +1,16 @@
 {
-  "name": "hub-itsteddydev",
+  "name": "kimoto-portfolio",
   "type": "module",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
+    "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "host": "astro dev --host"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^6.0.1",
-    "astro": "^5.5.4",
-    "tailwindcss": "^3.4.1",
-    "tailwindcss-animate": "^1.0.7"
+    "astro": "^5.5.4"
   }
 }

@@ -1,63 +1,51 @@
 ---
 interface Props {
 	title: string;
-	description: string;
 }
 
-import "../styles/global.css"; // Importa el CSS desde src/styles
-
-import { getLangFromUrl } from "../i18n/utils";
-
-const lang = getLangFromUrl(Astro.url);
-const { title, description } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content={description} />
+		<meta name="description" content="Astro description" />
 		<meta name="viewport" content="width=device-width" />
-		<link
-			rel="icon"
-			type="image/jpeg"
-			href="/images/webicon.jpeg"
-		/>
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<!-- <link rel="stylesheet" type="css" href="../styles/global.css " /> -->
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta
-			property="og:image"
-			content="/images/webicon.jpeg"
-		/>
-		<meta property="og:url" content="https://hub.justcoddev.com/" />
-		<meta name="twitter:card" content={description} />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta
-			name="twitter:image"
-			content="/images/webicon.jpeg"
-		/>
-
 		<title>{title}</title>
 	</head>
-	<body
-		class="bg-hub-background md:flex md:justify-center"
-	>
-		<!-- <Header /> -->
+	<body>
 		<slot />
 	</body>
 </html>
-
-<style>
-	body {
-		/* background-color: #101419; */
-		/* background-color: #ffffff; */
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	html {
+		font-family: system-ui, sans-serif;
+		background: #13151a;
+		background-size: 224px;
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
 	}
 </style>
-
-<script>
-	// ダークモード切替を無効化し、常にライトモードに固定
-	document.documentElement.classList.remove("dark");
-</script>
