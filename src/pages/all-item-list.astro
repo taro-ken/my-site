@@ -286,7 +286,7 @@ const noteHTML = await fetchNoteHTML();
           const links = noteContent.querySelectorAll('a');
           links.forEach(link => {
             link.style.color = '#000000';
-            link.style.textDecoration = 'none';
+            link.style.textDecoration = 'underline';
           });
           
           // 商品名のフォントサイズを強制的に設定
@@ -543,7 +543,7 @@ const noteHTML = await fetchNoteHTML();
 
   .note-content a {
     color: #000000;
-    text-decoration: none;
+    text-decoration: underline;
   }
 
   .note-content a:hover {
@@ -586,7 +586,7 @@ const noteHTML = await fetchNoteHTML();
   .note-content h3 a,
   .note-content p a {
     color: #000000 !important;
-    text-decoration: none !important;
+    text-decoration: underline !important;
   }
 
   .note-content a:hover,
