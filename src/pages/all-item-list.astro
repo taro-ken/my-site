@@ -17,9 +17,12 @@ async function fetchNoteHTML() {
         'Accept-Language': 'ja,en-US;q=0.7,en;q=0.3',
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1'
+        'Upgrade-Insecure-Requests': '1',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
       },
-      timeout: 10000 // 10秒のタイムアウト
+      cache: 'no-store' // キャッシュを無効化
     });
     
     if (!response.ok) {
