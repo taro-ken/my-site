@@ -11,6 +11,7 @@
     "host": "astro dev --host"
   },
   "dependencies": {
+    "@astrojs/vercel": "^8.2.8",
     "astro": "^5.5.4"
   }
 }
