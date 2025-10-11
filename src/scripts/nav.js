@@ -12,12 +12,14 @@ export function setupNav() {
 
     if (isOpen) {
       // 閉じる時：アニメーションを開始してからクラスを削除
+      document.body.classList.remove('nav-open');
       navMenu.classList.remove('is-open');
       setTimeout(() => {
         navMenu.classList.remove('is-visible');
       }, 300); // CSSのアニメーション時間と同じ
     } else {
       // 開く時：is-visibleを先に追加してからアニメーション
+      document.body.classList.add('nav-open');
       navMenu.classList.add('is-visible');
       setTimeout(() => {
         navMenu.classList.add('is-open');
