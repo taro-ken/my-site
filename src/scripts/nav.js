@@ -72,6 +72,10 @@ export function setupNav() {
         navMenu.style.border = 'none';
         navMenu.style.outline = 'none';
         navMenu.style.boxShadow = 'none';
+        navMenu.style.display = 'flex';
+        navMenu.style.flexDirection = 'column';
+        navMenu.style.alignItems = 'flex-end';
+        navMenu.style.justifyContent = 'flex-start';
         console.log('Applied Instagram WebView styles');
       }
 

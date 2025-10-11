@@ -258,7 +258,7 @@ ul {
     opacity: 1 !important;
     visibility: visible !important;
     flex-direction: column !important;
-    align-items: center !important;
+    align-items: flex-end !important;
     justify-content: flex-start !important;
     padding: 60px 40px 40px !important;
     box-sizing: border-box !important;
@@ -388,7 +388,7 @@ ul {
     visibility: visible !important;
     background: white !important;
     flex-direction: column !important;
-    align-items: center !important;
+    align-items: flex-end !important;
     justify-content: flex-start !important;
     padding: 60px 40px 40px !important;
     transform: none !important;
@@ -413,10 +413,13 @@ ul {
     transform: translateY(50vh) !important;
     -webkit-transform: translateY(50vh) !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 60px 40px 40px !important;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: flex-start !important;
     background: white !important;
   }
 }
