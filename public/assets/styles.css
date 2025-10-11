@@ -58,6 +58,10 @@ body {
   font-family: Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
+  /* Instagram Webビューアー対応 */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  position: relative;
 }
 
 img {
@@ -218,6 +222,9 @@ ul {
     justify-content: center;
     padding: 60px 40px 40px;
     box-sizing: border-box;
+    /* Instagram Webビューアー対応 */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open {
@@ -247,6 +254,9 @@ ul {
     justify-content: center;
     line-height: 1;
     font-weight: 300;
+    /* Instagram Webビューアー対応 */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .mobile-close-button:hover {
@@ -647,6 +657,10 @@ p {
     display: block;
     width: 100%;
     text-align: right;
+    /* Instagram Webビューアー対応 */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    cursor: pointer;
   }
 
   .nav-link-container:hover {

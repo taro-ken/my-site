@@ -33,6 +33,7 @@ export function setupNav() {
 
   // ハンバーガーメニューボタンのクリック
   navButton.addEventListener('click', (e) => {
+    e.preventDefault();
     e.stopPropagation();
     toggleNav();
   });
@@ -40,6 +41,7 @@ export function setupNav() {
   // クローズボタンのクリック
   if (closeButton) {
     closeButton.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       closeNav();
     });
