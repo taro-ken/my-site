@@ -266,6 +266,21 @@ ul {
     -webkit-transform: none !important;
   }
 
+  /* モバイル表示でのナビゲーションリンクの背景色を強制的に削除 */
+  aside.w-nav[data-collapse='medium'] nav.w-nav-menu.is-visible.is-open .nav-link-container,
+  .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open .nav-link-container,
+  aside.w-nav[data-collapse='medium'] nav.w-nav-menu.is-visible.is-open .nav-link-container:hover,
+  .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open .nav-link-container:hover,
+  aside.w-nav[data-collapse='medium'] nav.w-nav-menu.is-visible.is-open .nav-link-container:active,
+  .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open .nav-link-container:active,
+  aside.w-nav[data-collapse='medium'] nav.w-nav-menu.is-visible.is-open .nav-link-container.w--current,
+  .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open .nav-link-container.w--current {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
   .w-nav[data-collapse='medium'] .w-nav-button {
     display: block;
   }
@@ -421,6 +436,17 @@ ul {
     align-items: flex-end !important;
     justify-content: flex-start !important;
     background: white !important;
+  }
+
+  /* Instagram Webビューアー専用：ナビゲーションリンクの背景色を強制的に削除 */
+  .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open .nav-link-container,
+  .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open .nav-link-container:hover,
+  .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open .nav-link-container:active,
+  .w-nav[data-collapse='medium'] .w-nav-menu.is-visible.is-open .nav-link-container.w--current {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
   }
 }
 }

@@ -76,6 +76,16 @@ export function setupNav() {
         navMenu.style.flexDirection = 'column';
         navMenu.style.alignItems = 'flex-end';
         navMenu.style.justifyContent = 'flex-start';
+
+        // ナビゲーションリンクの背景色を強制的に削除
+        const navLinks = navMenu.querySelectorAll('.nav-link-container');
+        navLinks.forEach(link => {
+          link.style.backgroundColor = 'transparent';
+          link.style.border = 'none';
+          link.style.boxShadow = 'none';
+          link.style.outline = 'none';
+        });
+
         console.log('Applied Instagram WebView styles');
       }
 
