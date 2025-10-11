@@ -1,6 +1,7 @@
 export function setupNav() {
   const navButton = document.querySelector('.navbar-icon-button');
   const navMenu = document.querySelector('.w-nav-menu');
+  const closeButton = document.querySelector('.mobile-close-button');
 
   if (!navButton || !navMenu) return;
 
@@ -36,19 +37,46 @@ export function setupNav() {
     toggleNav();
   });
 
+  // クローズボタンのクリック
+  if (closeButton) {
+    closeButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeNav();
+    });
+  }
+
+  // ナビゲーションリンクのクリック時も閉じる
+  const navLinks = navMenu.querySelectorAll('.nav-link-container');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeNav();
+    });
+  });
+
   // サイドバーメニュー自体のクリック（閉じないようにする）
   navMenu.addEventListener('click', (e) => {
     e.stopPropagation();
   });
 
-  // 外側をクリックした時に閉じる
-  document.addEventListener('click', closeNav);
+  // ESCキーで閉じる
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      closeNav();
+    }
+  };
+  document.addEventListener('keydown', handleKeyDown);
 
   // クリーンアップ関数
   const cleanup = () => {
     navButton.removeEventListener('click', toggleNav);
+    if (closeButton) {
+      closeButton.removeEventListener('click', closeNav);
+    }
+    navLinks.forEach(link => {
+      link.removeEventListener('click', closeNav);
+    });
     navMenu.removeEventListener('click', closeNav);
-    document.removeEventListener('click', closeNav);
+    document.removeEventListener('keydown', handleKeyDown);
   };
 
   return cleanup;

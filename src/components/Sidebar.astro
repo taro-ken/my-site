@@ -28,6 +28,12 @@ const { selectedItem } = Astro.props;
     </a>
 
     <nav role="navigation" class="w-nav-menu">
+      <!-- モバイル用クローズボタン -->
+      <button class="mobile-close-button" aria-label="メニューを閉じる">
+        ×
+      </button>
+      
+      <!-- ナビゲーションリンク -->
       <a
         href="/"
         class={`nav-link-container w-inline-block ${
