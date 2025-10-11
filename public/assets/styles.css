@@ -665,14 +665,14 @@ p {
 
 .nav-link-container:hover {
   color: #333;
-  background-color: #f5f5f5;
-  border-color: #e0e0e0;
+  background-color: transparent !important;
+  border-color: transparent !important;
 }
 
 .nav-link-container.w--current {
   color: #333;
-  background-color: #f0f0f0;
-  border-color: #e0e0e0;
+  background-color: transparent !important;
+  border-color: transparent !important;
 }
 
 .projects-container {
@@ -826,13 +826,13 @@ p {
 
   .nav-link-container:hover {
     color: #333;
-    background-color: transparent;
+    background-color: transparent !important;
     opacity: 0.7;
   }
 
   .nav-link-container:active {
     color: #333;
-    background-color: transparent;
+    background-color: transparent !important;
     opacity: 0.5;
   }
 
