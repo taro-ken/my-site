@@ -1,13 +1,19 @@
 ---
 import Header from "../components/Header.astro";
 import Sidebar from "../components/Sidebar.astro";
+
+export const prerender = true;
 ---
 
 
 <!DOCTYPE html>
 <html
 >
-  <Header title="KENTARO" />
+  <Header 
+    title="KENTARO" 
+    description="ミニマルに生きるEngineer"
+    canonicalUrl="https://kentaro.vercel.app/"
+  />
   <body>
     <div class="content">
       <Sidebar selectedItem="home" />

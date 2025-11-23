@@ -2,7 +2,7 @@
 import Header from '../components/Header.astro';
 import Sidebar from "../components/Sidebar.astro";
 
-export const prerender = false;
+export const prerender = true;
 
 // Noteページから動的にデータを取得
 const NOTE_URL = "https://note.com/taroken2411/n/n48d515eac42c";
@@ -149,7 +149,11 @@ const noteHTML = await fetchNoteHTML();
 
 <!DOCTYPE html>
 <html>
-  <Header title="All Item List | KENTARO" />
+  <Header 
+    title="All Item List | KENTARO" 
+    description="全アイテム一覧"
+    canonicalUrl="https://kentaro.vercel.app/all-item-list"
+  />
   <body>
     <div class="content">
         <Sidebar selectedItem="all-item-list" />

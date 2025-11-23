@@ -2,6 +2,8 @@
 import Header from '../components/Header.astro';
 import Project from '../components/Project.astro';
 import Sidebar from '../components/Sidebar.astro';
+
+export const prerender = true;
 const projects = [
   {
     title: "Focusy<br>-タスク完了でロック解放-",
@@ -72,7 +74,11 @@ const projects = [
 <!DOCTYPE html>
 <html
 >
-  <Header title="Personal Projects | KENTARO" />
+  <Header 
+    title="Personal Projects | KENTARO" 
+    description="個人プロジェクト一覧"
+    canonicalUrl="https://kentaro.vercel.app/personal-projects"
+  />
   <body>
     <div class="content">
         <Sidebar selectedItem="personal-projects" />
