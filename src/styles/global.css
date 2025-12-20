@@ -24,11 +24,11 @@ body {
 }
 
 .btn-primary {
-	@apply w-fit flex gap-1.5 bg-foreground text-background px-2.5 py-1.5 text-xs rounded-lg items-center mt-1 hover:opacity-75 transition-opacity;
+	@apply w-fit flex gap-1.5 bg-transparent text-foreground pl-0 pr-2.5 py-1.5 text-xs rounded-lg items-center mt-1 hover:opacity-75 transition-opacity self-start underline underline-offset-4;
 }
 
 .btn-secondary {
-	@apply w-fit flex gap-1.5 bg-foreground/10 text-foreground px-2.5 py-1.5 text-xs rounded-lg items-center mt-1 hover:opacity-75 transition-opacity;
+	@apply w-fit flex gap-1.5 bg-transparent text-foreground pl-0 pr-2.5 py-1.5 text-xs rounded-lg items-center mt-1 hover:opacity-75 transition-opacity self-start underline underline-offset-4;
 }
 
 .section-title {

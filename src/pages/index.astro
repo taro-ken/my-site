@@ -61,7 +61,7 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
           <section class="app-container py-0">
             <h2 class="section-title">About</h2>
             <p class="text-xs max-w-2xl font-light leading-normal">
-              東京在住のミニマルに生きるエンジニア。複数の大手企業案件で実務経験を重ね、個人ではiOSアプリを開発。YouTube・Podcastでも発信。
+              東京在住のプログラマー/クリエイター。複数の大手企業案件で実務経験を重ね、メインではiOSアプリを開発、その他Web開発にも携わる。YouTube・Noteではミニマリズムを用いたライフスタイルについて発信している。
             </p>
           </section>
 
@@ -90,7 +90,6 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
             </p>
             <a class="btn-secondary" href="/all-item-list">
               View Items
-              <Icon size={14} name="mdi:arrow-right" />
             </a>
           </section>
 
@@ -102,7 +101,6 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
             </p>
             <a class="btn-secondary" href="/personal-projects">
               View Projects
-              <Icon size={14} name="mdi:arrow-right" />
             </a>
           </section>
 
@@ -118,11 +116,9 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
                 href="/contact"
               >
                 Contact
-                <Icon height={14} name="mdi:email" />
               </a>
               <a class="btn-secondary" href="/services" target="_self">
                 Services
-                <Icon height={14} name="mdi:arrow-right" />
               </a>
             </div>
           </section>
@@ -167,6 +163,17 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
     font-size: 0.75rem !important;
     line-height: 1.4 !important;
     color: #0c0c0c !important;
+  }
+  
+  section.app-container .btn-primary,
+  section.app-container .btn-secondary {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    align-self: flex-start !important;
+  }
+  
+  section.app-container > div.flex {
+    justify-content: flex-start !important;
   }
   
   .profile-image-container {
