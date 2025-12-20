@@ -757,6 +757,7 @@ p {
   text-transform: uppercase;
   align-items: center;
   padding-bottom: 0;
+  margin-bottom: -4rem;
   font-weight: 500;
   display: flex;
 }
