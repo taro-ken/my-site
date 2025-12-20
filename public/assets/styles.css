@@ -806,6 +806,13 @@ p {
 @media screen and (max-width: 991px) {
   .content {
     flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .main {
+    height: auto;
+    overflow: visible;
   }
 
   .sidebar {

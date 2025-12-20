@@ -178,10 +178,10 @@ const noteHTML = await fetchNoteHTML();
     
     <script>
       // 余白を削除する処理
-      document.addEventListener('DOMContentLoaded', function() {
+      function applyStyles() {
         try {
           const noteContent = document.querySelector('.note-content');
-          if (noteContent) {
+          if (noteContent && noteContent.children.length > 0) {
           // すべての要素の上部余白を削除
           const allElementsForMargin = noteContent.querySelectorAll('*');
           allElementsForMargin.forEach(el => {
@@ -375,7 +375,38 @@ const noteHTML = await fetchNoteHTML();
         } catch (error) {
           console.error('JavaScript error:', error);
         }
+      }
+
+      // 初回読み込み時
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyStyles);
+      } else {
+        applyStyles();
+      }
+
+      // Astroのページ遷移時
+      document.addEventListener('astro:page-load', () => {
+        // HTMLが完全に読み込まれるまで待つ
+        setTimeout(applyStyles, 100);
+        setTimeout(applyStyles, 500);
       });
+
+      // MutationObserverで.note-contentの変更を監視
+      const observer = new MutationObserver((mutations) => {
+        const noteContent = document.querySelector('.note-content');
+        if (noteContent && noteContent.children.length > 0) {
+          applyStyles();
+          observer.disconnect();
+        }
+      });
+
+      const noteContent = document.querySelector('.note-content');
+      if (noteContent) {
+        observer.observe(noteContent, {
+          childList: true,
+          subtree: true
+        });
+      }
     </script>
   </body>
 </html>
