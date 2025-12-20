@@ -40,7 +40,7 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
       <nav class="main">
         <div class="container">
           <!-- Hero Section -->
-          <main class="app-container flex flex-col gap-2 pt-12 md:pt-16 pb-1 relative">
+          <main class="app-container flex flex-col gap-2 pt-12 md:pt-16 pb-0 relative">
             <div class="flex flex-row items-center gap-4">
               <div class="flex-shrink-0">
                 <img 
@@ -85,7 +85,7 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
           <!-- All Item List Section -->
           <section class="app-container py-0">
             <h2 class="section-title">All Item List</h2>
-            <p class="text-xs max-w-xl pb-1">
+            <p class="text-xs max-w-xl">
               全ての持ち物をリスト化しています。
             </p>
             <a class="btn-secondary" href="/all-item-list">
@@ -97,7 +97,7 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
           <!-- Projects & Skills Section -->
           <section class="app-container py-0">
             <h2 class="section-title">Projects & Skills</h2>
-            <p class="text-xs max-w-xl pb-1">
+            <p class="text-xs max-w-xl">
               Work as an engineer, projects, and skills.
             </p>
             <a class="btn-secondary" href="/personal-projects">
@@ -109,7 +109,7 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
           <!-- Get in touch Section -->
           <section class="app-container py-0">
             <h2 class="section-title">Contact / Services</h2>
-            <p class="text-xs max-w-xl pb-1">
+            <p class="text-xs max-w-xl">
               お問い合わせやご相談は、以下のリンクからお気軽にご連絡ください。
             </p>
             <div class="flex flex-wrap space-x-4">
@@ -151,11 +151,16 @@ const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
   }
   
   section.app-container {
-    margin-top: -3rem !important;
+    margin-top: -2rem !important;
+    margin-bottom: 0 !important;
   }
   
   section.app-container:first-of-type {
-    margin-top: 0 !important;
+    margin-top: -3rem !important;
+  }
+  
+  section.app-container > *:last-child {
+    margin-bottom: 0 !important;
   }
   
   section.app-container p {

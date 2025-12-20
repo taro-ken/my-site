@@ -49,7 +49,7 @@ img {
 html {
   height: 100%;
   /* Instagram Webビューアー対応 */
-  overflow: hidden;
+  overflow: auto;
   position: relative;
 }
 
@@ -502,7 +502,7 @@ p {
 
 .content {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
 }
 
@@ -560,7 +560,7 @@ p {
 
 .main {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background-image: none;
   background-position: 0 0, 0 0, 0 0;
   background-size: auto, auto 1130px, auto;
@@ -568,7 +568,7 @@ p {
   align-items: center;
   padding: 46px 48px 82px;
   display: flex;
-  overflow: auto;
+  overflow: visible;
 }
 
 .container {
@@ -806,13 +806,14 @@ p {
 @media screen and (max-width: 991px) {
   .content {
     flex-direction: column;
-    height: auto;
+    height: auto !important;
     min-height: 100vh;
   }
   
   .main {
-    height: auto;
-    overflow: visible;
+    height: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden;
   }
 
   .sidebar {
@@ -894,6 +895,10 @@ p {
     line-height: 48px;
   }
 
+  .content {
+    height: auto !important;
+  }
+
   .sidebar {
     padding-left: 24px;
     padding-right: 18px;
@@ -902,6 +907,8 @@ p {
   .main {
     padding-left: 28px;
     padding-right: 28px;
+    height: auto !important;
+    overflow-y: visible !important;
   }
 
   .container {
