@@ -80,4 +80,19 @@ const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.
   
   <!-- Google Search Console Verification -->
   <meta name="google-site-verification" content="VzFebweoHfSUMDIuEQc2sgzHkvI7jwvZZIcTbgs2rVM" />
+  
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "KENTARO",
+    "url": siteUrl,
+    "description": description,
+    "jobTitle": "Engineer / Creator",
+    "sameAs": [
+      "https://www.youtube.com/channel/UCuEiSkWRxlzYiagZKhTpb2A",
+      "https://www.instagram.com/kentaro_ntc/",
+      "https://note.com/taroken2411"
+    ]
+  })} />
 </head>
