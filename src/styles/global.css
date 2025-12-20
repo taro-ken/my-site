@@ -1,0 +1,37 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--font-sans: system-ui, sans-serif;
+	--font-mono: 'IBM Plex Mono', monospace;
+
+	--color-foreground: #0c0c0c;
+	--color-background: #ffffff;
+	--color-primary: #0784b5;
+}
+
+html {
+	scroll-padding-top: 6.5rem;
+	scroll-behavior: smooth;
+}
+
+body {
+	@apply text-foreground bg-background font-light;
+}
+
+.app-container {
+	@apply container mx-auto px-6 sm:px-12 2xl:px-16;
+}
+
+.btn-primary {
+	@apply w-fit flex gap-1.5 bg-foreground text-background px-2.5 py-1.5 text-xs rounded-lg items-center mt-4 hover:opacity-75 transition-opacity;
+}
+
+.btn-secondary {
+	@apply w-fit flex gap-1.5 bg-foreground/10 text-foreground px-2.5 py-1.5 text-xs rounded-lg items-center mt-4 hover:opacity-75 transition-opacity;
+}
+
+.section-title {
+	@apply text-base font-semibold pb-1;
+}
+

@@ -1,9 +1,13 @@
 ---
 import Header from '../components/Header.astro';
 import Project from '../components/Project.astro';
-import Sidebar from '../components/Sidebar.astro';
+import '../styles/global.css';
 
 export const prerender = true;
+
+const languages = ['Swift', 'Flutter', 'Python'];
+const tools = ['Firebase', 'AWS', 'Node.js', 'Shopify'];
+
 const projects = [
   {
     title: "Focusy<br>-タスク完了でロック解放-",
@@ -81,7 +85,6 @@ const projects = [
   />
   <body>
     <div class="content">
-        <Sidebar selectedItem="personal-projects" />
       <nav class="main">
         <div class="container">
           <div class="back-nav-container">
@@ -92,6 +95,27 @@ const projects = [
           </div>
           <div class="content-container">
             <h1 style="font-size: 1.8rem; margin-bottom: 0.1rem;">Personal Projects</h1>
+            
+            <!-- Languages Section -->
+            <section class="skills-section" style="margin-top: 1rem;">
+              <h2 class="section-title">Languages</h2>
+              <div class="flex flex-wrap gap-2 mt-0">
+                {languages.map((language) => (
+                  <span class="skill-chip">{language}</span>
+                ))}
+              </div>
+            </section>
+            
+            <!-- Tools Section -->
+            <section class="skills-section" style="margin-top: -1rem;">
+              <h2 class="section-title">Tools</h2>
+              <div class="flex flex-wrap gap-2 mt-0">
+                {tools.map((tool) => (
+                  <span class="skill-chip">{tool}</span>
+                ))}
+              </div>
+            </section>
+            
             <section class="items-container">
                 <div class="resouce-items">
                     {projects.map(project => (
@@ -115,3 +139,33 @@ const projects = [
     <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
   </body>
 </html>
+
+<style>
+  .skill-chip {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: #0c0c0c;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .skills-section {
+    margin-bottom: 1rem;
+    text-align: left;
+    width: 100%;
+  }
+  
+  .skills-section .section-title {
+    text-align: left !important;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    margin-left: 0 !important;
+  }
+  
+  .skills-section .flex {
+    justify-content: flex-start !important;
+    margin-left: 0 !important;
+  }
+</style>

@@ -2,6 +2,9 @@
   "name": "kimoto-portfolio",
   "type": "module",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -13,5 +16,12 @@
   "dependencies": {
     "@astrojs/vercel": "^8.2.8",
     "astro": "^5.5.4"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro-icon": "^1.1.5",
+    "tailwindcss": "^4.1.18"
   }
 }

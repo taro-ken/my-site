@@ -1,14 +1,35 @@
 ---
 import Header from "../components/Header.astro";
-import Sidebar from "../components/Sidebar.astro";
+import { Icon } from 'astro-icon/components';
+import '../styles/global.css';
 
 export const prerender = true;
+
+const socialLinks = [
+  {
+    name: 'YouTube',
+    url: 'https://www.youtube.com/channel/UCuEiSkWRxlzYiagZKhTpb2A',
+  },
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/kentaro_ntc/',
+  },
+  {
+    name: 'Note',
+    url: 'https://note.com/taroken2411',
+  },
+  {
+    name: 'GitHub',
+    url: 'https://github.com/taro-ken',
+  },
+];
+
+const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
 ---
 
 
 <!DOCTYPE html>
-<html
->
+<html lang="ja">
   <Header 
     title="KENTARO" 
     description="ミニマルに生きるEngineer"
@@ -16,52 +37,95 @@ export const prerender = true;
   />
   <body>
     <div class="content">
-      <Sidebar selectedItem="home" />
       <nav class="main">
         <div class="container">
-          <div class="projects-section">
-            <!-- iOS Development -->
-            <div class="projects-container">
-              <div class="single-projects-category">
-                <div class="projects-category-image-container profile-image-container">
-                  <img src="./assets/profile-icon.jpg" loading="lazy" alt="" class="projects-category-image profile-image" />
-                </div>
+          <!-- Hero Section -->
+          <main class="app-container flex flex-col gap-2 pt-12 md:pt-16 pb-1 relative">
+            <div class="flex flex-row items-center gap-4">
+              <div class="flex-shrink-0">
+                <img 
+                  src="/assets/profile-icon.jpg" 
+                  loading="lazy" 
+                  alt="KENTARO" 
+                  class="w-16 h-16 md:w-20 md:h-20 rounded-lg object-cover border-2 border-foreground/10"
+                />
               </div>
-              <div class="single-projects-content">
-                <h4>KENTARO</h4>
-                <p class="lead">
-                  東京在住のミニマルに生きるエンジニア。複数の大手企業案件で実務経験を重ね、個人ではiOSアプリを開発。YouTube・Podcastでも発信。
-                </p>
-                <div class="tech-tools-container">
-                  <div class="mini-label-white gray-color">Skills</div>
-                  <div class="chips-container chips-container-small-width">
-                    <div class="single-chip small-chip">Swift</div>
-                    <div class="single-chip small-chip">Flutter</div>
-                    <div class="single-chip small-chip">Shopify</div>
-                    <div class="single-chip small-chip">Node.js</div>
-                    <div class="single-chip small-chip">AWS</div>
-                  </div>
-                </div>
-                <div class="links-container">
-                  <div class="mini-label-white gray-color">Links</div>
-                  <div class="links-icons-container">
-                    <a href="https://www.youtube.com/channel/UCuEiSkWRxlzYiagZKhTpb2A" target="_blank" class="link-icon">
-                      <img src="/assets/youtube-icon.svg" alt="YouTube" class="social-icon" />
-                    </a>
-                    <a href="https://www.instagram.com/kentaro_ntc/" target="_blank" class="link-icon">
-                      <img src="/assets/instagram-icon.svg" alt="Instagram" class="social-icon" />
-                    </a>
-                    <a href="https://note.com/taroken2411" target="_blank" class="link-icon">
-                      <img src="/assets/note-icon.svg" alt="Note" class="social-icon" />
-                    </a>
-                    <a href="https://github.com/taro-ken" target="_blank" class="link-icon">
-                      <img src="/assets/github-icon.svg" alt="GitHub" class="social-icon" />
-                    </a>
-                  </div>
-                </div>
+              <div>
+                <h1 class="text-xs font-bold leading-none">KENTARO.</h1>
+                <p class="text-sm font-light leading-normal">Engineer / Creator</p>
               </div>
             </div>
-          </div>
+          </main>
+
+          <!-- About Section -->
+          <section class="app-container py-0">
+            <h2 class="section-title">About</h2>
+            <p class="text-xs max-w-2xl font-light leading-normal">
+              東京在住のミニマルに生きるエンジニア。複数の大手企業案件で実務経験を重ね、個人ではiOSアプリを開発。YouTube・Podcastでも発信。
+            </p>
+          </section>
+
+          <!-- Social Section -->
+          <section class="app-container py-0">
+            <h2 class="section-title">Social</h2>
+            <div class="flex flex-wrap gap-8 mt-0">
+              {socialLinks.map((link) => (
+                <a
+                  class="text-xs text-primary no-underline hover:no-underline"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.name}
+                </a>
+              ))}
+            </div>
+          </section>
+
+          <!-- All Item List Section -->
+          <section class="app-container py-0">
+            <h2 class="section-title">All Item List</h2>
+            <p class="text-xs max-w-xl pb-1">
+              全ての持ち物をリスト化しています。
+            </p>
+            <a class="btn-secondary" href="/all-item-list">
+              View Items
+              <Icon size={14} name="mdi:arrow-right" />
+            </a>
+          </section>
+
+          <!-- Projects & Skills Section -->
+          <section class="app-container py-0">
+            <h2 class="section-title">Projects & Skills</h2>
+            <p class="text-xs max-w-xl pb-1">
+              Work as an engineer, projects, and skills.
+            </p>
+            <a class="btn-secondary" href="/personal-projects">
+              View Projects
+              <Icon size={14} name="mdi:arrow-right" />
+            </a>
+          </section>
+
+          <!-- Get in touch Section -->
+          <section class="app-container py-0">
+            <h2 class="section-title">Contact / Services</h2>
+            <p class="text-xs max-w-xl pb-1">
+              お問い合わせやご相談は、以下のリンクからお気軽にご連絡ください。
+            </p>
+            <div class="flex flex-wrap space-x-4">
+              <a
+                class="btn-primary"
+                href="/contact"
+              >
+                Contact
+                <Icon height={14} name="mdi:email" />
+              </a>
+              <a class="btn-secondary" href="/services" target="_self">
+                Services
+                <Icon height={14} name="mdi:arrow-right" />
+              </a>
+            </div>
+          </section>
         </div>
       </nav>
     </div>
@@ -71,6 +135,35 @@ export const prerender = true;
 </html>
 
 <style>
+  main.app-container h1 {
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    color: #0c0c0c !important;
+  }
+  
+  main.app-container p {
+    font-size: 0.875rem !important;
+    line-height: 1.2 !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0 !important;
+  }
+  
+  section.app-container {
+    margin-top: -1rem !important;
+  }
+  
+  section.app-container:first-of-type {
+    margin-top: 0 !important;
+  }
+  
+  section.app-container p {
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
+    color: #0c0c0c !important;
+  }
+  
   .profile-image-container {
     width: 120px;
     height: 120px;
