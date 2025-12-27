@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 export const prerender = true;
 
 // Noteページから動的にデータを取得
-const NOTE_URL = "https://note.com/taroken2411/n/n48d515eac42c";
+const NOTE_URL = "https://note.com/preview/n7d0a763b53eb?prev_access_key=4651ed87e196b27205920d7a40f9b9cc";
 
 // NoteページのHTMLを直接取得
 async function fetchNoteHTML() {
@@ -182,6 +182,23 @@ const noteHTML = await fetchNoteHTML();
         try {
           const noteContent = document.querySelector('.note-content');
           if (noteContent && noteContent.children.length > 0) {
+          // &nbsp; を通常スペースに置換して折り返し可能にする
+          const walker = document.createTreeWalker(noteContent, NodeFilter.SHOW_TEXT, null);
+          let node;
+          while ((node = walker.nextNode())) {
+            if (node.nodeValue && node.nodeValue.includes('\u00a0')) {
+              node.nodeValue = node.nodeValue.replace(/\u00a0/g, ' ');
+            }
+          }
+
+          // 段落内リンクを確実に改行
+          const linksInParagraphs = noteContent.querySelectorAll('p a');
+          linksInParagraphs.forEach((a) => {
+            a.style.display = 'block';
+            a.style.margin = '0 0 0.25rem 0';
+            a.style.whiteSpace = 'pre-wrap';
+          });
+
           // すべての要素の上部余白を削除
           const allElementsForMargin = noteContent.querySelectorAll('*');
           allElementsForMargin.forEach(el => {
@@ -527,6 +544,31 @@ const noteHTML = await fetchNoteHTML();
     color: #333;
     margin: 1rem 0;
     font-size: 1rem;
+    white-space: pre-wrap;
+  }
+
+  /* 説明行内のリンクも改行させる */
+  .note-content p a {
+    display: block !important;
+    margin: 0 0 0.25rem 0;
+  }
+
+  /* 改行を保持して説明文を表示 */
+  .note-content .item-description {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+  }
+
+  /* 説明文内のリンクを強制改行 */
+  .note-content .item-description a {
+    display: block;
+    margin: 0 0 0.25rem 0;
+  }
+
+  /* figcaptionが残っている場合も改行を保持 */
+  .note-content figure figcaption {
+    white-space: pre-wrap;
   }
 
   .note-content ul, .note-content ol {
@@ -540,8 +582,9 @@ const noteHTML = await fetchNoteHTML();
   }
 
   .note-content img {
-    max-width: 100%;
+    width: 100%;
     height: auto;
+    max-width: 100%;
     border-radius: 8px;
     margin: 0.5rem 0;
     display: block;
@@ -559,12 +602,13 @@ const noteHTML = await fetchNoteHTML();
 
   .note-content figure img {
     margin: 0.5rem 0;
+    width: 100%;
     max-width: 100%;
-    width: auto;
     height: auto;
     display: block;
     margin-left: 0;
     padding-left: 0;
+    object-fit: contain;
   }
 
   /* 画像をタイトルと同じ左端に揃える */
@@ -595,17 +639,17 @@ const noteHTML = await fetchNoteHTML();
     margin: 0.5rem 0;
   }
 
-    .note-content h3 + figure + p {
-      margin: 0.5rem 0 1.5rem 0;
-      font-size: 0.9rem;
-      margin-left: 0 !important;
-      padding-left: 0 !important;
-      margin-right: 0 !important;
-      padding-right: 0 !important;
-      max-width: 300px !important;
-      width: 300px !important;
-      box-sizing: border-box !important;
-    }
+  .note-content h3 + figure + p {
+    margin: 0.5rem 0 1.5rem 0;
+    font-size: 0.9rem;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
 
   .note-content a {
     color: #000000;
