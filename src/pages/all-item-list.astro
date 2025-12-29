@@ -149,7 +149,7 @@ const noteHTML = await fetchNoteHTML();
 <!DOCTYPE html>
 <html>
   <Header 
-    title="All Item List | KENTARO" 
+    title="All Item List" 
     description="全アイテム一覧"
     canonicalUrl="https://kentaro.vercel.app/all-item-list"
   />
@@ -183,11 +183,51 @@ const noteHTML = await fetchNoteHTML();
           const noteContent = document.querySelector('.note-content');
           if (noteContent && noteContent.children.length > 0) {
           // &nbsp; を通常スペースに置換して折り返し可能にする
+          // テキストノード内の改行を<br>タグに変換する処理
           const walker = document.createTreeWalker(noteContent, NodeFilter.SHOW_TEXT, null);
+          const textNodes = [];
           let node;
           while ((node = walker.nextNode())) {
-            if (node.nodeValue && node.nodeValue.includes('\u00a0')) {
-              node.nodeValue = node.nodeValue.replace(/\u00a0/g, ' ');
+            if (node.nodeValue) {
+              textNodes.push(node);
+            }
+          }
+          
+          // テキストノードを処理（後ろから処理してインデックスがずれないようにする）
+          for (let i = textNodes.length - 1; i >= 0; i--) {
+            const textNode = textNodes[i];
+            const parent = textNode.parentElement;
+            
+            if (textNode.nodeValue) {
+              // &nbsp; を通常スペースに置換
+              let text = textNode.nodeValue;
+              if (text.includes('\u00a0')) {
+                text = text.replace(/\u00a0/g, ' ');
+              }
+              
+              // 改行文字（\n）を<br>タグに変換
+              if (text.includes('\n')) {
+                const parts = text.split('\n');
+                const fragment = document.createDocumentFragment();
+                
+                for (let j = 0; j < parts.length; j++) {
+                  if (parts[j]) {
+                    fragment.appendChild(document.createTextNode(parts[j]));
+                  }
+                  if (j < parts.length - 1) {
+                    fragment.appendChild(document.createElement('br'));
+                  }
+                }
+                
+                parent.replaceChild(fragment, textNode);
+              } else {
+                textNode.nodeValue = text;
+              }
+              
+              // 親要素にwhite-space: pre-wrapを設定して改行を保持
+              if (parent && (parent.tagName === 'P' || parent.tagName === 'LI' || parent.tagName === 'DIV' || parent.tagName === 'SPAN')) {
+                parent.style.whiteSpace = 'pre-wrap';
+              }
             }
           }
 
@@ -579,6 +619,7 @@ const noteHTML = await fetchNoteHTML();
   .note-content li {
     margin: 0.5rem 0;
     color: #333;
+    white-space: pre-wrap;
   }
 
   .note-content img {
@@ -873,7 +914,7 @@ const noteHTML = await fetchNoteHTML();
       box-sizing: border-box !important;
       overflow-wrap: break-word !important;
       word-wrap: break-word !important;
-      white-space: normal !important;
+      white-space: pre-wrap !important;
     }
 
     .note-source {
