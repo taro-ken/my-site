@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 export const prerender = true;
 
 // Noteページから動的にデータを取得
-const NOTE_URL = "https://note.com/preview/n7d0a763b53eb?prev_access_key=4651ed87e196b27205920d7a40f9b9cc";
+const NOTE_URL = "https://note.com/taroken2411/n/n48d515eac42c";
 
 // NoteページのHTMLを直接取得
 async function fetchNoteHTML() {
@@ -38,7 +38,14 @@ async function fetchNoteHTML() {
       let content = contentMatch[1];
       
       // 冒頭の説明文とカテゴリーリストを除去
+      // Profileセクションを除去
+      content = content.replace(/<p[^>]*>【Profile】[^<]*<\/p>/gi, '');
+      content = content.replace(/<p[^>]*>.*?KENTARO\.東京在住のプログラマー.*?<\/p>/gis, '');
+      content = content.replace(/<p[^>]*>.*?HOME[：:].*?kentaro\.life.*?<\/p>/gi, '');
+      content = content.replace(/<p[^>]*>.*?HOME.*?https:\/\/kentaro\.life.*?<\/p>/gi, '');
       // 最初の段落（説明文）を除去
+      content = content.replace(/<p[^>]*>.*?全ての持ち物をリスト化して管理.*?<\/p>/gi, '');
+      content = content.replace(/<p[^>]*>.*?全ての持ち物をリスト化し.*?熱量があるものしか持たない.*?<\/p>/gi, '');
       content = content.replace(/<p[^>]*>全ての持ち物をリスト化し[^<]*<\/p>/s, '');
       content = content.replace(/<p[^>]*>新しい物を購入する際は[^<]*<\/p>/s, '');
       
@@ -93,6 +100,14 @@ async function fetchNoteHTML() {
       let content = bodyMatch[1];
       
       // 同様の除去処理
+      // Profileセクションを除去
+      content = content.replace(/<p[^>]*>【Profile】[^<]*<\/p>/gi, '');
+      content = content.replace(/<p[^>]*>.*?KENTARO\.東京在住のプログラマー.*?<\/p>/gis, '');
+      content = content.replace(/<p[^>]*>.*?HOME[：:].*?kentaro\.life.*?<\/p>/gi, '');
+      content = content.replace(/<p[^>]*>.*?HOME.*?https:\/\/kentaro\.life.*?<\/p>/gi, '');
+      // 最初の段落（説明文）を除去
+      content = content.replace(/<p[^>]*>.*?全ての持ち物をリスト化して管理.*?<\/p>/gi, '');
+      content = content.replace(/<p[^>]*>.*?全ての持ち物をリスト化し.*?熱量があるものしか持たない.*?<\/p>/gi, '');
       content = content.replace(/<p[^>]*>全ての持ち物をリスト化し[^<]*<\/p>/s, '');
       content = content.replace(/<p[^>]*>新しい物を購入する際は[^<]*<\/p>/s, '');
       content = content.replace(/<p[^>]*>※冷蔵庫・洗濯機は[^<]*<\/p>/s, '');
@@ -275,6 +290,20 @@ const noteHTML = await fetchNoteHTML();
             firstHeading.style.marginTop = '0';
             firstHeading.style.paddingTop = '0';
           }
+          
+          // Profileセクション、HOMEリンク、説明文を除去
+          const allParagraphs = noteContent.querySelectorAll('p');
+          allParagraphs.forEach(p => {
+            const text = p.textContent || '';
+            if (text.includes('【Profile】') || 
+                text.includes('Profile') && text.includes('KENTARO') ||
+                text.includes('KENTARO.東京在住のプログラマー') ||
+                text.includes('HOME') && (text.includes('kentaro.life') || text.includes('https://kentaro.life')) ||
+                text.includes('全ての持ち物をリスト化して管理') ||
+                (text.includes('全ての持ち物をリスト化し') && text.includes('熱量があるものしか持たない'))) {
+              p.remove();
+            }
+          });
           
           // 空の要素を削除
           const emptyElements = noteContent.querySelectorAll('p:empty, div:empty, br');
