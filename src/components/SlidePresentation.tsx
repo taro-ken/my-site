@@ -43,21 +43,15 @@ export default function SlidePresentation() {
     const [touchEnd, setTouchEnd] = useState(0);
 
     const slideVariants = {
-        enter: (direction: number) => ({
+        enter: {
             opacity: 0,
-            scale: 0.95,
-            x: direction > 0 ? 50 : -50,
-        }),
+        },
         center: {
             opacity: 1,
-            scale: 1,
-            x: 0,
         },
-        exit: (direction: number) => ({
+        exit: {
             opacity: 0,
-            scale: 0.95,
-            x: direction < 0 ? 50 : -50,
-        }),
+        },
     };
 
     const nextSlide = () => {
@@ -130,9 +124,8 @@ export default function SlidePresentation() {
                     animate="center"
                     exit="exit"
                     transition={{
-                        opacity: { duration: 0.5 },
-                        scale: { duration: 0.5 },
-                        x: { duration: 0.5 },
+                        duration: 0.3,
+                        ease: "easeInOut",
                     }}
                     className="slide"
                 >
