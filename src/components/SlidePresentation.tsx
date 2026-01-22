@@ -39,6 +39,8 @@ const slides: Slide[] = [
 export default function SlidePresentation() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [direction, setDirection] = useState(0);
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
 
     const slideVariants = {
         enter: (direction: number) => ({
@@ -73,6 +75,32 @@ export default function SlidePresentation() {
         setCurrentSlide(index);
     };
 
+    // Minimum swipe distance (in px)
+    const minSwipeDistance = 50;
+
+    const onTouchStart = (e: React.TouchEvent) => {
+        setTouchEnd(0); // Reset touch end
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe) {
+            nextSlide();
+        } else if (isRightSwipe) {
+            prevSlide();
+        }
+    };
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowRight') {
@@ -87,7 +115,12 @@ export default function SlidePresentation() {
     }, [currentSlide]);
 
     return (
-        <div className="slide-container">
+        <div
+            className="slide-container"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+        >
             <AnimatePresence initial={false} custom={direction} mode="wait">
                 <motion.div
                     key={currentSlide}
@@ -108,14 +141,6 @@ export default function SlidePresentation() {
                         alt={slides[currentSlide].alt}
                         className="slide-image"
                     />
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3, duration: 0.5 }}
-                        className="slide-number"
-                    >
-                        {currentSlide + 1} / {slides.length}
-                    </motion.div>
                 </motion.div>
             </AnimatePresence>
 
