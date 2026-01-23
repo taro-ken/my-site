@@ -11,28 +11,28 @@ interface Slide {
 const slides: Slide[] = [
     {
         id: 1,
-        image: '/slides/slide_image_1_1769038596461.png',
-        alt: 'Abstract geometric shapes with purple and pink gradient',
+        image: '/slide-cover.png',
+        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
     },
     {
         id: 2,
-        image: '/slides/slide_image_2_1769038612387.png',
-        alt: 'Flowing waves pattern with blue and cyan gradient',
+        image: '/slide-cover.png',
+        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
     },
     {
         id: 3,
-        image: '/slides/slide_image_3_1769038631905.png',
-        alt: 'Organic shapes with green and emerald gradient',
+        image: '/slide-cover.png',
+        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
     },
     {
         id: 4,
-        image: '/slides/slide_image_4_1769038653733.png',
-        alt: 'Circular patterns with orange and amber gradient',
+        image: '/slide-cover.png',
+        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
     },
     {
         id: 5,
-        image: '/slides/slide_image_5_1769038667843.png',
-        alt: 'Dynamic lines with indigo and purple gradient',
+        image: '/slide-cover.png',
+        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
     },
 ];
 
