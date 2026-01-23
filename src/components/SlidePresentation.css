@@ -11,10 +11,8 @@
 
 .slide {
   position: relative;
-  width: auto;
-  height: 90vh;
-  max-height: 90vh;
-  aspect-ratio: 3 / 4;
+  width: 1410px;
+  height: 2250px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,6 +20,8 @@
   background: #ffffff;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
+  transform: scale(calc(min(90vw / 1410, 90vh / 2250)));
+  transform-origin: center;
 }
 
 .slide-image {
@@ -184,6 +184,13 @@
 
   50% {
     opacity: 1;
+  }
+}
+
+/* Desktop: Force vertical e-book layout */
+@media (min-width: 769px) {
+  .slide {
+    transform: scale(calc(90vh / 2250));
   }
 }
 
