@@ -1,27 +1,22 @@
 /* =============================================
-   1. コンテナ設定（絶対中央配置 & スクロール禁止）
+   1. コンテナ設定（絶対中央配置 & スワイプ禁止）
    ============================================= */
 .slide-container {
   position: relative;
   width: 100vw;
-  height: 100vh;
   height: 100dvh;
-  /* ブラウザのバーを考慮した高さ */
   overflow: hidden;
-  /* 上下スクロールを物理的に禁止 */
   background: #000000;
   display: flex;
   align-items: center;
-  /* 垂直中央 */
   justify-content: center;
-  /* 水平中央 */
   touch-action: none;
-  /* スマホのバウンスを防止 */
+  /* スワイプを禁止しボタン操作に特化 */
   -webkit-font-smoothing: antialiased;
 }
 
 /* =============================================
-   2. スライド本体（PC・スマホ共通の土台）
+   2. スライド本体（画像の比率を維持）
    ============================================= */
 .slide {
   position: relative;
@@ -29,154 +24,108 @@
   align-items: center;
   justify-content: center;
   background: transparent !important;
-  overflow: hidden;
-
-  /* 描画の安定化（チカチカ防止） */
-  will-change: transform, opacity;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transform: translateZ(0);
-  /* GPU加速を強制 */
 }
 
 .slide-image {
-  width: 100%;
-  height: 100%;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
-  display: block;
-  transform-style: preserve-3d;
 }
 
 /* =============================================
-   3. レスポンシブ切り替え（ここが重要）
-   ============================================= */
-
-/* 【PC・タブレット】高さを基準に本の比率で中央配置 */
-@media (min-width: 769px) {
-  .slide {
-    /* 画面の高さの90%を「本の高さ」に設定 */
-    height: 90vh;
-    /* 本の比率 (1410:2250) を維持して幅を計算 */
-    width: calc(90vh * (1410 / 2250));
-
-    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
-    border-radius: 4px;
-    margin: 0;
-    /* Flexで中央配置するためauto等は不要 */
-  }
-
-  .slide-image {
-    object-fit: cover;
-    /* 枠いっぱいに表示 */
-  }
-}
-
-/* 【スマホ】画面にぴったり収める（スクロールさせない） */
-@media (max-width: 768px) {
-  .slide {
-    width: 100vw;
-    height: 100dvh;
-    border-radius: 0;
-    box-shadow: none;
-    margin: 0;
-  }
-
-  .slide-image {
-    /* 画像を画面内に100%収める（これで上下が切れたりスクロールしたりしません） */
-    object-fit: contain;
-  }
-
-  /* スマホ用ナビゲーション位置微調整 */
-  .slide-indicators {
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem) !important;
-  }
-
-  .nav-button {
-    width: 48px;
-    height: 48px;
-  }
-}
-
-/* =============================================
-   4. ナビゲーション・装飾（共通）
+   3. 復活・小型化したナビゲーションボタン
    ============================================= */
 .nav-button {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 100;
+  z-index: 200;
   color: white;
+  transition: all 0.2s ease;
+  /* ボタンサイズを小型化 */
+  width: 42px !important;
+  height: 42px !important;
 }
 
-.nav-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.nav-button-left {
-  left: 1.5rem;
-}
-
-.nav-button-right {
-  right: 1.5rem;
-}
-
-.nav-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.slide-indicators {
-  position: absolute;
-  bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.75rem;
-  z-index: 100;
-}
-
-.indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.nav-button:active {
   background: rgba(255, 255, 255, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  padding: 0;
+  transform: scale(0.9);
 }
 
-.indicator-active {
-  background: white;
-  width: 28px;
-  border-radius: 6px;
-  border-color: white;
+/* アイコンのサイズも調整 */
+.nav-icon {
+  width: 18px;
+  height: 18px;
 }
 
-/* PC用キーボードヒント（スマホでは非表示） */
-.keyboard-hint {
-  position: absolute;
-  top: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  opacity: 0.6;
-}
-
-@media (max-width: 768px) {
-  .keyboard-hint {
-    display: none;
+/* --- 【PC・タブレット表示】 --- */
+@media (min-width: 769px) {
+  .slide {
+    padding: 40px;
+    box-sizing: border-box;
   }
+
+  .slide-image {
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
+  }
+
+  /* PCでは左右の中央に配置 */
+  .nav-button {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .nav-button-left {
+    left: 2rem;
+  }
+
+  .nav-button-right {
+    right: 2rem;
+  }
+}
+
+/* --- 【スマホ表示】 --- */
+@media (max-width: 768px) {
+
+  /* ボタンを画面下部の左右に配置 */
+  .nav-button {
+    top: auto !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1.5rem) !important;
+  }
+
+  .nav-button-left {
+    left: 1.5rem !important;
+  }
+
+  .nav-button-right {
+    right: 1.5rem !important;
+  }
+}
+
+/* =============================================
+   4. 非表示設定
+   ============================================= */
+/* 下のポチポチ（インジケーター）を完全に消去 */
+.slide-indicators {
+  display: none !important;
+}
+
+.keyboard-hint {
+  display: none !important;
 }
