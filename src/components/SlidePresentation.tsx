@@ -74,6 +74,27 @@ export default function SlidePresentation() {
         }
     };
 
+    // Preload adjacent images for faster navigation
+    useEffect(() => {
+        const preloadImages = () => {
+            // Preload next 3 and previous 3 slides
+            const imagesToPreload = [];
+
+            for (let i = -3; i <= 3; i++) {
+                if (i === 0) continue; // Skip current slide
+                const index = (currentSlide + i + slides.length) % slides.length;
+                imagesToPreload.push(slides[index].image);
+            }
+
+            imagesToPreload.forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
+        };
+
+        preloadImages();
+    }, [currentSlide]);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowRight') {
