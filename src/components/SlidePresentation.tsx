@@ -53,17 +53,21 @@ export default function SlidePresentation() {
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50;
 
-    const onTouchStart = (e: React.TouchEvent) => {
-        setTouchEnd(0); // Reset touch end
+    const onTouchStart = useCallback((e: React.TouchEvent) => {
+        setTouchEnd(0);
         setTouchStart(e.targetTouches[0].clientX);
-    };
+    }, []);
 
-    const onTouchMove = (e: React.TouchEvent) => {
+    const onTouchMove = useCallback((e: React.TouchEvent) => {
         setTouchEnd(e.targetTouches[0].clientX);
-    };
+    }, []);
 
-    const onTouchEnd = () => {
-        if (!touchStart || !touchEnd) return;
+    const onTouchEnd = useCallback(() => {
+        if (!touchStart || !touchEnd) {
+            setTouchStart(0);
+            setTouchEnd(0);
+            return;
+        }
 
         const distance = touchStart - touchEnd;
         const isLeftSwipe = distance > minSwipeDistance;
@@ -74,7 +78,11 @@ export default function SlidePresentation() {
         } else if (isRightSwipe) {
             prevSlide();
         }
-    };
+
+        // Reset touch state
+        setTouchStart(0);
+        setTouchEnd(0);
+    }, [touchStart, touchEnd, nextSlide, prevSlide]);
 
     // Preload adjacent images for faster navigation
     useEffect(() => {
