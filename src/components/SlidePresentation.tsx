@@ -8,33 +8,12 @@ interface Slide {
     alt: string;
 }
 
-const slides: Slide[] = [
-    {
-        id: 1,
-        image: '/slide-cover.png',
-        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
-    },
-    {
-        id: 2,
-        image: '/slide-cover.png',
-        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
-    },
-    {
-        id: 3,
-        image: '/slide-cover.png',
-        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
-    },
-    {
-        id: 4,
-        image: '/slide-cover.png',
-        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
-    },
-    {
-        id: 5,
-        image: '/slide-cover.png',
-        alt: 'LESS BUT BETTER - 心とお金にゆとりを生む50のミニマルライフルール',
-    },
-];
+// Generate slides array from 1.png to 22.png in public/slides folder
+const slides: Slide[] = Array.from({ length: 22 }, (_, i) => ({
+    id: i + 1,
+    image: `/slides/${i + 1}.png`,
+    alt: `Slide ${i + 1}`,
+}));
 
 export default function SlidePresentation() {
     const [currentSlide, setCurrentSlide] = useState(0);
