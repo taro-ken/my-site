@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import './SlidePresentation.css';
 
 interface Slide {
@@ -18,8 +18,10 @@ const slides: Slide[] = Array.from({ length: 22 }, (_, i) => ({
 export default function SlidePresentation() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [direction, setDirection] = useState(0);
-    const [touchStart, setTouchStart] = useState(0);
-    const [touchEnd, setTouchEnd] = useState(0);
+
+    // Use refs instead of state for touch tracking to avoid closure issues
+    const touchStartX = useRef<number>(0);
+    const touchEndX = useRef<number>(0);
 
     const slideVariants = {
         enter: {
@@ -54,22 +56,20 @@ export default function SlidePresentation() {
     const minSwipeDistance = 50;
 
     const onTouchStart = useCallback((e: React.TouchEvent) => {
-        setTouchEnd(0);
-        setTouchStart(e.targetTouches[0].clientX);
+        touchEndX.current = 0;
+        touchStartX.current = e.targetTouches[0].clientX;
     }, []);
 
     const onTouchMove = useCallback((e: React.TouchEvent) => {
-        setTouchEnd(e.targetTouches[0].clientX);
+        touchEndX.current = e.targetTouches[0].clientX;
     }, []);
 
     const onTouchEnd = useCallback(() => {
-        if (!touchStart || !touchEnd) {
-            setTouchStart(0);
-            setTouchEnd(0);
+        if (!touchStartX.current || !touchEndX.current) {
             return;
         }
 
-        const distance = touchStart - touchEnd;
+        const distance = touchStartX.current - touchEndX.current;
         const isLeftSwipe = distance > minSwipeDistance;
         const isRightSwipe = distance < -minSwipeDistance;
 
@@ -79,10 +79,10 @@ export default function SlidePresentation() {
             prevSlide();
         }
 
-        // Reset touch state
-        setTouchStart(0);
-        setTouchEnd(0);
-    }, [touchStart, touchEnd, nextSlide, prevSlide]);
+        // Reset
+        touchStartX.current = 0;
+        touchEndX.current = 0;
+    }, [nextSlide, prevSlide]);
 
     // Preload adjacent images for faster navigation
     useEffect(() => {
