@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import './SlidePresentation.css';
 
 interface Slide {
@@ -19,82 +19,58 @@ export default function SlidePresentation() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [direction, setDirection] = useState(0);
 
-    // Use refs instead of state for touch tracking to avoid closure issues
-    const touchStartX = useRef<number>(0);
-    const touchEndX = useRef<number>(0);
-
     const slideVariants = {
-        enter: {
+        enter: (direction: number) => ({
             opacity: 0,
-        },
+        }),
         center: {
             opacity: 1,
         },
-        exit: {
+        exit: (direction: number) => ({
             opacity: 0,
-        },
+        }),
     };
 
-    const nextSlide = useCallback(() => {
+    const nextSlide = () => {
         setDirection(1);
         setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, []);
+    };
 
-    const prevSlide = useCallback(() => {
+    const prevSlide = () => {
         setDirection(-1);
         setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    }, []);
+    };
 
-    const goToSlide = useCallback((index: number) => {
-        setCurrentSlide((prev) => {
-            setDirection(index > prev ? 1 : -1);
-            return index;
-        });
-    }, []);
+    const goToSlide = (index: number) => {
+        setDirection(index > currentSlide ? 1 : -1);
+        setCurrentSlide(index);
+    };
 
-    // Minimum swipe distance (in px)
-    const minSwipeDistance = 50;
+    // Handle drag end for swipe detection
+    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+        const swipeThreshold = 50;
 
-    const onTouchStart = useCallback((e: React.TouchEvent) => {
-        touchEndX.current = 0;
-        touchStartX.current = e.targetTouches[0].clientX;
-    }, []);
-
-    const onTouchMove = useCallback((e: React.TouchEvent) => {
-        touchEndX.current = e.targetTouches[0].clientX;
-    }, []);
-
-    const onTouchEnd = useCallback(() => {
-        if (!touchStartX.current || !touchEndX.current) {
-            return;
-        }
-
-        const distance = touchStartX.current - touchEndX.current;
-        const isLeftSwipe = distance > minSwipeDistance;
-        const isRightSwipe = distance < -minSwipeDistance;
-
-        if (isLeftSwipe) {
-            nextSlide();
-        } else if (isRightSwipe) {
+        if (info.offset.x > swipeThreshold) {
+            // Swiped right - go to previous slide
             prevSlide();
+        } else if (info.offset.x < -swipeThreshold) {
+            // Swiped left - go to next slide
+            nextSlide();
         }
+    };
 
-        // Reset
-        touchStartX.current = 0;
-        touchEndX.current = 0;
-    }, [nextSlide, prevSlide]);
-
-    // Preload adjacent images for faster navigation
+    // Preload only next and previous slides for better performance
     useEffect(() => {
         const preloadImages = () => {
-            // Preload next 3 and previous 3 slides
             const imagesToPreload = [];
 
-            for (let i = -3; i <= 3; i++) {
-                if (i === 0) continue; // Skip current slide
-                const index = (currentSlide + i + slides.length) % slides.length;
-                imagesToPreload.push(slides[index].image);
-            }
+            // Preload next slide
+            const nextIndex = (currentSlide + 1) % slides.length;
+            imagesToPreload.push(slides[nextIndex].image);
+
+            // Preload previous slide
+            const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+            imagesToPreload.push(slides[prevIndex].image);
 
             imagesToPreload.forEach((src) => {
                 const img = new Image();
@@ -116,15 +92,10 @@ export default function SlidePresentation() {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [nextSlide, prevSlide]);
+    }, [currentSlide]);
 
     return (
-        <div
-            className="slide-container"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-        >
+        <div className="slide-container">
             <AnimatePresence initial={false} custom={direction} mode="wait">
                 <motion.div
                     key={currentSlide}
@@ -137,12 +108,18 @@ export default function SlidePresentation() {
                         duration: 0.3,
                         ease: "easeInOut",
                     }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
+                    onDragEnd={handleDragEnd}
                     className="slide"
                 >
                     <img
                         src={slides[currentSlide].image}
                         alt={slides[currentSlide].alt}
                         className="slide-image"
+                        loading="eager"
+                        draggable={false}
                     />
                 </motion.div>
             </AnimatePresence>
