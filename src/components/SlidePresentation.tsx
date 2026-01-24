@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './SlidePresentation.css';
 
 interface Slide {
@@ -33,20 +33,22 @@ export default function SlidePresentation() {
         },
     };
 
-    const nextSlide = () => {
+    const nextSlide = useCallback(() => {
         setDirection(1);
         setCurrentSlide((prev) => (prev + 1) % slides.length);
-    };
+    }, []);
 
-    const prevSlide = () => {
+    const prevSlide = useCallback(() => {
         setDirection(-1);
         setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    };
+    }, []);
 
-    const goToSlide = (index: number) => {
-        setDirection(index > currentSlide ? 1 : -1);
-        setCurrentSlide(index);
-    };
+    const goToSlide = useCallback((index: number) => {
+        setCurrentSlide((prev) => {
+            setDirection(index > prev ? 1 : -1);
+            return index;
+        });
+    }, []);
 
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50;
@@ -106,7 +108,7 @@ export default function SlidePresentation() {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentSlide]);
+    }, [nextSlide, prevSlide]);
 
     return (
         <div
