@@ -1,4 +1,5 @@
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { PanInfo } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import './SlidePresentation.css';
 
