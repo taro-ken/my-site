@@ -1,0 +1,36 @@
+---
+import MoneySimulator from '../components/MoneySimulator';
+import Header from "../components/Header.astro";
+import '../styles/global.css';
+
+export const prerender = true;
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+  <Header 
+    title="資産管理シミュレーター | 25-15-50-10の法則" 
+    description="25-15-50-10の法則に基づいた資産管理シミュレーター。手取り月収を入力して理想的な配分を計算。"
+    canonicalUrl="https://kentaro.vercel.app/assetmanagement"
+  />
+  <body class="bg-gray-50 transition-colors duration-300 min-h-screen flex flex-col font-sans mb-10">
+    <div class="content flex-grow">
+      <nav class="main">
+        <div class="container mx-auto px-4 py-8">
+            
+            {/* Simple Back Link */}
+            <div className="mb-8">
+                <a href="/" className="text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1">
+                    ← ホームに戻る
+                </a>
+            </div>
+
+            <main>
+                <MoneySimulator client:load />
+            </main>
+
+        </div>
+      </nav>
+    </div>
+  </body>
+</html>
