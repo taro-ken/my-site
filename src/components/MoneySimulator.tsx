@@ -118,7 +118,7 @@ const DonutChart = ({
 
 
 export default function MoneySimulator() {
-    const [incomeStr, setIncomeStr] = useState<string>('200,000');
+    const [incomeStr, setIncomeStr] = useState<string>('');
 
     const income = useMemo(() => {
         return parseInt(incomeStr.replace(/,/g, ''), 10) || 0;
