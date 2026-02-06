@@ -117,6 +117,60 @@ const DonutChart = ({
 };
 
 
+// --- Accordion Component ---
+const RecommendationAccordion = ({
+    title,
+    items,
+    buttonColorClass = "text-blue-600 hover:text-blue-800"
+}: {
+    title: string;
+    items: { label: string; url: string }[];
+    buttonColorClass?: string;
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className="flex flex-col items-end w-full">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className={cn("inline-flex items-center text-xs font-semibold transition-colors focus:outline-none", buttonColorClass)}
+            >
+                {title}
+                <svg
+                    className={cn("w-3 h-3 ml-1 transform transition-transform duration-200", isOpen ? "rotate-180" : "")}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div
+                className={cn(
+                    "overflow-hidden transition-all duration-300 ease-in-out w-full",
+                    isOpen ? "max-h-40 opacity-100 mt-2" : "max-h-0 opacity-0"
+                )}
+            >
+                <div className="flex flex-col gap-2 items-end">
+                    {items.map((item, idx) => (
+                        <a
+                            key={idx}
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-gray-600 hover:text-gray-900 transition-colors flex items-center"
+                        >
+                            {item.label}
+                            <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 export default function MoneySimulator() {
     const [incomeStr, setIncomeStr] = useState<string>('');
 
@@ -274,11 +328,32 @@ export default function MoneySimulator() {
                             </div>
 
                             {cat.key === 'stability' && (
-                                <div className="mt-4 pt-4 border-t border-gray-200 w-full">
+                                <div className="mt-4 pt-4 border-t border-gray-200 w-full flex flex-col gap-2">
                                     <p className="flex items-center justify-start md:justify-end gap-2 text-[10px] text-gray-400">
                                         <Info size={12} />
                                         <span>目標: {formatCurrency(Math.round(income * 0.5 * 5))} (生活費5ヶ月分)</span>
                                     </p>
+                                    <RecommendationAccordion
+                                        title="おすすめの証券口座"
+                                        items={[
+                                            { label: "SBI証券", url: "https://www.sbisec.co.jp/visitor/" },
+                                            { label: "楽天証券", url: "https://ad2.trafficgate.net/t/r/1258/738/312778_390421" },
+                                        ]}
+                                        buttonColorClass="text-blue-600 hover:text-blue-800"
+                                    />
+                                </div>
+                            )}
+
+                            {cat.key === 'essentials' && (
+                                <div className="mt-4 pt-4 border-t border-gray-200 w-full flex flex-col gap-2">
+                                    <RecommendationAccordion
+                                        title="おすすめのサービス"
+                                        items={[
+                                            { label: "格安SIM：楽天モバイル", url: "https://ad2.trafficgate.net/t/r/416/4401/312778_390421" },
+                                            { label: "ハピタス", url: "https://hapitas.jp/register?i=25697521" },
+                                        ]}
+                                        buttonColorClass="text-blue-600 hover:text-blue-800"
+                                    />
                                 </div>
                             )}
                         </div>
