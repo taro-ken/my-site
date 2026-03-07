@@ -1,10 +1,10 @@
 ---
-import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
 
-export const prerender = true;
 
 // Noteページから動的にデータを取得
-const NOTE_URL = "https://note.com/taroken2411/n/n48d515eac42c";
+const NOTE_URL = "https://note.com/taro_minimal/n/n48d515eac42c";
 
 // NoteページのHTMLを直接取得
 async function fetchNoteHTML() {
@@ -12,964 +12,151 @@ async function fetchNoteHTML() {
     const response = await fetch(NOTE_URL, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'ja,en-US;q=0.7,en;q=0.3',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
       },
-      cache: 'no-store' // キャッシュを無効化
+      cache: 'no-store'
     });
     
-    if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`);
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     
     const html = await response.text();
-    
-    // 記事の内容部分を抽出（Noteの構造に合わせて調整）
     const contentMatch = html.match(/<div[^>]*class="[^"]*note-common-styles__textnote-body[^"]*"[^>]*>(.*?)<\/div>/s);
     
     if (contentMatch) {
       let content = contentMatch[1];
       
-      // 冒頭の説明文とカテゴリーリストを除去
-      // Profileセクションを除去
+      // Cleanup
       content = content.replace(/<p[^>]*>【Profile】[^<]*<\/p>/gi, '');
       content = content.replace(/<p[^>]*>.*?KENTARO\.東京在住のプログラマー.*?<\/p>/gis, '');
       content = content.replace(/<p[^>]*>.*?HOME[：:].*?kentaro\.life.*?<\/p>/gi, '');
-      content = content.replace(/<p[^>]*>.*?HOME.*?https:\/\/kentaro\.life.*?<\/p>/gi, '');
-      // 最初の段落（説明文）を除去
-      content = content.replace(/<p[^>]*>.*?全ての持ち物をリスト化して管理.*?<\/p>/gi, '');
-      content = content.replace(/<p[^>]*>.*?全ての持ち物をリスト化し.*?熱量があるものしか持たない.*?<\/p>/gi, '');
-      content = content.replace(/<p[^>]*>全ての持ち物をリスト化し[^<]*<\/p>/s, '');
-      content = content.replace(/<p[^>]*>新しい物を購入する際は[^<]*<\/p>/s, '');
+      content = content.replace(/<p[^>]*>全ての持ち物をリスト化し[^<]*<\/p>/gs, '');
+      content = content.replace(/<p[^>]*>新しい物を購入する際は[^<]*<\/p>/gs, '');
+      content = content.replace(/<p[^>]*>※冷蔵庫・洗濯機は[^<]*<\/p>/gs, '');
       
-      // 注釈部分を除去
-      content = content.replace(/<p[^>]*>※冷蔵庫・洗濯機は[^<]*<\/p>/s, '');
-      
-      // カテゴリーリストのみを精密に除去（商品タイトルは保護）
-      // 最初のulタグのみを除去（カテゴリーリスト）
       content = content.replace(/<ul[^>]*>[\s\S]*?<\/ul>/s, '');
-      
-      // カテゴリーリストの内容を直接除去（ただし、商品タイトルは保護）
-      // 商品タイトルではない場合のみ除去
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)デスク関連・ガジェット類(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)服・小物類(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)生活家電(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)生活用品(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)家具・インテリア雑貨(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)食関連(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      
-      // 箇条書き記号のみを除去（商品名内の記号は保護）
-      content = content.replace(/^・/gm, '');
-      content = content.replace(/^\s*・/gm, '');
-      content = content.replace(/^[\s]*・[\s]*/gm, '');
       content = content.replace(/^\s*・\s*/gm, '');
-      content = content.replace(/\n\s*・\s*/g, '\n');
-      content = content.replace(/\r?\n\s*・\s*/g, '\n');
-      
-      // 空のリスト構造のみを除去
-      content = content.replace(/<ul[^>]*>\s*<\/ul>/g, '');
-      content = content.replace(/<ol[^>]*>\s*<\/ol>/g, '');
-      
-      // 空の段落を除去
-      content = content.replace(/<p[^>]*>\s*<\/p>/g, '');
-      
-      // 見出し画像を除去
       content = content.replace(/<figure[^>]*class="[^"]*o-noteEyecatch[^"]*"[^>]*>.*?<\/figure>/s, '');
-      
-      // 冒頭の余白や改行を除去
-      content = content.replace(/^\s+/, '');
-      content = content.replace(/^<br\s*\/?>/gi, '');
-      content = content.replace(/^<div[^>]*>\s*<\/div>/gi, '');
       
       return content;
     }
-    
-    // フォールバック: より広範囲で記事内容を探す
-    const bodyMatch = html.match(/<article[^>]*>(.*?)<\/article>/s) || 
-                     html.match(/<main[^>]*>(.*?)<\/main>/s) ||
-                     html.match(/<div[^>]*class="[^"]*content[^"]*"[^>]*>(.*?)<\/div>/s);
-    
-    if (bodyMatch) {
-      let content = bodyMatch[1];
-      
-      // 同様の除去処理
-      // Profileセクションを除去
-      content = content.replace(/<p[^>]*>【Profile】[^<]*<\/p>/gi, '');
-      content = content.replace(/<p[^>]*>.*?KENTARO\.東京在住のプログラマー.*?<\/p>/gis, '');
-      content = content.replace(/<p[^>]*>.*?HOME[：:].*?kentaro\.life.*?<\/p>/gi, '');
-      content = content.replace(/<p[^>]*>.*?HOME.*?https:\/\/kentaro\.life.*?<\/p>/gi, '');
-      // 最初の段落（説明文）を除去
-      content = content.replace(/<p[^>]*>.*?全ての持ち物をリスト化して管理.*?<\/p>/gi, '');
-      content = content.replace(/<p[^>]*>.*?全ての持ち物をリスト化し.*?熱量があるものしか持たない.*?<\/p>/gi, '');
-      content = content.replace(/<p[^>]*>全ての持ち物をリスト化し[^<]*<\/p>/s, '');
-      content = content.replace(/<p[^>]*>新しい物を購入する際は[^<]*<\/p>/s, '');
-      content = content.replace(/<p[^>]*>※冷蔵庫・洗濯機は[^<]*<\/p>/s, '');
-      content = content.replace(/<ul[^>]*>[\s\S]*?<\/ul>/s, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)デスク関連・ガジェット類(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)服・小物類(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)生活家電(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)生活用品(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)家具・インテリア雑貨(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/(?<!<h[1-6][^>]*>)(?<!<a[^>]*>)食関連(?!<\/a>)(?!<\/h[1-6]>)/g, '');
-      content = content.replace(/^・/gm, '');
-      content = content.replace(/^\s*・/gm, '');
-      content = content.replace(/^[\s]*・[\s]*/gm, '');
-      content = content.replace(/^\s*・\s*/gm, '');
-      content = content.replace(/\n\s*・\s*/g, '\n');
-      content = content.replace(/\r?\n\s*・\s*/g, '\n');
-      content = content.replace(/<ul[^>]*>\s*<\/ul>/g, '');
-      content = content.replace(/<ol[^>]*>\s*<\/ol>/g, '');
-      content = content.replace(/<p[^>]*>\s*<\/p>/g, '');
-      
-      // 見出し画像を除去
-      content = content.replace(/<figure[^>]*class="[^"]*o-noteEyecatch[^"]*"[^>]*>.*?<\/figure>/s, '');
-      
-      content = content.replace(/^\s+/, '');
-      content = content.replace(/^<br\s*\/?>/gi, '');
-      content = content.replace(/^<div[^>]*>\s*<\/div>/gi, '');
-      
-      return content;
-    }
-    
-    return '<p>Noteページの内容を取得できませんでした。</p>';
-    
+    return '<p class="text-zinc-500">Noteページの内容を取得できませんでした。</p>';
   } catch (error) {
-    console.error('NoteページのHTML取得に失敗しました:', error);
-    
-    // フォールバック: 静的なコンテンツを表示
-    return `
-      <div style="text-align: center; padding: 2rem;">
-        <h2>コンテンツを読み込み中です...</h2>
-        <p>Noteページから最新の情報を取得できませんでした。</p>
-        <p><a href="${NOTE_URL}" target="_blank" style="color: #0066cc; text-decoration: underline;">こちらから直接アクセスしてください</a></p>
-        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-          しばらく待ってからページを再読み込みしてください。
-        </p>
-      </div>
-    `;
+    console.error('Note fetch failed:', error);
+    return `<div class="text-center py-20"><p class="text-zinc-500">Noteデータの取得に失敗しました。</p><a href="${NOTE_URL}" target="_blank" class="text-white underline mt-4 inline-block">Noteで直接見る</a></div>`;
   }
 }
 
-// HTMLコンテンツを取得
 const noteHTML = await fetchNoteHTML();
 ---
 
-<!DOCTYPE html>
-<html>
-  <Header 
-    title="All Item List" 
-    description="全アイテム一覧"
-    canonicalUrl="https://kentaro.vercel.app/all-item-list"
-  />
-  <body>
-    <div class="content">
-      <nav class="main">
-        <div class="container">
-          <div class="back-nav-container">
-            <a href="/" class="back-nav-button w-inline-block"
-              ><img src="/assets/back.svg" loading="lazy" alt="" class="back-nav-img" />
-              <div>Back</div></a
-            >
-          </div>
-          <div class="content-container">
-            <h1 style="font-size: 1.8rem; margin-bottom: 0.1rem;">All Item List</h1>
+<Layout title="All Item List | KENTARO">
+  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-[#BF953F] selection:text-black">
+    <div class="max-w-3xl mx-auto w-full">
+      <div class="text-center mb-12 flex flex-col items-center">
+              <p class="text-zinc-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">The Gear</p>
+              <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-4">
+                All Item List
+              </h1>
+              <p class="text-zinc-400 font-medium max-w-2xl text-sm md:text-base">
+                生活を身軽にする、厳選された持ち物と愛用品のリスト
+              </p>
+            </div>
             <section class="items-container">
-              <div class="note-content" set:html={noteHTML}></div>
-
-            </section>
-          </div>
-        </div>
-      </nav>
+              <div class="note-content md:prose-invert" set:html={noteHTML}></div>
+      </section>
     </div>
+  </main>
 
-    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
-    
     <script>
-      // 余白を削除する処理
       function applyStyles() {
-        try {
-          const noteContent = document.querySelector('.note-content');
-          if (noteContent && noteContent.children.length > 0) {
-          // &nbsp; を通常スペースに置換して折り返し可能にする
-          // テキストノード内の改行を<br>タグに変換する処理
-          const walker = document.createTreeWalker(noteContent, NodeFilter.SHOW_TEXT, null);
-          const textNodes = [];
-          let node;
-          while ((node = walker.nextNode())) {
-            if (node.nodeValue) {
-              textNodes.push(node);
-            }
-          }
-          
-          // テキストノードを処理（後ろから処理してインデックスがずれないようにする）
-          for (let i = textNodes.length - 1; i >= 0; i--) {
-            const textNode = textNodes[i];
-            const parent = textNode.parentElement;
-            
-            if (textNode.nodeValue) {
-              // &nbsp; を通常スペースに置換
-              let text = textNode.nodeValue;
-              if (text.includes('\u00a0')) {
-                text = text.replace(/\u00a0/g, ' ');
-              }
-              
-              // 改行文字（\n）を<br>タグに変換
-              if (text.includes('\n')) {
-                const parts = text.split('\n');
-                const fragment = document.createDocumentFragment();
-                
-                for (let j = 0; j < parts.length; j++) {
-                  if (parts[j]) {
-                    fragment.appendChild(document.createTextNode(parts[j]));
-                  }
-                  if (j < parts.length - 1) {
-                    fragment.appendChild(document.createElement('br'));
-                  }
-                }
-                
-                parent.replaceChild(fragment, textNode);
-              } else {
-                textNode.nodeValue = text;
-              }
-              
-              // 親要素にwhite-space: pre-wrapを設定して改行を保持
-              if (parent && (parent.tagName === 'P' || parent.tagName === 'LI' || parent.tagName === 'DIV' || parent.tagName === 'SPAN')) {
-                parent.style.whiteSpace = 'pre-wrap';
-              }
-            }
-          }
-
-          // 段落内リンクを確実に改行
-          const linksInParagraphs = noteContent.querySelectorAll('p a');
-          linksInParagraphs.forEach((a) => {
-            a.style.display = 'block';
-            a.style.margin = '0 0 0.25rem 0';
-            a.style.whiteSpace = 'pre-wrap';
-          });
-
-          // すべての要素の上部余白を削除
-          const allElementsForMargin = noteContent.querySelectorAll('*');
-          allElementsForMargin.forEach(el => {
-            if (el.style) {
-              el.style.marginTop = '0';
-              el.style.paddingTop = '0';
-            }
-          });
-          
-          // 最初の要素の余白を削除
-          const firstChild = noteContent.firstElementChild;
-          if (firstChild) {
-            firstChild.style.marginTop = '0';
-            firstChild.style.paddingTop = '0';
-          }
-          
-          // 見出し画像の余白を削除
-          const eyecatchImage = noteContent.querySelector('.o-noteEyecatch');
-          if (eyecatchImage) {
-            eyecatchImage.style.marginTop = '0';
-            eyecatchImage.style.paddingTop = '0';
-          }
-          
-          // 最初のfigure要素の余白を削除
-          const firstFigure = noteContent.querySelector('figure:first-child');
-          if (firstFigure) {
-            firstFigure.style.marginTop = '0';
-            firstFigure.style.paddingTop = '0';
-          }
-          
-          // 最初の見出しの余白を削除
-          const firstHeading = noteContent.querySelector('h1:first-child, h2:first-child, h3:first-child, h4:first-child');
-          if (firstHeading) {
-            firstHeading.style.marginTop = '0';
-            firstHeading.style.paddingTop = '0';
-          }
-          
-          // Profileセクション、HOMEリンク、説明文を除去
-          const allParagraphs = noteContent.querySelectorAll('p');
-          allParagraphs.forEach(p => {
-            const text = p.textContent || '';
-            if (text.includes('【Profile】') || 
-                text.includes('Profile') && text.includes('KENTARO') ||
-                text.includes('KENTARO.東京在住のプログラマー') ||
-                text.includes('HOME') && (text.includes('kentaro.life') || text.includes('https://kentaro.life')) ||
-                text.includes('全ての持ち物をリスト化して管理') ||
-                (text.includes('全ての持ち物をリスト化し') && text.includes('熱量があるものしか持たない'))) {
-              p.remove();
-            }
-          });
-          
-          // 空の要素を削除
-          const emptyElements = noteContent.querySelectorAll('p:empty, div:empty, br');
-          emptyElements.forEach(el => {
-            if (el.tagName === 'BR' || el.textContent.trim() === '') {
-              el.remove();
-            }
-          });
-          
-          // 箇条書き記号「・」を除去
-          const allTextNodes = noteContent.querySelectorAll('*');
-          allTextNodes.forEach(el => {
-            if (el.textContent && el.textContent.trim().startsWith('・')) {
-              el.textContent = el.textContent.replace(/^・\s*/, '');
-            }
-          });
-          
-          // 画像の左端をタイトルに揃え、説明文の幅を画像に合わせる
-          const figures = noteContent.querySelectorAll('figure');
-          figures.forEach(figure => {
-            figure.style.marginLeft = '0';
-            figure.style.paddingLeft = '0';
-            const img = figure.querySelector('img');
-            if (img) {
-              img.style.marginLeft = '0';
-              img.style.paddingLeft = '0';
-              
-              // 画像が読み込まれてから幅を取得
-              const adjustParagraphWidth = () => {
-                const nextParagraph = figure.nextElementSibling;
-                if (nextParagraph && nextParagraph.tagName === 'P') {
-                  if (window.innerWidth <= 768) {
-                    // スマホの場合 - 強制的に100%幅
-                    nextParagraph.style.maxWidth = '100%';
-                    nextParagraph.style.width = '100%';
-                    nextParagraph.style.marginLeft = '0';
-                    nextParagraph.style.marginRight = '0';
-                    nextParagraph.style.paddingLeft = '0';
-                    nextParagraph.style.paddingRight = '0';
-                    nextParagraph.style.boxSizing = 'border-box';
-                  } else {
-                    // PCの場合 - 画像の幅に合わせる
-                    const imgWidth = img.offsetWidth;
-                    if (imgWidth > 0) {
-                      nextParagraph.style.maxWidth = imgWidth + 'px';
-                      nextParagraph.style.width = 'auto';
-                      nextParagraph.style.marginLeft = '0';
-                      nextParagraph.style.marginRight = '0';
-                      nextParagraph.style.paddingLeft = '0';
-                      nextParagraph.style.paddingRight = '0';
-                    }
-                  }
-                }
-              };
-              
-          // 複数回実行して確実に適用
-          setTimeout(adjustParagraphWidth, 100);
-          setTimeout(adjustParagraphWidth, 500);
-          setTimeout(adjustParagraphWidth, 1000);
-          
-          // Noteページのスタイルシートを無効化
-          const noteStyles = noteContent.querySelectorAll('style, link[rel="stylesheet"]');
-          noteStyles.forEach(style => {
-            if (style.tagName === 'STYLE') {
-              style.textContent = '';
-            } else {
-              style.disabled = true;
-            }
-          });
-              
-              // 画像が読み込まれた後に実行
-              if (img.complete) {
-                adjustParagraphWidth();
-              } else {
-                img.onload = () => {
-                  adjustParagraphWidth();
-                  setTimeout(adjustParagraphWidth, 100);
-                };
-              }
-              
-              // スマホでの画像表示を調整
-              if (window.innerWidth <= 768) {
-                img.style.maxWidth = '100%';
-                img.style.width = '100%';
-                img.style.height = 'auto';
-              }
-            }
-          });
-          
-          // リンクの色を強制的に黒に設定
-          const links = noteContent.querySelectorAll('a');
-          links.forEach(link => {
-            link.style.color = '#000000';
-            link.style.textDecoration = 'underline';
-          });
-          
-          // 商品名のフォントサイズを強制的に設定
-          const h3Elements = noteContent.querySelectorAll('h3');
-          h3Elements.forEach(h3 => {
-            h3.style.fontSize = '1.1rem';
-            h3.style.fontWeight = 'bold';
-            const h3Links = h3.querySelectorAll('a');
-            h3Links.forEach(link => {
-              link.style.fontSize = '1.1rem';
-              link.style.fontWeight = 'bold';
-            });
-          });
-          
-          // 全てのテキスト要素を黒に設定し、Noteページのデフォルトスタイルを削除
+        const noteContent = document.querySelector('.note-content');
+        if (noteContent) {
           const allElements = noteContent.querySelectorAll('*');
           allElements.forEach(el => {
-            if (el.style) {
-              el.style.color = '#000000';
+            if (el instanceof HTMLElement) {
+              el.style.color = '#d4d4d8'; // zinc-300
+              el.style.backgroundColor = 'transparent';
+              el.style.borderColor = '#27272a'; // zinc-800
               
-              // スマホでNoteページのデフォルトスタイルを削除
-              if (window.innerWidth <= 768) {
-                // 幅に関するスタイルを強制的にリセット
-                el.style.width = '100%';
-                el.style.maxWidth = '100%';
-                el.style.marginLeft = '0';
-                el.style.marginRight = '0';
-                el.style.paddingLeft = '0';
-                el.style.paddingRight = '0';
-                el.style.boxSizing = 'border-box';
-                el.style.overflowWrap = 'break-word';
-                el.style.wordWrap = 'break-word';
-                el.style.whiteSpace = 'normal';
-                
-                // Noteページのデフォルトクラスを削除
-                el.removeAttribute('class');
+              if (el.tagName === 'A') {
+                el.style.color = '#a1a1aa'; // zinc-400
+                el.style.textDecoration = 'none';
+              }
+              if (['H1', 'H2', 'H3', 'H4'].includes(el.tagName)) {
+                el.style.color = '#ffffff';
               }
             }
           });
-          
-          // 説明文のフォントサイズを調整
-          const paragraphs = noteContent.querySelectorAll('p');
-          paragraphs.forEach(p => {
-            if (window.innerWidth <= 768) {
-              // スマホの場合
-              p.style.fontSize = '0.6rem';
-            } else {
-              // PCの場合
-              p.style.fontSize = '0.9rem';
-            }
-            // 左右端を画像に合わせる
-            p.style.marginLeft = '0';
-            p.style.paddingLeft = '0';
-            p.style.marginRight = '0';
-            p.style.paddingRight = '0';
-            p.style.boxSizing = 'border-box';
-            p.style.overflowWrap = 'break-word';
-            p.style.wordWrap = 'break-word';
-          });
-          }
-        } catch (error) {
-          console.error('JavaScript error:', error);
         }
       }
-
-      // 初回読み込み時
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyStyles);
-      } else {
-        applyStyles();
-      }
-
-      // Astroのページ遷移時
-      document.addEventListener('astro:page-load', () => {
-        // HTMLが完全に読み込まれるまで待つ
-        setTimeout(applyStyles, 100);
-        setTimeout(applyStyles, 500);
-      });
-
-      // MutationObserverで.note-contentの変更を監視
-      const observer = new MutationObserver((mutations) => {
-        const noteContent = document.querySelector('.note-content');
-        if (noteContent && noteContent.children.length > 0) {
-          applyStyles();
-          observer.disconnect();
-        }
-      });
-
-      const noteContent = document.querySelector('.note-content');
-      if (noteContent) {
-        observer.observe(noteContent, {
-          childList: true,
-          subtree: true
-        });
-      }
+      applyStyles();
+      document.addEventListener('astro:after-swap', applyStyles);
     </script>
-  </body>
-</html>
+  </div>
+</Layout>
 
-<style>
-  .items-container {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  .note-content {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 0.5rem 0.5rem 0.5rem;
-    line-height: 1.6;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-
-  .note-content > *:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  .note-content > *:first-child::before {
-    display: none !important;
-  }
-
-  /* Noteページの見出し画像の余白を削除 */
-  .note-content figure:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  .note-content .o-noteEyecatch {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  /* 最初の見出し画像の前の余白を削除 */
-  .note-content .o-noteEyecatch:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  /* 最初の要素の前の余白を完全に削除 */
-  .note-content > *:first-child,
-  .note-content > *:first-child * {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  /* より強力な余白削除 */
-  .note-content * {
-    margin-top: 0 !important;
-  }
-
-  .note-content *:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  /* 見出しの余白を調整 */
-  .note-content h1:first-child,
-  .note-content h2:first-child,
-  .note-content h3:first-child,
-  .note-content h4:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  /* 最初の段落の余白を削除 */
-  .note-content p:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  /* 見出し画像を非表示 */
-  .note-content .o-noteEyecatch {
-    display: none !important;
-  }
-
-  .note-content figure.o-noteEyecatch {
-    display: none !important;
+<style is:global>
+  body {
+    background-color: black;
+    color: #d4d4d8;
+    margin: 0;
+    font-family: system-ui, -apple-system, sans-serif;
   }
 
   .note-content h1, .note-content h2, .note-content h3, .note-content h4 {
-    color: #1a1a1a;
-    margin: 1.5rem 0 1rem 0;
-    font-weight: bold;
-  }
-
-  .note-content h1 {
-    font-size: 2rem;
-    border-bottom: 2px solid #e5e5e5;
-    padding-bottom: 0.5rem;
+    color: #ffffff !important;
+    font-weight: 900;
+    letter-spacing: -0.01em;
   }
 
   .note-content h2 {
     font-size: 1.5rem;
-    border-bottom: 1px solid #e5e5e5;
-    padding-bottom: 0.3rem;
-  }
-
-  .note-content h2:first-child,
-  .note-content > h2:first-child {
-    margin-top: 0 !important;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #27272a;
+    padding-bottom: 0.5rem;
   }
 
   .note-content h3 {
-    font-size: 1.2rem;
-  }
-
-  .note-content h4 {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
   }
 
   .note-content p {
-    color: #333;
-    margin: 1rem 0;
-    font-size: 1rem;
-    white-space: pre-wrap;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: #d4d4d8 !important;
   }
 
-  /* 説明行内のリンクも改行させる */
-  .note-content p a {
-    display: block !important;
-    margin: 0 0 0.25rem 0;
+  .note-content a {
+    color: #a1a1aa !important;
+    text-decoration: none !important;
   }
 
-  /* 改行を保持して説明文を表示 */
-  .note-content .item-description {
-    white-space: pre-wrap;
-    word-break: break-word;
-    line-height: 1.5;
-  }
-
-  /* 説明文内のリンクを強制改行 */
-  .note-content .item-description a {
-    display: block;
-    margin: 0 0 0.25rem 0;
-  }
-
-  /* figcaptionが残っている場合も改行を保持 */
-  .note-content figure figcaption {
-    white-space: pre-wrap;
-  }
-
-  .note-content ul, .note-content ol {
-    margin: 1rem 0;
-    padding-left: 2rem;
-  }
-
-  .note-content li {
-    margin: 0.5rem 0;
-    color: #333;
-    white-space: pre-wrap;
+  .note-content a:hover {
+    color: #ffffff !important;
+    text-decoration: none !important;
   }
 
   .note-content img {
     width: 100%;
-    height: auto;
-    max-width: 100%;
-    border-radius: 8px;
-    margin: 0.5rem 0;
-    display: block;
-  }
-
-  /* 商品画像のレイアウト調整 */
-  .note-content figure {
-    margin: 0.5rem 0;
-    text-align: left;
-    padding-left: 0;
-    margin-left: 0;
-    width: 100%;
-    display: block;
-  }
-
-  .note-content figure img {
-    margin: 0.5rem 0;
-    width: 100%;
     max-width: 100%;
     height: auto;
-    display: block;
-    margin-left: 0;
-    padding-left: 0;
-    object-fit: contain;
-  }
-
-  /* 画像をタイトルと同じ左端に揃える */
-  .note-content h3 + figure {
-    margin-left: 0;
-    padding-left: 0;
-  }
-
-  .note-content h3 + figure img {
-    margin-left: 0;
-    padding-left: 0;
-  }
-
-  /* 商品セクションのレイアウト統一 */
-  .note-content h3 {
-    margin: 1.5rem 0 0.5rem 0;
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-  }
-
-  /* より強力な商品名のフォントサイズ設定 */
-  .note-content h3 a {
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-  }
-
-  .note-content h3 + figure {
-    margin: 0.5rem 0;
-  }
-
-  .note-content h3 + figure + p {
-    margin: 0.5rem 0 1.5rem 0;
-    font-size: 0.9rem;
-    margin-left: 0 !important;
-    padding-left: 0 !important;
-    margin-right: 0 !important;
-    padding-right: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  .note-content a {
-    color: #000000;
-    text-decoration: underline;
-  }
-
-  .note-content a:hover {
-    text-decoration: underline;
-  }
-
-  /* 商品名と説明の文字色を黒に */
-  .note-content h3 a {
-    color: #000000 !important;
-  }
-
-  .note-content p {
-    color: #000000 !important;
-    font-size: 0.9rem !important;
-    margin-left: 0 !important;
-    padding-left: 0 !important;
-    margin-right: 0 !important;
-    padding-right: 0 !important;
-    max-width: 100% !important;
-    width: auto !important;
-    box-sizing: border-box !important;
-    overflow-wrap: break-word !important;
-    word-wrap: break-word !important;
-    display: block !important;
-  }
-
-  /* 画像の直後の段落を特別に制御 */
-  .note-content figure + p {
-    margin-top: 0.5rem !important;
-    margin-bottom: 1.5rem !important;
-    width: auto !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* より強力なリンク色の変更 */
-  .note-content a,
-  .note-content h3 a,
-  .note-content p a {
-    color: #000000 !important;
-    text-decoration: underline !important;
-  }
-
-  .note-content a:hover,
-  .note-content h3 a:hover,
-  .note-content p a:hover {
-    color: #000000 !important;
-    text-decoration: underline !important;
-  }
-
-  /* 説明文を強制的に黒に */
-  .note-content p,
-  .note-content div,
-  .note-content span {
-    color: #000000 !important;
-  }
-
-  .note-content * {
-    color: #000000 !important;
-  }
-
-  .note-content blockquote {
-    border-left: 4px solid #0066cc;
-    margin: 1rem 0;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 0 8px 8px 0;
-  }
-
-  .note-content code {
-    background: #f1f3f4;
-    padding: 0.2rem 0.4rem;
     border-radius: 4px;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 0.9em;
+    margin: 1.5rem auto;
+    display: block;
   }
 
-  .note-content pre {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 1rem 0;
+  .note-content figure {
+    margin: 2rem 0;
   }
 
-  .note-content pre code {
-    background: none;
-    padding: 0;
+  .note-content ul {
+    list-style-type: none;
+    padding-left: 0;
   }
 
-  .note-source {
-    text-align: center;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid #e5e5e5;
-  }
-
-  .note-source p {
-    color: #888;
-    font-size: 0.85rem;
-    margin: 0;
-  }
-
-  .note-source a {
-    color: #0066cc;
-    text-decoration: none;
-  }
-
-  .note-source a:hover {
-    text-decoration: underline;
-  }
-
-  .update-info {
-    color: #666;
-    font-size: 0.8rem;
-    margin: 0.5rem 0 0 0;
-    font-style: italic;
-  }
-
-  @media (max-width: 768px) {
-    .note-content {
-      margin: 0;
-      padding: 0.5rem 0.25rem;
-      width: 100%;
-      max-width: none;
-    }
-
-    .note-content h1 {
-      font-size: 1.5rem;
-    }
-
-    .note-content h2 {
-      font-size: 1.3rem;
-    }
-
-    .note-content h3 {
-      font-size: 1.1rem;
-    }
-
-    .note-content p {
-      font-size: 0.6rem;
-    }
-
-    /* スマホでの画像のアスペクト比保持 */
-    .note-content figure img {
-      width: 100%;
-      height: auto;
-      max-width: none;
-      object-fit: contain;
-    }
-
-    /* スマホでも画像の幅を適切に調整 */
-    .note-content figure {
-      text-align: left;
-      margin: 0.5rem 0;
-    }
-
-    .note-content figure img {
-      max-width: 100%;
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .note-content p {
-      max-width: 100% !important;
-      width: 100% !important;
-      font-size: 0.7rem !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-      box-sizing: border-box !important;
-      overflow-wrap: break-word !important;
-      word-wrap: break-word !important;
-    }
-
-    .note-content figure + p {
-      max-width: 100% !important;
-      width: 100% !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-      box-sizing: border-box !important;
-      overflow-wrap: break-word !important;
-      word-wrap: break-word !important;
-    }
-
-    /* スマホで強制的にコンテナ幅に合わせる */
-    .note-content {
-      width: 100% !important;
-      max-width: none !important;
-      padding: 0.5rem 0.25rem !important;
-    }
-
-    .note-content * {
-      max-width: 100% !important;
-    }
-
-    /* Noteページのデフォルトスタイルを強制的に上書き */
-    .note-content p,
-    .note-content div,
-    .note-content span,
-    .note-content .note-body,
-    .note-content .note-content,
-    .note-content .note-text,
-    .note-content .note-paragraph {
-      width: 100% !important;
-      max-width: 100% !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-      box-sizing: border-box !important;
-      overflow-wrap: break-word !important;
-      word-wrap: break-word !important;
-      white-space: pre-wrap !important;
-    }
-
-    .note-source {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-    }
-
-    .content-container {
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0;
-      width: 100%;
-    }
-
-    .items-container {
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0;
-      width: 100%;
-    }
-
-    .container {
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0;
-      width: 100%;
-    }
+  .note-content li {
+    margin-bottom: 0.5rem;
   }
 </style>

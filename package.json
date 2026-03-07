@@ -19,10 +19,14 @@
     "@vercel/analytics": "^1.6.1",
     "astro": "^5.5.4",
     "clsx": "^2.1.1",
+    "firebase": "^12.10.0",
+    "firebase-admin": "^13.7.0",
     "framer-motion": "^12.28.1",
     "lucide-react": "^0.563.0",
+    "microcms-js-sdk": "^3.3.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "stripe": "^20.4.0",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {

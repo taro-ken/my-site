@@ -1,15 +1,41 @@
 ---
-import { Analytics } from '@vercel/analytics/astro';
+import vercelAnalytics from '@vercel/analytics/astro';
+import Navigation from '../components/Navigation.astro';
+import { adminAuth, adminDb } from '../lib/firebase/server';
+import '../styles/global.css';
+
+const Analytics = vercelAnalytics;
 
 interface Props {
 	title: string;
 }
 
 const { title } = Astro.props;
+
+// Global session and premium status check
+const sessionCookie = Astro.cookies.get("session")?.value;
+let isLoggedIn = false;
+let isPremium = false;
+
+if (sessionCookie) {
+  try {
+    const decodedToken = await adminAuth.verifySessionCookie(sessionCookie);
+    isLoggedIn = true;
+    
+    // Check Firestore for premium status
+    const doc = await adminDb.collection('users').doc(decodedToken.uid).get();
+    if (doc.exists && doc.data()?.stripe_status === 'active') {
+      isPremium = true;
+    }
+  } catch (err) {
+    isLoggedIn = false;
+    isPremium = false;
+  }
+}
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ja" class="bg-black text-white">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Astro description" />
@@ -18,7 +44,8 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body>
+	<body class="bg-black min-h-screen">
+		<Navigation isLoggedIn={isLoggedIn} isPremium={isPremium} />
 		<slot />
 		<Analytics />
 	</body>
@@ -37,8 +64,6 @@ const { title } = Astro.props;
 	}
 	html {
 		font-family: system-ui, sans-serif;
-		background: #13151a;
-		background-size: 224px;
 	}
 	code {
 		font-family:

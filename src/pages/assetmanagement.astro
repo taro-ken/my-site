@@ -1,27 +1,25 @@
 ---
+import Layout from '../layouts/Layout.astro';
 import MoneySimulator from '../components/MoneySimulator';
-import Header from "../components/Header.astro";
 import '../styles/global.css';
 
-export const prerender = true;
 ---
 
-<!DOCTYPE html>
-<html lang="ja">
-  <Header 
-    title="資産管理シミュレーター | 25-15-50-10の法則" 
-    description="25-15-50-10の法則に基づいた資産管理シミュレーター。手取り月収を入力して理想的な配分を計算。"
-    canonicalUrl="https://kentaro.vercel.app/assetmanagement"
-  />
-  <body class="bg-gray-50 transition-colors duration-300 min-h-screen flex flex-col font-sans mb-10">
-    <div class="content flex-grow">
-      <nav class="main">
-        <div class="container mx-auto px-4 py-8">
-            <main>
-                <MoneySimulator client:load />
-            </main>
-        </div>
-      </nav>
-    </div>
-  </body>
-</html>
+<Layout title="Asset Allocation Simulator | The Golden Rule">
+  <div class="assetmanagement-body bg-black text-white min-h-screen pt-32 pb-32 px-5">
+    <main>
+      <MoneySimulator client:load />
+    </main>
+  </div>
+</Layout>
+<style is:global>
+  /* このページだけ余白も含めて全面黒にする（global.css の body 背景を上書き） */
+  html.bg-black,
+  html.bg-black body.assetmanagement-body {
+    background-color: #000000 !important;
+    background: #000000 !important;
+  }
+  html.bg-black {
+    min-height: 100%;
+  }
+</style>

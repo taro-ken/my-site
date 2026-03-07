@@ -1,0 +1,21 @@
+Checking for new versions...
+
+Getting ready...
+Ready! You are using Stripe API Version [2026-02-25.clover]. Your webhook signing secret is whsec_06700924386fb8a1de26004f3168519d2eb6269f19d9a0ad3ca63fcd21b05bbb (^C to quit)
+2026-03-07 15:38:02   --> product.created [evt_1T8EUwRxbsRRcZuEmOXi21dH]
+2026-03-07 15:38:03  <--  [200] POST http://localhost:4321/api/stripe/webhook [evt_1T8EUwRxbsRRcZuEmOXi21dH]
+2026-03-07 15:38:03   --> price.created [evt_1T8EUxRxbsRRcZuEiJmAZKic]
+2026-03-07 15:38:03  <--  [200] POST http://localhost:4321/api/stripe/webhook [evt_1T8EUxRxbsRRcZuEiJmAZKic]
+2026-03-07 15:38:05   --> charge.succeeded [evt_3T8EUyRxbsRRcZuE18rSfN93]
+2026-03-07 15:38:06  <--  [200] POST http://localhost:4321/api/stripe/webhook [evt_3T8EUyRxbsRRcZuE18rSfN93]
+2026-03-07 15:38:06   --> payment_intent.succeeded [evt_3T8EUyRxbsRRcZuE17Adiu8j]
+2026-03-07 15:38:06  <--  [200] POST http://localhost:4321/api/stripe/webhook [evt_3T8EUyRxbsRRcZuE17Adiu8j]
+2026-03-07 15:38:06   --> payment_intent.created [evt_3T8EUyRxbsRRcZuE1QnaXe84]
+2026-03-07 15:38:06  <--  [200] POST http://localhost:4321/api/stripe/webhook [evt_3T8EUyRxbsRRcZuE1QnaXe84]
+2026-03-07 15:38:06   --> checkout.session.completed [evt_1T8EUzRxbsRRcZuEFKnGAvBW]
+2026-03-07 15:38:06  <--  [200] POST http://localhost:4321/api/stripe/webhook [evt_1T8EUzRxbsRRcZuEFKnGAvBW]
+2026-03-07 15:38:08   --> charge.updated [evt_3T8EUyRxbsRRcZuE1CubXIu7]
+2026-03-07 15:38:08  <--  [200] POST http://localhost:4321/api/stripe/webhook [evt_3T8EUyRxbsRRcZuE1CubXIu7]
+time="Sat, 07 Mar 2026 16:30:05 JST" level=error msg="Error when writing ping message: websocket: close sent" prefix=websocket.Client.writePump
+time="Sat, 07 Mar 2026 16:34:07 JST" level=error msg="Error when writing ping message: websocket: close sent" prefix=websocket.Client.writePump
+time="Sat, 07 Mar 2026 17:26:29 JST" level=error msg="Error when writing ping message: websocket: close sent" prefix=websocket.Client.writePump

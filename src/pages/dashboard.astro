@@ -1,0 +1,148 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { adminAuth, adminDb } from '../lib/firebase/server';
+
+const sessionCookie = Astro.cookies.get("session")?.value;
+
+if (!sessionCookie) {
+  console.log("[dashboard.astro] sessionCookie is missing from Astro.cookies");
+  return Astro.redirect("/login");
+}
+
+let user;
+let stripeStatus = 'free';
+
+try {
+  const decodedToken = await adminAuth.verifySessionCookie(sessionCookie, true);
+  user = await adminAuth.getUser(decodedToken.uid);
+
+  const userDoc = await adminDb.collection('users').doc(user.uid).get();
+  
+  if (userDoc.exists) {
+    const data = userDoc.data();
+    if (data?.stripe_status === 'active') {
+      stripeStatus = 'active';
+    } else {
+      // Small delay and retry in case of webhook lag
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      const retryDoc = await adminDb.collection('users').doc(user.uid).get();
+      if (retryDoc.exists && retryDoc.data()?.stripe_status === 'active') {
+        stripeStatus = 'active';
+      }
+    }
+  }
+
+  // Sync isPremium cookie
+  if (stripeStatus === 'active') {
+    Astro.cookies.set("isPremium", "true", {
+      path: "/",
+      httpOnly: false,
+      secure: import.meta.env.PROD,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 5,
+    });
+  } else {
+    Astro.cookies.set("isPremium", "false", { path: "/" });
+  }
+
+  // Non-subscribers cannot access dashboard
+  if (stripeStatus !== 'active') {
+    console.log(`[dashboard.astro] stripeStatus is ${stripeStatus}, redirecting to /`);
+    return Astro.redirect("/");
+  }
+
+} catch (error) {
+  console.error("[dashboard.astro] Session verification failed:", error);
+  Astro.cookies.delete("session", { path: "/" });
+  Astro.cookies.delete("isLoggedIn", { path: "/" });
+  Astro.cookies.delete("isPremium", { path: "/" });
+  return Astro.redirect("/login");
+}
+---
+
+<Layout title="ダッシュボード | Kimoto Portfolio">
+  <main class="min-h-screen bg-black text-white p-8 pt-24 max-w-4xl mx-auto">
+    <div class="flex flex-row justify-between items-center gap-4 mb-10">
+      <h1 class="text-2xl md:text-4xl font-black tracking-tight">
+        ダッシュボード
+      </h1>
+      <button id="signout-btn" class="shrink-0 whitespace-nowrap px-4 md:px-5 py-2 md:py-2.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-all text-xs md:text-sm font-medium">
+        ログアウト
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- プロフィールカード -->
+      <div class="p-6 rounded-2xl bg-zinc-950 border border-white/10 shadow-xl">
+        <h2 class="text-lg font-bold mb-5 text-white">プロフィール</h2>
+        <div class="space-y-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">メールアドレス</p>
+            <p class="font-medium text-sm">{user.email}</p>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">ユーザーID</p>
+            <p class="font-medium text-xs font-mono truncate text-zinc-400">{user.uid}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- サブスクリプションカード -->
+      <div class="p-6 rounded-2xl bg-zinc-950 border border-white/10 shadow-xl relative overflow-hidden">
+        <div class="absolute top-4 right-4">
+          <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${stripeStatus === 'active' ? 'bg-white text-black border-white' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}>
+            {stripeStatus === 'active' ? 'プレミアム' : '無料プラン'}
+          </span>
+        </div>
+        <h2 class="text-lg font-bold mb-5 text-white">サブスクリプション</h2>
+        
+        {stripeStatus === 'active' ? (
+          <>
+            <p class="text-zinc-400 mb-2 text-sm">
+              すべてのプレミアム記事・チュートリアル・限定コンテンツにアクセスできます。
+            </p>
+            <p class="text-zinc-300 mb-6 text-sm font-medium">ご支援いただきありがとうございます。</p>
+            <div class="flex flex-col gap-3">
+              <form method="POST" action="/api/stripe/portal">
+                <button type="submit" class="w-full px-5 py-3 bg-white text-black hover:bg-zinc-200 font-bold rounded-md transition-colors text-sm">
+                  サブスクリプションを管理・解約する
+                </button>
+              </form>
+            </div>
+          </>
+        ) : (
+          <>
+            <p class="text-zinc-400 mb-6 text-sm">
+              プレミアムプランにアップグレードして、限定記事やコンテンツにアクセスしましょう。
+            </p>
+            <a href="/pricing" class="inline-block w-full text-center px-5 py-3 bg-white text-black hover:bg-zinc-200 font-bold rounded-md transition-colors text-sm">
+              プランをアップグレード
+            </a>
+          </>
+        )}
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
+<script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
+<script is:inline>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
+    authDomain: "fitw-prod.firebaseapp.com",
+    projectId: "fitw-prod",
+    storageBucket: "fitw-prod.firebasestorage.app",
+    messagingSenderId: "208896639763",
+    appId: "1:208896639763:web:dbdbf3a44a7010da6450e6"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  document.getElementById('signout-btn').addEventListener('click', async function() {
+    await firebase.auth().signOut();
+    window.location.assign('/api/auth/signout');
+  });
+</script>

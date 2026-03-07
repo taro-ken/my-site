@@ -1,0 +1,167 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const errorParam = Astro.url.searchParams.get("error");
+const registeredParam = Astro.url.searchParams.get("registered");
+
+let errorMessage = "";
+if (errorParam === "invalid_credentials") {
+  errorMessage = "invalid_credentials";
+} else if (errorParam === "missing_fields") {
+  errorMessage = "missing_fields";
+} else if (errorParam) {
+  errorMessage = "server_error";
+}
+
+let showSuccess = registeredParam === "true";
+---
+
+<Layout title="ログイン | Kimoto Portfolio">
+  <main class="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden font-sans selection:bg-white selection:text-black">
+    <div class="max-w-md w-full rounded-2xl p-8 sm:p-10 shadow-2xl bg-zinc-950 border border-white/10">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-black mb-3 tracking-tight">おかえりなさい</h1>
+        <p class="text-zinc-400 text-sm font-medium">ログインしてプレミアムコンテンツにアクセスし、サブスクリプションを管理しましょう。</p>
+      </div>
+
+      {showSuccess && (
+        <div class="mb-4 p-3 rounded-md text-sm bg-green-950/50 text-green-500 border border-green-900/50 text-center font-medium">
+          登録が完了しました。ログインしてください。
+        </div>
+      )}
+
+      <div id="error-msg" class={`mb-4 p-3 rounded-md text-sm bg-red-950/50 text-red-500 border border-red-900/50 text-center font-medium ${errorMessage ? '' : 'hidden'}`}>
+        {errorMessage === "invalid_credentials" && (
+          <span>アカウントが見つからないかパスワードが間違っています。<br/><a href="/register" class="underline font-bold mt-1 inline-block">新規登録はこちら</a></span>
+        )}
+        {errorMessage === "missing_fields" && <span>メールアドレスとパスワードを入力してください。</span>}
+        {errorMessage === "server_error" && <span>エラーが発生しました。しばらくしてから再試行してください。</span>}
+      </div>
+
+      <div class="space-y-5">
+        <div>
+          <label for="email" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">メールアドレス</label>
+          <input 
+            type="email" 
+            id="email" 
+            required 
+            placeholder="you@example.com"
+            class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors text-sm"
+          />
+        </div>
+
+        <div>
+          <label for="password" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">パスワード</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="password" 
+              required 
+              placeholder="••••••••"
+              class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors text-sm pr-12"
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-0 flex items-center px-4 text-zinc-500 hover:text-white transition-colors focus:outline-none z-10"
+              aria-label="Toggle password visibility"
+              onclick="
+                const input = document.getElementById('password');
+                const eyeOpen = document.getElementById('eye-icon-open');
+                const eyeClosed = document.getElementById('eye-icon-closed');
+                const isPassword = input.getAttribute('type') === 'password';
+                input.setAttribute('type', isPassword ? 'text' : 'password');
+                if (isPassword) { eyeOpen.classList.remove('hidden'); eyeClosed.classList.add('hidden'); }
+                else { eyeOpen.classList.add('hidden'); eyeClosed.classList.remove('hidden'); }
+              "
+            >
+              <svg id="eye-icon-open" class="h-5 w-5 pointer-events-none hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <svg id="eye-icon-closed" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button 
+          id="login-btn"
+          type="button" 
+          class="w-full py-4 px-4 mt-4 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.1em] uppercase rounded-sm shadow-lg transition-colors"
+        >
+          ログイン
+        </button>
+      </div>
+
+      <p class="mt-8 text-center text-sm font-medium text-zinc-500">
+        アカウントを持っていませんか？ 
+        <a href="/register" class="text-white hover:underline underline-offset-4 transition-all ml-1">新規登録</a>
+      </p>
+    </div>
+  </main>
+</Layout>
+
+<!-- Load Firebase SDK from CDN using is:inline to bypass Astro module bundling entirely -->
+<script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
+<script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
+<script is:inline>
+  // Firebase config - PUBLIC values, safe to expose client-side
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
+    authDomain: "fitw-prod.firebaseapp.com",
+    projectId: "fitw-prod",
+    storageBucket: "fitw-prod.firebasestorage.app",
+    messagingSenderId: "208896639763",
+    appId: "1:208896639763:web:dbdbf3a44a7010da6450e6"
+  };
+
+  // Initialize Firebase (guard against double-init)
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  document.getElementById('login-btn').addEventListener('click', async function() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('error-msg');
+    const btn = document.getElementById('login-btn');
+
+    if (!email || !password) {
+      errorMsg.innerHTML = 'メールアドレスとパスワードを入力してください。';
+      errorMsg.classList.remove('hidden');
+      return;
+    }
+
+    errorMsg.classList.add('hidden');
+    btn.textContent = 'ログイン中...';
+    btn.disabled = true;
+
+    try {
+      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const idToken = await userCredential.user.getIdToken();
+
+      const res = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + idToken }
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        window.location.assign(data.url || '/dashboard');
+      } else {
+        throw new Error('session_error');
+      }
+    } catch (error) {
+      const code = error.code || '';
+      if (code === 'auth/user-not-found' || code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/invalid-login-credentials') {
+        errorMsg.innerHTML = 'アカウントが見つからないかパスワードが間違っています。<br><a href="/register" class="underline font-bold mt-1 inline-block">新規登録はこちら</a>';
+      } else {
+        errorMsg.textContent = 'ログインに失敗しました。もう一度お試しください。';
+      }
+      errorMsg.classList.remove('hidden');
+      btn.textContent = 'ログイン';
+      btn.disabled = false;
+    }
+  });
+</script>

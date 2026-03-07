@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { adminAuth, adminDb } from '../lib/firebase/server';
+
+const sessionCookie = Astro.cookies.get("session")?.value;
+
+let isLoggedIn = false;
+let isPremium = false;
+
+if (sessionCookie) {
+  try {
+    const decodedToken = await adminAuth.verifySessionCookie(sessionCookie);
+    isLoggedIn = true;
+    
+    // Check Firestore for premium status
+    const doc = await adminDb.collection('users').doc(decodedToken.uid).get();
+    if (doc.exists && doc.data()?.stripe_status === 'active') {
+      isPremium = true;
+    }
+  } catch (err) {
+    // Invalid or expired token, safely ignore
+  }
+}
+---
+
+<Layout title="料金について | Kimoto Portfolio">
+  <main class="min-h-screen bg-black text-white flex flex-col pt-32 pb-32 px-5 font-sans selection:bg-white selection:text-black">
+    <div class="max-w-4xl mx-auto w-full text-center mb-16">
+      <p class="text-zinc-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">Membership</p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6">
+        The Essence
+      </h1>
+      <p class="text-xs md:text-sm text-zinc-400 max-w-2xl mx-auto font-medium leading-relaxed">
+        メンバーシップに参加して、ライフスタイルデザイン・<br class="md:hidden" />
+        ミニマリズム・テクノロジーについての限定記事や<br class="md:hidden" />
+        リソースにフルアクセスしましょう。
+      </p>
+    </div>
+
+    <div class="max-w-md w-full mx-auto">
+      <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-8 md:p-10 shadow-2xl relative">
+        <div class="text-center mb-8 border-b border-zinc-900 pb-8">
+          <h2 class="text-2xl font-black text-white mb-2 tracking-tight">プレミアムメンバー</h2>
+          <p class="text-zinc-400 text-sm font-medium">すべてにアクセス可能</p>
+          
+          <div class="mt-8 flex justify-center items-end gap-1">
+            <span class="text-5xl font-black text-white tracking-tighter">¥500</span>
+            <span class="text-zinc-500 font-bold mb-1">/月</span>
+          </div>
+        </div>
+
+        <ul class="space-y-5 mb-10">
+          <li class="flex items-start">
+            <svg class="w-5 h-5 text-white mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-zinc-300 font-medium text-sm">すべての限定記事が読み放題</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="w-5 h-5 text-white mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-zinc-300 font-medium text-sm">ソースコードやデザイン素材のダウンロード</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="w-5 h-5 text-white mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-zinc-300 font-medium text-sm">限定コミュニティへのアクセス（予定）</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="w-5 h-5 text-white mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-zinc-300 font-medium text-sm">いつでもキャンセル可能</span>
+          </li>
+        </ul>
+
+        <div class="mt-auto">
+          {isPremium ? (
+            <button disabled class="w-full py-4 px-4 bg-zinc-900 border border-zinc-800 text-zinc-500 font-bold rounded-sm cursor-not-allowed uppercase tracking-widest text-xs">
+              現在のプラン
+            </button>
+          ) : isLoggedIn ? (
+            <form action="/api/stripe/checkout" method="POST">
+              <button type="submit" class="w-full py-4 px-4 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
+                今すぐ登録する
+              </button>
+            </form>
+          ) : (
+            <a href="/login" class="block text-center w-full py-4 px-4 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
+              今すぐ登録する
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

@@ -5,8 +5,8 @@
 	--font-sans: system-ui, sans-serif;
 	--font-mono: 'IBM Plex Mono', monospace;
 
-	--color-foreground: #0c0c0c;
-	--color-background: #ffffff;
+	--color-foreground: #ffffff;
+	--color-background: #000000;
 	--color-primary: #0784b5;
 }
 
@@ -34,4 +34,3 @@ body {
 .section-title {
 	@apply text-base font-semibold pb-0;
 }
-

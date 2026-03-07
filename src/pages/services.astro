@@ -1,329 +1,28 @@
 ---
-import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
 
-export const prerender = true;
 ---
 
-<!DOCTYPE html>
-<html>
-  <Header 
-    title="Services | KENTARO" 
-    description="サービス一覧"
-    canonicalUrl="https://kentaro.vercel.app/services"
-  />
-  <body>
-    <div class="content">
-      <nav class="main">
-        <div class="container">
-          <div class="back-nav-container">
-            <a href="/" class="back-nav-button w-inline-block"
-              ><img src="/assets/back.svg" loading="lazy" alt="" class="back-nav-img" />
-              <div>Back</div></a
-            >
-          </div>
-          <div class="content-container">
-            <h1 style="font-size: 1.8rem; margin-bottom: 0.1rem;">Services</h1>
+<Layout title="Services | KENTARO">
+  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-[#BF953F] selection:text-black">
+    <div class="max-w-3xl mx-auto w-full">
+      <div class="text-center mb-12 flex flex-col items-center">
+              <p class="text-zinc-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">The Services</p>
+              <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-4">
+                Services
+              </h1>
+              <p class="text-zinc-400 font-medium max-w-2xl text-sm md:text-base">
+                実務的なサポートメニュー
+              </p>
+            </div>
             <section class="items-container">
-              <div class="services-container">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <!-- 早起き習慣コンサル -->
-                  <div class="service-card">
-                    <div class="service-content">
-                      <!-- 画像セクション -->
-                      <div class="service-image">
-                        <img 
-                          src="/assets/services/consulting.jpg" 
-                          alt="早起き習慣コンサル" 
-                          class="service-img"
-                          loading="lazy"
-                        />
-                      </div>
-
-                      <!-- サービス詳細セクション -->
-                      <div class="service-details">
-                        <h3 class="service-title">早起き習慣コンサル（月3名限定）</h3>
-                        
-                        <div class="service-info">
-                          <div class="service-section">
-                            <p class="service-description">
-                              意志ではなく仕組みで早起きを続けるための1対1伴走サービスです。
-                            </p>
-                            <p class="service-description">
-                              ・早起きを習慣化して自分時間を確保したい方<br>
-                              ・営業・経営者・フリーランスの方<br>
-                              に最適です。
-                            </p>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">得られること</h4>
-                            <ul class="service-list">
-                              <li>
-                                <div class="service-item-title">• 起床時刻の安定化</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 二度寝・スヌーズのゼロ化</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 朝の第一行動が自動で始まる設計</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 仕事の生産性と可処分時間の増加</div>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">サービス内容</h4>
-                            <ul class="service-list">
-                              <li>
-                                <div class="service-item-title">• キックオフ面談（30分）</div>
-                                <div class="service-item-desc">目的・理想起床・現状（就寝/起床・環境・阻害要因）を把握し、個別プランを作成します。</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• デイリー報告（1日5分）</div>
-                                <div class="service-item-desc">夜：振り返り／翌日の起床プラン<br>朝：起床時刻・第一行動の実施報告<br>テンプレートを用意し、負担を最小化します。</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 中期面談（任意・各15分／2週目・4週目）</div>
-                                <div class="service-item-desc">経過を見て再プランニングします。</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• チャット対応</div>
-                                <div class="service-item-desc">悩み・ご相談に対して代替ルーティンや環境調整を即時提案します。</div>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">こんな悩みに</h4>
-                            <ul class="service-list">
-                              <li>
-                                <div class="service-item-title">• 二度寝してしまう</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 夜更かしで朝がズレる</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 朝の最初の一歩が重い</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 仕事前に自己投資の時間を確保したい</div>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">進め方</h4>
-                            <ul class="service-list">
-                              <li>
-                                <div class="service-item-title">• お申込み → 日程調整</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 事前アンケート（目的／現状と理想の就寝・起床／阻害要因）</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• キックオフ面談 → 4週間伴走（デイリー報告＋週次調整）</div>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">サービスのポイント</h4>
-                            <p class="service-description">
-                              起床時間を宣言し報告することで、早起きに対しての責任感が生まれます。<br>
-                              責任感や緊張感があれば、朝起きやすくなるメカニズムです。
-                            </p>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">私のルーティン</h4>
-                            <p class="service-description">
-                              4:00起き→シャワー→ トレーニング→食事→仕事
-                            </p>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">料金</h4>
-                            <p class="service-price">月額：¥9,800</p>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">キャンセル</h4>
-                            <p class="service-cancel">
-                              月額：次回更新日前までの連絡で翌月課金を停止（日割り返金なし）
-                            </p>
-                          </div>
-                        </div>
-
-                        <div class="service-button">
-                          <a 
-                            href="https://forms.gle/WgmL5zMchr7365gC9" 
-                            class="service-btn"
-                          >
-                            無料カウンセリングを申し込む
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- オンラインダイエットコーチング -->
-                  <div class="service-card">
-                    <div class="service-content">
-                      <!-- 画像セクション -->
-                      <div class="service-image">
-                        <img 
-                          src="/assets/services/diet.png" 
-                          alt="オンラインダイエットコーチング" 
-                          class="service-img"
-                          loading="lazy"
-                        />
-                      </div>
-
-                      <!-- サービス詳細セクション -->
-                      <div class="service-details">
-                        <h3 class="service-title">オンラインダイエットコーチング</h3>
-                        
-                        <div class="service-info">
-                          <div class="service-section">
-                            <h4 class="service-subtitle">サービス内容（1ヶ月）</h4>
-                            <ul class="service-list">
-                              <li>
-                                <div class="service-item-title">• 初回ヒアリング（無料）</div>
-                                <div class="service-item-desc">目標・体質・生活リズム・既往歴を確認し、到達指標を設定</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 毎日の食事レビュー＆代替提案</div>
-                                <div class="service-item-desc">写真OK・24時間以内に返信</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 月1回オンラインミーティング</div>
-                                <div class="service-item-desc">（任意・30分）</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 運動プラン</div>
-                                <div class="service-item-desc">自宅／ジムのどちらにも対応（レベル別メニュー）</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 停滞時の再計算</div>
-                                <div class="service-item-desc">体重・見た目・食欲の変化に合わせてPFC/カロリーを再設計</div>
-                              </li>
-                            </ul>
-                            <p class="service-note">
-                              ※連絡手段は LINE／メール 等から選択可能。
-                            </p>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">料金</h4>
-                            <p class="service-price">月額：¥9,800</p>
-                            <p class="service-price-desc">（毎日レビュー／質問無制限）</p>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">キャンセル</h4>
-                            <p class="service-cancel">
-                              月額：次回更新日前までの連絡で翌月課金を停止（日割り返金なし）
-                            </p>
-                          </div>
-                        </div>
-
-                        <div class="service-button">
-                          <a 
-                            href="https://forms.gle/WgmL5zMchr7365gC9" 
-                            class="service-btn"
-                          >
-                            無料カウンセリングを申し込む
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- パーソナルトレーニング -->
-                  <div class="service-card">
-                    <div class="service-content">
-                      <!-- 画像セクション -->
-                      <div class="service-image">
-                        <img 
-                          src="/assets/services/personal.jpg" 
-                          alt="パーソナルトレーニング" 
-                          class="service-img"
-                          loading="lazy"
-                        />
-                      </div>
-
-                      <!-- サービス詳細セクション -->
-                      <div class="service-details">
-                        <h3 class="service-title">パーソナルトレーニング</h3>
-                        
-                        <div class="service-info">
-                          <div class="service-section">
-                            <h4 class="service-subtitle">サービス内容（60分／回）</h4>
-                            <ul class="service-list">
-                              <li>
-                                <div class="service-item-title">• 初回ヒアリング</div>
-                                <div class="service-item-desc">目標・体調・既往歴を確認</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 姿勢／可動域チェック</div>
-                                <div class="service-item-desc">→ 安全なフォーム指導</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• 目的別メニュー提案</div>
-                              </li>
-                              <li>
-                                <div class="service-item-title">• セッション中の重量・回数管理と微調整</div>
-                              </li>
-                            </ul>
-                            <p class="service-note">
-                              ※場所は東京都内のレンタルジムで実施（応相談）。※ウェア／室内シューズ／タオル／飲み物はご持参ください。
-                            </p>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">料金（ジム利用料込み）</h4>
-                            <p class="service-price">60分：¥8,000</p>
-                            <p class="service-price-desc">
-                              ※ 支払いはカードまたはQRコード決済が利用可能です。
-                            </p>
-                          </div>
-
-                          <div class="service-section">
-                            <h4 class="service-subtitle">キャンセル</h4>
-                            <p class="service-cancel">
-                              前日21:00まで無料／当日100%（ジム枠確保のため）
-                            </p>
-                          </div>
-                        </div>
-
-                        <div class="service-button">
-                          <a 
-                            href="https://forms.gle/WgmL5zMchr7365gC9" 
-                            class="service-btn"
-                          >
-                            申し込む
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
+              <div class="services-container max-w-3xl mx-auto w-full">
+                <div class="flex flex-col gap-6">
                   <!-- キャリアカウンセリング -->
                   <div class="service-card">
                     <div class="service-content">
-                      <!-- 画像セクション -->
-                      <div class="service-image">
-                        <img 
-                          src="/assets/services/coaching.png" 
-                          alt="キャリアカウンセリング" 
-                          class="service-img"
-                          loading="lazy"
-                        />
-                      </div>
-
-                      <!-- サービス詳細セクション -->
+                      <!-- 画像セクションなし -->                      <!-- サービス詳細セクション -->
                       <div class="service-details">
                         <h3 class="service-title">キャリアカウンセリング</h3>
                         
@@ -379,17 +78,7 @@ export const prerender = true;
                   <!-- システム開発支援 -->
                   <div class="service-card">
                     <div class="service-content">
-                      <!-- 画像セクション -->
-                      <div class="service-image">
-                        <img 
-                          src="/assets/services/system.jpg" 
-                          alt="システム開発支援" 
-                          class="service-img"
-                          loading="lazy"
-                        />
-                      </div>
-
-                      <!-- サービス詳細セクション -->
+                      <!-- 画像セクションなし -->                      <!-- サービス詳細セクション -->
                       <div class="service-details">
                         <h3 class="service-title">システム開発支援</h3>
                         
@@ -426,63 +115,36 @@ export const prerender = true;
                 </div>
               </div>
             </section>
-          </div>
-        </div>
-      </nav>
     </div>
-
-    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
-  </body>
-</html>
+  </main>
+</Layout>
 
 <style>
   .services-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 0;
-  }
-
-  .grid {
-    display: grid;
-    gap: 2rem;
-  }
-
-  .grid-cols-1 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-
-  .lg\\:grid-cols-2 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+    padding: 1rem 0;
   }
 
   .service-card {
-    border: 0.5px solid #e0e0e0;
+    border: 1px solid #27272a; /* zinc-800 */
     border-radius: 12px;
     padding: 1.5rem;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.2s;
+    background: #09090b; /* zinc-950 */
+    box-shadow: none;
+    transition: all 0.3s ease;
   }
 
   .service-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: #3f3f46; /* zinc-700 */
+    background: #18181b; /* zinc-900 */
+    transform: translateY(-2px);
   }
 
   .service-content {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-  }
-
-  .service-image {
-    width: 100%;
-  }
-
-  .service-img {
-    width: 100%;
-    height: 16rem;
-    object-fit: cover;
-    border-radius: 8px;
   }
 
   .service-details {
@@ -492,9 +154,9 @@ export const prerender = true;
   }
 
   .service-title {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    color: #1a1a1a;
+    color: #ffffff;
     margin: 0;
   }
 
@@ -511,14 +173,14 @@ export const prerender = true;
   }
 
   .service-subtitle {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: #1a1a1a;
+    color: #e4e4e7; /* zinc-200 */
     margin: 0;
   }
 
   .service-list {
-    color: #666;
+    color: #a1a1aa; /* zinc-400 */
     font-size: 0.75rem;
     margin: 0;
     padding: 0;
@@ -530,43 +192,44 @@ export const prerender = true;
 
   .service-item-title {
     font-weight: 500;
+    color: #d4d4d8; /* zinc-300 */
   }
 
   .service-item-desc {
     margin-left: 1rem;
     margin-top: 0.25rem;
-    font-size: 0.625rem;
+    font-size: 0.65rem;
   }
 
   .service-note {
     font-size: 0.75rem;
-    color: #666;
+    color: #a1a1aa;
     margin: 0.25rem 0 0 0;
   }
 
   .service-price {
     font-size: 0.875rem;
     font-weight: bold;
-    color: #1a1a1a;
+    color: #ffffff;
     margin: 0;
   }
 
   .service-price-desc {
     font-size: 0.75rem;
-    color: #666;
+    color: #a1a1aa;
     margin: 0;
   }
 
   .service-cancel {
     font-size: 0.75rem;
-    color: #666;
+    color: #a1a1aa;
     margin: 0;
   }
 
   .service-description {
     font-size: 0.75rem;
-    color: #666;
-    line-height: 1.5;
+    color: #a1a1aa;
+    line-height: 1.6;
     margin: 0 0 0.5rem 0;
   }
 
@@ -577,33 +240,18 @@ export const prerender = true;
 
   .service-btn {
     display: inline-block;
-    padding: 0.5rem 1.5rem;
-    background: black;
-    color: white;
-    font-size: 0.625rem;
-    font-weight: 500;
+    padding: 0.6rem 2rem;
+    background: #ffffff;
+    color: #000000;
+    font-size: 0.7rem;
+    font-weight: 700;
     border-radius: 8px;
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
   }
 
   .service-btn:hover {
-    background: #333;
+    background: #a1a1aa; /* zinc-400 */
   }
 
-  @media (max-width: 768px) {
-    .service-img {
-      height: 9rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .lg\\:grid-cols-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    
-    .service-img {
-      height: 18rem;
-    }
-  }
 </style>

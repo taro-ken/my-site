@@ -1,283 +1,261 @@
 ---
-import Header from "../components/Header.astro";
-import { Icon } from 'astro-icon/components';
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+import { getBlogs, type BlogItem } from '../lib/cms';
 
-export const prerender = true;
+export const prerender = false;
 
-const socialLinks = [
+// Fetch latest blogs for the homepage
+let latestBlogs: BlogItem[] = [];
+try {
+  // Assuming getBlogs() can take parameters like limit, or we just slice the array
+  const response = await getBlogs();
+  latestBlogs = response.contents.slice(0, 6); // Get top 6 most recent
+} catch (error) {
+  console.error("Failed to fetch latest blogs for homepage:", error);
+}
+
+// Helper to strip HTML for excerpt
+const stripHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
+
+const resources = [
   {
-    name: 'YouTube',
-    url: 'https://www.youtube.com/channel/UCSjowQaMeSSAnCuMFhOnuAw',
+    title: "- 50 Minimal Life Rules -",
+    description: "日々の暮らしで大切にしている『手放す技術』や、人生における心とお金にゆとりを生むための考え方。",
+    link: "https://kentaro.life/send",
+    image: "/assets/resource/50rules.png", 
+    linkText: "Download Free"
   },
   {
-    name: 'Podcast',
-    url: 'https://open.spotify.com/show/2BLHFC1p0NBlShy0jNUXRx',
+    title: "The Golden Rule of Asset Allocation",
+    description: "安定した資産形成と経済的自由を実現するポートフォリオ戦略。時代を超えて機能するシミュレーター。",
+    link: "/assetmanagement",
+    image: "/assets/resource/goldenrules.png",
+    linkText: "Read Guide"
   },
   {
-    name: 'Note',
-    url: 'https://note.com/taroken2411',
+    title: "MyTube",
+    description: "おすすめ動画、ショート動画、コメント、動画内広告をすべて排除。あなたの大切な時間を守るための集中用YouTubeアプリ。",
+    link: "https://apps.apple.com/jp/app/id6447217754", // Replace with the actual URL if different
+    image: "/assets/app/4.png",
+    linkText: "View App"
   },
   {
-    name: 'GitHub',
-    url: 'https://github.com/taro-ken',
-  },
+    title: "Focusy",
+    description: "デジタルノイズを強制シャットアウト。指定したアプリをロックし、あなたから奪われた集中力を取り戻すためのツール。",
+    link: "https://apps.apple.com/jp/app/id6747918924", // Replace with actual URL when applied
+    image: "/assets/app/5.png",
+    linkText: "View App"
+  }
 ];
 
-const skills = ['Swift', 'Flutter', 'Shopify', 'Node.js', 'AWS'];
+const socialLinks = [
+  { name: 'YouTube', url: 'https://www.youtube.com/channel/UCSjowQaMeSSAnCuMFhOnuAw' },
+  { name: 'Threads', url: 'https://www.threads.com/@taro_minimal' },
+  { name: 'X', url: 'https://x.com/KENTARO1272740' },
+  { name: 'GitHub', url: 'https://github.com/taro-ken' },
+];
 ---
 
+<Layout title="KENTARO | Engineer & Creator">
+  <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pb-32">
+    {/* Hero Section */}
+    <section class="max-w-4xl mx-auto px-5 pt-32 md:pt-24 pb-8 text-center flex flex-col items-center">
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-8 leading-[1.05]">
+        Simple.
+        <br />
+        To The
+        <br />
+        Essence.
+      </h1>
+      <p class="text-sm md:text-base text-zinc-400 font-medium max-w-xl mb-6 leading-relaxed">
+        よりシンプルに、そして本質へ。
+      </p>
+      <a href="/blog" class="flex items-center text-sm font-bold hover:text-zinc-300 transition-colors border-b border-zinc-700 pb-1">
+        <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+        Read the latest articles
+      </a>
+    </section>
 
-<!DOCTYPE html>
-<html lang="ja">
-  <Header 
-    title="KENTARO" 
-    description="ミニマルに生きるEngineer"
-    canonicalUrl="https://kentaro.vercel.app/"
-  />
-  <body>
-    <div class="content">
-      <nav class="main">
-        <div class="container">
-          <!-- Hero Section -->
-          <main class="app-container flex flex-col gap-2 pt-0 md:pt-2 pb-0 relative">
-            <div class="flex flex-row items-center gap-4">
-              <div class="flex-shrink-0">
+    {/* Resources Section - Freedom & Focus */}
+    <section class="max-w-6xl mx-auto px-5 py-6 lg:py-8 border-t border-zinc-900">
+      <div class="text-center mb-6">
+        <p class="text-zinc-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">Resources</p>
+        <h2 class="text-4xl md:text-5xl font-black tracking-tight mb-4">
+          Freedom & Focus
+        </h2>
+        <p class="text-zinc-400 font-medium">
+          自分らしい人生をデザインするためのツールと知識。<br class="hidden md:block" />情報過多な世界で、あなたの時間と集中力を取り戻すためのリソース。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+        {resources.map((resource) => (
+          <div class="flex flex-col group cursor-pointer">
+            <a href={resource.link} class="block mb-6 overflow-hidden bg-zinc-900 aspect-[16/10] rounded-[4px]">
+              {resource.image ? (
                 <img 
-                  src="/assets/profile-icon.jpg" 
-                  loading="lazy" 
-                  alt="KENTARO" 
-                  class="w-16 h-16 md:w-20 md:h-20 rounded-lg object-cover border-2 border-foreground/10"
+                  src={resource.image} 
+                  alt={resource.title} 
+                  class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading="lazy"
                 />
-              </div>
-              <div>
-                <h1 class="text-xs font-bold leading-none">KENTARO.</h1>
-                <p class="text-sm font-light leading-normal">Engineer / Creator</p>
-              </div>
-            </div>
-          </main>
-
-          <!-- About Section -->
-          <section class="app-container py-0">
-            <h2 class="section-title">About</h2>
-            <p class="text-xs max-w-2xl font-light leading-normal">
-              東京在住のプログラマー/クリエイター。複数の大手企業案件で実務経験を重ね、メインではiOSアプリを開発、その他Web開発にも携わる。YouTubeではミニマリズムについて発信している。
-            </p>
-          </section>
-
-          <!-- Social Section -->
-          <section class="app-container py-0">
-            <h2 class="section-title">Social</h2>
-            <div class="flex flex-wrap gap-8 mt-0">
-              {socialLinks.map((link) => (
-                <a
-                  class="text-xs text-primary no-underline hover:no-underline"
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
-          </section>
-
-          <!-- All Item List Section -->
-          <section class="app-container py-0">
-            <h2 class="section-title">All Item List</h2>
-            <p class="text-xs max-w-xl">
-              Essential items more minimal.
-            </p>
-            <a class="btn-secondary" href="/all-item-list">
-              View Items
+              ) : (
+                <div class="w-full h-full flex items-center justify-center text-zinc-700 font-bold uppercase tracking-widest bg-zinc-900 group-hover:bg-zinc-800 transition-colors">
+                  {resource.title}
+                </div>
+              )}
             </a>
-          </section>
-
-          <!-- Projects & Skills Section -->
-          <section class="app-container py-0">
-            <h2 class="section-title">Projects & Skills</h2>
-            <p class="text-xs max-w-xl">
-              Work as an engineer, projects, and skills.
-            </p>
-            <a class="btn-secondary" href="/personal-projects">
-              View Projects
+            <a href={resource.link} class="flex flex-col flex-1">
+              <h3 class="text-2xl font-bold mb-3 leading-[1.2] group-hover:text-zinc-300 transition-colors">
+                {resource.title}
+              </h3>
+              <p class="text-zinc-400 text-sm mb-6 leading-relaxed flex-1">
+                {resource.description}
+              </p>
+              <div class="flex items-center text-sm font-bold text-white group-hover:text-zinc-300 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                {resource.linkText}
+              </div>
             </a>
-          </section>
+          </div>
+        ))}
+      </div>
+    </section>
 
-          <!-- Get in touch Section -->
-          <section class="app-container py-0">
-            <h2 class="section-title">Contact / Services</h2>
-            <p class="text-xs max-w-xl">
-              Contact me here.
-            </p>
-            <div class="flex flex-wrap space-x-4">
-              <a
-                class="btn-primary"
-                href="/contact"
-              >
-                Contact
-              </a>
-              <a class="btn-secondary" href="/services" target="_self">
-                Services
-              </a>
-            </div>
-          </section>
+    {/* The Blog Feed */}
+    <section class="max-w-6xl mx-auto px-5 py-6 lg:py-8 border-t border-zinc-900">
+      <div class="text-center mb-6">
+        <p class="text-zinc-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">The Blog</p>
+        <h2 class="text-4xl md:text-5xl font-black tracking-tight mb-4">
+          Articles & Insights
+        </h2>
+        <p class="text-zinc-400 font-medium">
+          習慣、思考法、そしてより少ないもので豊かに生きるための実践的な気づき
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-8 md:gap-x-6 md:gap-y-12">
+        {latestBlogs.map((blog) => (
+          <article class="flex flex-col group cursor-pointer relative">
+            <a href={`/blog/${blog.id}`} class="block mb-4 overflow-hidden bg-zinc-900 aspect-[16/10] relative rounded-[4px]">
+              {blog.eyecatch ? (
+                <img 
+                  src={blog.eyecatch.url} 
+                  alt={blog.title} 
+                  class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="w-full h-full flex items-center justify-center text-zinc-600">
+                  <span class="tracking-widest uppercase text-[10px]">No Image</span>
+                </div>
+              )}
+            </a>
+            <a href={`/blog/${blog.id}`} class="flex flex-col flex-1">
+              <h3 class="text-[11px] md:text-lg font-bold mb-2 md:mb-3 leading-[1.4] md:leading-[1.3] group-hover:text-zinc-300 transition-colors line-clamp-3">
+                {blog.is_premium && (
+                  <span class="inline-block align-middle mr-1.5 -translate-y-0.5 text-white" title="Premium Content">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                  </span>
+                )}
+                <span class="align-middle">{blog.title}</span>
+              </h3>
+              <div class="flex-1 mb-3 md:mb-4">
+                <p class="text-[10px] md:text-xs text-zinc-400 leading-relaxed line-clamp-2">
+                  {stripHtml(blog.content)}
+                </p>
+              </div>
+              <div class="font-bold italic underline underline-offset-2 md:underline-offset-4 mb-3 md:mb-4 decoration-2 text-[10px] md:text-xs text-zinc-200 group-hover:text-white transition-colors">
+                Read Full Post
+              </div>
+              <div class="pt-3 border-t border-zinc-800 text-[9px] text-zinc-400 font-semibold flex items-center">
+                <span class="italic text-zinc-300">taro.</span>
+                <span class="mx-2 uppercase tracking-wider">•</span>
+                <span class="uppercase tracking-wider">{new Date(blog.publishedAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+      
+      <div class="text-center mt-6">
+        <a href="/blog" class="inline-block px-8 py-3 bg-transparent border border-zinc-700 hover:border-zinc-500 text-xs tracking-widest uppercase font-bold rounded-sm transition-colors">
+          View All Posts
+        </a>
+      </div>
+    </section>
+
+    {/* About Section - Dan Koe Style */}
+    <section class="max-w-5xl mx-auto px-5 pt-6 pb-12 lg:pt-8 lg:pb-16 border-t border-zinc-900 flex flex-col items-center">
+      <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 w-full">
+        {/* Monochromatic Profile Image Container */}
+        <div class="flex flex-col items-center flex-shrink-0">
+          <div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-2 border-zinc-800 grayscale shadow-2xl">
+            <img 
+              src="/assets/profile-icon.jpg" 
+              alt="taro." 
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          {/* Social Icons under profile image */}
+          <div class="flex justify-center gap-6 mt-8 mb-4 md:mt-10 md:mb-0">
+            <a href="https://www.youtube.com/channel/UCSjowQaMeSSAnCuMFhOnuAw" target="_blank" class="text-white hover:text-zinc-400 transition-colors">
+              <svg class="w-6 h-6 -translate-y-[2px]" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+            <a href="https://www.threads.net/" target="_blank" class="text-white hover:text-zinc-400 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg>
+            </a>
+            <a href="https://x.com/" target="_blank" class="text-white hover:text-zinc-400 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://github.com/taro-ken" target="_blank" class="text-white hover:text-zinc-400 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.373 0 12c0 5.302 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.125-.303-.535-1.524.115-3.176 0 0 1.005-.322 3.3 1.23.95-.266 1.97-.399 2.99-.403 1.02.004 2.04.137 2.99.403 2.29-1.552 3.295-1.23 3.295-1.23.65 1.653.24 2.874.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.43.37.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .32.215.694.825.576C20.565 21.796 24 17.298 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+          </div>
         </div>
-      </nav>
+        
+        {/* Bio Text */}
+        <div class="max-w-md">
+          <h3 class="text-2xl font-black mb-4">Hey, I'm taro.</h3>
+          <p class="text-zinc-400 mb-6 leading-relaxed">
+            エンジニア、クリエイター、ミニマリズム実践者。大規模なiOSアプリの開発やWebシステム開発に従事。ライフスタイルデザイン・ミニマリズムについて発信しています。
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  {/* Clean Minimalist Footer */}
+  <footer class="bg-black text-white py-6 px-6 border-t border-zinc-900">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-end items-start gap-12 w-full">
+      <div class="flex flex-col">
+        <h4 class="font-bold text-lg mb-2">Gain An Essential Perspective</h4>
+        <p class="text-zinc-400 text-sm leading-relaxed mb-4 max-w-sm">
+          The Essence
+        </p>
+        <a href="/pricing" class="flex items-center text-sm font-bold text-white hover:text-zinc-400 transition-colors">
+          <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          Join The Essence
+        </a>
+      </div>
     </div>
-
-    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
-  </body>
-</html>
-
+    <div class="max-w-6xl mx-auto text-center mt-16 text-xs text-zinc-500 font-medium">
+      © All Rights Reserved.
+    </div>
+  </footer>
+</Layout>
 <style>
-  main.app-container h1 {
-    font-size: 1rem !important;
-    line-height: 1.1 !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    color: #0c0c0c !important;
-  }
-  
-  main.app-container p {
-    font-size: 0.875rem !important;
-    line-height: 1.2 !important;
-    margin-top: 0.5rem !important;
-    margin-bottom: 0 !important;
-  }
-  
-  section.app-container {
-    margin-top: -2rem !important;
-    margin-bottom: 0 !important;
-  }
-  
-  section.app-container:first-of-type {
-    margin-top: -3rem !important;
-  }
-  
-  section.app-container > *:last-child {
-    margin-bottom: 0 !important;
-  }
-  
-  section.app-container p {
-    font-size: 0.75rem !important;
-    line-height: 1.4 !important;
-    color: #0c0c0c !important;
-  }
-  
-  section.app-container .btn-primary,
-  section.app-container .btn-secondary {
-    margin-left: 0 !important;
-    padding-left: 0 !important;
-    align-self: flex-start !important;
-  }
-  
-  section.app-container > div.flex {
-    justify-content: flex-start !important;
-  }
-  
-  .profile-image-container {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .profile-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
-  }
-  
-  .single-projects-content h4 {
-    font-size: 1.5rem;
-  }
-  
-  .single-projects-content .lead {
-    font-size: 0.9rem;
-    color: #666;
-  }
-  
-  .chips-container-small-width .single-chip {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.4rem;
-  }
-  
-  .mini-label-white {
-    font-size: 0.7rem;
-  }
-  
-  .links-container {
-    margin-top: 1rem;
-  }
-  
-  .links-icons-container {
-    display: flex;
-    justify-content: flex-start;
-    gap: 1rem;
-    margin-top: 0.5rem;
-  }
-  
-  .link-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid #e0e0e0;
-    border-radius: 50%;
-    background-color: #fff;
-    transition: all 0.3s ease;
-    text-decoration: none;
-  }
-  
-  .link-icon:hover {
-    background-color: #f5f5f5;
-    border-color: #ccc;
-    transform: translateY(-2px);
-  }
-  
-  .social-icon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  @media (max-width: 768px) {
-    .profile-image-container {
-      width: 80px;
-      height: 80px;
-    }
-    
-    .single-projects-content h4 {
-      font-size: 1.2rem;
-    }
-    
-    .single-projects-content .lead {
-      font-size: 0.8rem;
-      line-height: 1.3;
-      color: #666;
-    }
-    
-    .chips-container-small-width .single-chip {
-      font-size: 0.6rem;
-      padding: 0.15rem 0.3rem;
-    }
-    
-    .mini-label-white {
-      font-size: 0.6rem;
-    }
-    
-    .links-icons-container {
-      gap: 0.8rem;
-    }
-    
-    .link-icon {
-      width: 36px;
-      height: 36px;
-    }
-    
-    .social-icon {
-      width: 18px;
-      height: 18px;
-    }
+  html {
+    background-color: black;
   }
 </style>
