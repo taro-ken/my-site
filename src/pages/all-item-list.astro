@@ -26,7 +26,7 @@ async function fetchNoteHTML() {
       
       // Cleanup
       content = content.replace(/<p[^>]*>【Profile】[^<]*<\/p>/gi, '');
-      content = content.replace(/<p[^>]*>.*?KENTARO\.東京在住のプログラマー.*?<\/p>/gis, '');
+      content = content.replace(/<p[^>]*>.*?taro\.東京在住のプログラマー.*?<\/p>/gis, '');
       content = content.replace(/<p[^>]*>.*?HOME[：:].*?kentaro\.life.*?<\/p>/gi, '');
       content = content.replace(/<p[^>]*>全ての持ち物をリスト化し[^<]*<\/p>/gs, '');
       content = content.replace(/<p[^>]*>新しい物を購入する際は[^<]*<\/p>/gs, '');
@@ -48,7 +48,10 @@ async function fetchNoteHTML() {
 const noteHTML = await fetchNoteHTML();
 ---
 
-<Layout title="All Item List | KENTARO">
+<Layout 
+  title="Gear - taro."
+  description="人生の質を高めてくれる、厳選された愛用アイテムたち。"
+>
   <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-[#BF953F] selection:text-black">
     <div class="max-w-3xl mx-auto w-full">
       <div class="text-center mb-12 flex flex-col items-center">

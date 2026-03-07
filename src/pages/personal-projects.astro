@@ -1,7 +1,6 @@
 ---
-import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
 import Project from '../components/Project.astro';
-import '../styles/global.css';
 
 
 const languages = ['Swift', 'Flutter', 'Python'];
@@ -74,16 +73,13 @@ const projects = [
 ];
 ---
 
-<!DOCTYPE html>
-<html
+<Layout 
+  title="Personal Projects - taro." 
+  description="個人プロジェクト一覧。"
+  canonicalUrl="https://kentaro.vercel.app/personal-projects"
+  hideNav={true}
 >
-  <Header 
-    title="Personal Projects | KENTARO" 
-    description="個人プロジェクト一覧"
-    canonicalUrl="https://kentaro.vercel.app/personal-projects"
-  />
-  <body>
-    <div class="content">
+  <div class="content">
       <nav class="main">
         <div class="container">
           <div class="back-nav-container">
@@ -136,8 +132,7 @@ const projects = [
     </div>
 
     <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
-  </body>
-</html>
+  </Layout>
 
 <style>
   .skill-chip {

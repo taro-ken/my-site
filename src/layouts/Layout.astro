@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import vercelAnalytics from '@vercel/analytics/astro';
 import Navigation from '../components/Navigation.astro';
 import { adminAuth, adminDb } from '../lib/firebase/server';
@@ -7,10 +8,28 @@ import '../styles/global.css';
 const Analytics = vercelAnalytics;
 
 interface Props {
-	title: string;
+  title: string;
+  description?: string;
+  keywords?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  ogType?: 'website' | 'article';
+  hideNav?: boolean;
 }
 
-const { title } = Astro.props;
+const { 
+  title,
+  description = "taro. | クリエイター・ミニマリズム実践者。ライフスタイルデザインや自己啓発、テクノロジーについて発信しています。",
+  keywords = "taro, ミニマリスト, 習慣, 自己啓発, サイドFIRE",
+  ogImage = "/assets/webicon.png",
+  canonicalUrl,
+  ogType = "website",
+  hideNav = false
+} = Astro.props;
+
+const siteUrl = "https://kentaro.vercel.app";
+const currentUrl = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
+const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? ogImage : '/' + ogImage}`;
 
 // Global session and premium status check
 const sessionCookie = Astro.cookies.get("session")?.value;
@@ -38,14 +57,56 @@ if (sessionCookie) {
 <html lang="ja" class="bg-black text-white">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+		<link rel="icon" type="image/png" href="/assets/webicon.png" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="taro." />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={currentUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullOgImage} />
+    <meta property="og:site_name" content="taro. Portfolio" />
+    <meta property="og:locale" content="ja_JP" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={currentUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImage} />
+
+    <link rel="canonical" href={currentUrl} />
+
+    <!-- Google Search Console -->
+    <meta name="google-site-verification" content="VzFebweoHfSUMDIuEQc2sgzHkvI7jwvZZIcTbgs2rVM" />
+
+    <ViewTransitions />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": ogType === 'article' ? "BlogPosting" : "Person",
+      "name": "taro.",
+      "url": siteUrl,
+      "description": description,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": currentUrl
+      }
+    })} />
 	</head>
 	<body class="bg-black min-h-screen">
-		<Navigation isLoggedIn={isLoggedIn} isPremium={isPremium} />
+		{!hideNav && <Navigation isLoggedIn={isLoggedIn} isPremium={isPremium} />}
 		<slot />
 		<Analytics />
 	</body>

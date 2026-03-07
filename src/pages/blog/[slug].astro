@@ -63,9 +63,22 @@ if (blog.is_premium) {
     }
   }
 }
+// Helper to strip HTML and get excerpt
+const getExcerpt = (html: string) => {
+  const text = html.replace(/<[^>]*>?/gm, '');
+  return text.length > 160 ? text.slice(0, 157) + "..." : text;
+};
+
+const blogDescription = blog ? getExcerpt(blog.content) : "";
 ---
 
-<Layout title={`${blog.title} | Kimoto Portfolio`}>
+<Layout 
+  title={`${blog.title} | taro.`}
+  description={blogDescription}
+  ogImage={blog.eyecatch?.url}
+  ogType="article"
+  canonicalUrl={`https://kentaro.vercel.app/blog/${blog.id}`}
+>
   <main class="min-h-screen bg-black text-zinc-200 font-sans pt-32 pb-32 selection:bg-white selection:text-black">
     
     <article class="max-w-[460px] mx-auto px-5 md:px-0">
@@ -172,7 +185,7 @@ if (blog.is_premium) {
       <div class="flex flex-col">
         <h4 class="font-bold text-lg mb-2">Gain An Essential Perspective</h4>
         <p class="text-zinc-400 text-sm leading-relaxed mb-4 max-w-sm">
-          The Essence
+          知の探求を、さらに深く。
         </p>
         <a href="/pricing" class="flex items-center text-sm font-bold text-white hover:text-zinc-400 transition-colors">
           <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

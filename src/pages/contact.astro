@@ -1,17 +1,14 @@
 ---
-import Header from '../components/Header.astro';
-
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!DOCTYPE html>
-<html>
-  <Header 
-    title="Contact | KENTARO" 
-    description="お問い合わせページ"
-    canonicalUrl="https://kentaro.vercel.app/contact"
-  />
-  <body>
-    <div class="content">
+<Layout 
+  title="Contact - taro." 
+  description="お問い合わせ。"
+  canonicalUrl="https://kentaro.vercel.app/contact"
+  hideNav={true}
+>
+  <div class="content">
       <nav class="main">
         <div class="container">
           <div class="back-nav-container">
@@ -46,8 +43,7 @@ import Header from '../components/Header.astro';
     </div>
 
     <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
-  </body>
-</html>
+  </Layout>
 
 <style>
   .contact-form-container {
