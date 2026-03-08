@@ -3,87 +3,131 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout 
-  title="特定商取引法に基づく表記 - taro." 
-  description="特定商取引法に基づく表記"
-  canonicalUrl="https://kentaro.vercel.app/tokushoho"
+  title="特定商取引法に基づく表記 (商取引に関する開示) - taro." 
+  description="特定商取引法に基づく表記（商取引に関する開示情報）をご案内します。"
 >
-  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-[#BF953F] selection:text-black">
+  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-white selection:text-black">
     <div class="max-w-2xl mx-auto w-full">
       <div class="text-center mb-16">
         <h1 class="text-3xl md:text-4xl font-black tracking-tight mb-4">
-          特定商取引法に基づく表記
+          特定商取引法に基づく表記<br/>
+          <span class="text-xl md:text-2xl text-zinc-500">(商取引に関する開示)</span>
         </h1>
       </div>
 
       <div class="space-y-12">
+        {/* 1. 法人名 / 氏名 */}
         <section>
-          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">事業者名称</h2>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">法人名 / 氏名</h2>
           <p class="text-zinc-300 text-sm leading-relaxed">
-            taro. (個人事業主)
+            taro. (屋号)<br/>
+            ※氏名については「請求があった場合は遅滞なく開示します」
           </p>
         </section>
 
+        {/* 2. 住所 */}
         <section>
-          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">所在地・連絡先</h2>
-          <p class="text-zinc-300 text-sm leading-relaxed mb-2">
-            所在地：請求があったら遅滞なく開示します。
-          </p>
-          <p class="text-zinc-300 text-sm leading-relaxed mb-6">
-            電話番号：請求があったら遅滞なく開示します。<br>
-            ※お問い合わせは、当サイトの<a href="/contact" class="underline underline-offset-4 hover:text-white transition-colors">お問い合わせページ</a>もしくはメールよりお願いいたします。
-          </p>
-        </section>
-
-        <section>
-          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">販売価格</h2>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">住所</h2>
           <p class="text-zinc-300 text-sm leading-relaxed">
-            各商品・サービスのご購入ページにて表示する価格（税込）となります。
+            請求があった場合には速やかに開示いたします。
           </p>
         </section>
 
+        {/* 3. 電話番号 */}
         <section>
-          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">商品代金以外の必要料金</h2>
-          <ul class="list-disc list-inside text-zinc-300 text-sm leading-relaxed space-y-2">
-            <li>当サイトのページの閲覧、ソフトウェアのダウンロード等に必要となるインターネット接続料金、通信料金等はお客様のご負担となります。</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">お支払い方法</h2>
-          <ul class="list-disc list-inside text-zinc-300 text-sm leading-relaxed space-y-2">
-            <li>クレジットカード決済（Stripeを利用）</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">お支払時期</h2>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">電話番号</h2>
           <p class="text-zinc-300 text-sm leading-relaxed">
-            初回：お申し込み時<br>
-            2回目以降（サブスクリプションの場合）：初回お申し込み日から1ヶ月ごとに自動請求となります。
+            請求があった場合には速やかに開示いたします。<br/>
+            営業時間 10:00 ～ 18:00 (土日祝日を除く)
           </p>
         </section>
 
+        {/* 4. メールアドレス */}
         <section>
-          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">商品の引き渡し時期・サービスの提供時期</h2>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">メールアドレス</h2>
           <p class="text-zinc-300 text-sm leading-relaxed">
-            クレジットカード決済完了後、ただちにご利用いただけます。
+            kentaro.life.contact@gmail.com
           </p>
         </section>
 
+        {/* 5. 運営責任者 */}
         <section>
-          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">返品・キャンセルに関する特約</h2>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">運営責任者</h2>
           <p class="text-zinc-300 text-sm leading-relaxed">
-            提供するサービス・商品の性質上、決済完了後のキャンセル・返品・返金はお受けしておりません。<br>
-            サブスクリプションの解約については、次回更新日の前日までにダッシュボードのアカウント設定画面よりお手続きいただくことで、次回以降の請求を停止することができます。
+            taro.
           </p>
         </section>
-        
+
+        {/* 6. 追加手数料 (商品代金以外の必要料金) */}
+        <section>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">追加手数料</h2>
+          <p class="text-zinc-300 text-sm leading-relaxed">
+            コンテンツの閲覧、ソフトウェアのダウンロード等に必要なインターネット接続料金、通信料金等はお客様のご負担となります。
+          </p>
+        </section>
+
+        {/* 7. 交換および返品に関するポリシー (返品・キャンセルに関する特約) */}
+        <section>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">交換および返品に関するポリシー</h2>
+          <div class="text-zinc-300 text-sm leading-relaxed space-y-4">
+            <p>
+              <strong>＜顧客からの返品・交換＞</strong><br/>
+              提供するサービス・商品の性質上、決済完了後のキャンセル・返品・返金はお受けしておりません。
+            </p>
+            <p>
+              <strong>＜不良品・サービスの返品・交換＞</strong><br/>
+              万が一、提供するコンテンツに不備や閲覧不能な状態があった場合は、上記メールアドレスまでお問い合わせください。内容を確認し、修正版の提供または適切な対応を速やかに行います。
+            </p>
+            <p>
+              <strong>＜サブスクリプションの解約について＞</strong><br/>
+              次回更新日の前日までにダッシュボードの管理画面よりお手続きいただくことで、次回以降の請求を停止することができます。解約手続き完了後も、有効期限まではサービスをご利用いただけます。
+            </p>
+          </div>
+        </section>
+
+        {/* 8. 配達時間 (引渡時期) */}
+        <section>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">配達時間</h2>
+          <p class="text-zinc-300 text-sm leading-relaxed">
+            クレジットカード決済完了後、ただちにサービスをご利用いただけます。また、デジタルコンテンツは注文完了後すぐに利用可能です。
+          </p>
+        </section>
+
+        {/* 9. 利用可能な決済手段 */}
+        <section>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">利用可能な決済手段</h2>
+          <p class="text-zinc-300 text-sm leading-relaxed">
+            クレジットカード決済
+          </p>
+        </section>
+
+        {/* 10. 決済期間 (お支払時期) */}
+        <section>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">決済期間</h2>
+          <p class="text-zinc-300 text-sm leading-relaxed">
+            クレジットカード決済は直ちに処理されます。サブスクリプションの場合は、初回お申し込み時、およびその後1ヶ月ごとに決済が行われます。
+          </p>
+        </section>
+
+        {/* 11. 価格 */}
+        <section>
+          <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">価格</h2>
+          <p class="text-zinc-300 text-sm leading-relaxed">
+            各商品・サービスページに記載の金額 (消費税を含む)
+          </p>
+        </section>
+
+        {/* オプション: 動作環境 */}
         <section>
           <h2 class="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-4 border-b border-zinc-800 pb-2">動作環境</h2>
           <p class="text-zinc-300 text-sm leading-relaxed">
-            最新のモダンブラウザ（Chrome, Safari, Firefox, Edge等）にてご利用いただけます。
+            最新のモダンブラウザ (Chrome, Safari, Firefox, Edge等) にてご利用いただけます。
           </p>
         </section>
+      </div>
+      
+      <div class="mt-20 text-center">
+        <a href="/" class="text-xs text-zinc-500 hover:text-white underline underline-offset-4 transition-colors">トップページに戻る</a>
       </div>
     </div>
   </main>
