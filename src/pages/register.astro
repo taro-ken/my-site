@@ -90,7 +90,7 @@ if (errorParam === "email_exists") {
 
       <p class="mt-8 text-center text-sm font-medium text-zinc-500">
         すでにアカウントをお持ちですか？ 
-        <a href="/login" class="text-white hover:underline underline-offset-4 transition-all ml-1">ログイン</a>
+        <a href={`/login${Astro.url.searchParams.has('redirect') ? '?redirect=' + Astro.url.searchParams.get('redirect') : ''}`} class="text-white hover:underline underline-offset-4 transition-all ml-1">ログイン</a>
       </p>
     </div>
   </main>
@@ -100,53 +100,63 @@ if (errorParam === "email_exists") {
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
 <script is:inline>
-  // Firebase config - PUBLIC values, safe to expose client-side
-  const firebaseConfig = {
-    apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
-    authDomain: "fitw-prod.firebaseapp.com",
-    projectId: "fitw-prod",
-    storageBucket: "fitw-prod.firebasestorage.app",
-    messagingSenderId: "208896639763",
-    appId: "1:208896639763:web:dbdbf3a44a7010da6450e6"
-  };
-
-  // Initialize Firebase (guard against double-init)
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-
-  document.getElementById('register-btn').addEventListener('click', async function() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const errorMsg = document.getElementById('error-msg');
+  document.addEventListener('astro:page-load', () => {
     const btn = document.getElementById('register-btn');
+    if (!btn) return;
 
-    if (!email || !password) {
-      errorMsg.textContent = 'メールアドレスとパスワードを入力してください。';
-      errorMsg.classList.remove('hidden');
-      return;
+    // Firebase config - PUBLIC values, safe to expose client-side
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
+      authDomain: "fitw-prod.firebaseapp.com",
+      projectId: "fitw-prod",
+      storageBucket: "fitw-prod.firebasestorage.app",
+      messagingSenderId: "208896639763",
+      appId: "1:208896639763:web:dbdbf3a44a7010da6450e6"
+    };
+
+    // Initialize Firebase (guard against double-init)
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
     }
 
-    errorMsg.classList.add('hidden');
-    btn.textContent = 'アカウント作成中...';
-    btn.disabled = true;
+    btn.addEventListener('click', async function() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('error-msg');
 
-    try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      window.location.assign('/login?registered=true');
-    } catch (error) {
-      const code = error.code || '';
-      if (code === 'auth/email-already-in-use') {
-        errorMsg.innerHTML = 'このメールアドレスはすでに登録されています。<br><a href="/login" class="underline font-bold mt-1 inline-block">ログインはこちら</a>';
-      } else if (code === 'auth/weak-password') {
-        errorMsg.textContent = 'パスワードは6文字以上で入力してください。';
-      } else {
-        // Show raw error code for debugging
-        errorMsg.textContent = '登録エラー: ' + (code || error.message || '不明なエラー');
+      if (!email || !password) {
+        errorMsg.textContent = 'メールアドレスとパスワードを入力してください。';
+        errorMsg.classList.remove('hidden');
+        return;
       }
-      errorMsg.classList.remove('hidden');
-      btn.textContent = '登録する';
-      btn.disabled = false;
-    }
+
+      errorMsg.classList.add('hidden');
+      btn.textContent = 'アカウント作成中...';
+      btn.disabled = true;
+
+      try {
+        await firebase.auth().createUserWithEmailAndPassword(email, password);
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect');
+        if (redirectUrl) {
+          window.location.assign('/login?registered=true&redirect=' + encodeURIComponent(redirectUrl));
+        } else {
+          window.location.assign('/login?registered=true');
+        }
+      } catch (error) {
+        const code = error.code || '';
+        if (code === 'auth/email-already-in-use') {
+          errorMsg.innerHTML = 'このメールアドレスはすでに登録されています。<br><a href="/login" class="underline font-bold mt-1 inline-block">ログインはこちら</a>';
+        } else if (code === 'auth/weak-password') {
+          errorMsg.textContent = 'パスワードは6文字以上で入力してください。';
+        } else {
+          // Show raw error code for debugging
+          errorMsg.textContent = '登録エラー: ' + (code || error.message || '不明なエラー');
+        }
+        errorMsg.classList.remove('hidden');
+        btn.textContent = '登録する';
+        btn.disabled = false;
+      }
+    });
   });
 </script>

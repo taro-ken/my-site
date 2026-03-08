@@ -6,8 +6,8 @@ interface Props {
 
 const { isLoggedIn = false, isPremium = false } = Astro.props;
 
-const authUrl = isLoggedIn ? (isPremium ? '/dashboard' : '/pricing') : '/login';
-const authText = isLoggedIn ? 'Account' : 'Login';
+const authUrl = isLoggedIn ? (isPremium ? '/dashboard' : '/pricing') : '/pricing';
+const authText = isLoggedIn ? 'Account' : 'Membership';
 ---
 
 <header class="fixed top-0 left-0 w-full z-[100] bg-black/90 backdrop-blur-md border-b border-white/5 transition-all duration-300 text-white">

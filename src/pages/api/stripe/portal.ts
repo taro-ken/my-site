@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { stripe } from "../../../lib/stripe";
 import { adminAuth, adminDb } from "../../../lib/firebase/server";
 
-export const POST: APIRoute = async ({ cookies, redirect, url }) => {
+export const ALL: APIRoute = async ({ cookies, redirect, url }) => {
     const sessionCookie = cookies.get("session");
 
     if (!sessionCookie) {

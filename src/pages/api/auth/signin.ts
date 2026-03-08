@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { adminAuth, adminDb } from "../../../lib/firebase/server";
 
-export const POST: APIRoute = async ({ request, cookies, redirect }) => {
+export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
     // Extract ID Token from Authorization header
     const authHeader = request.headers.get("Authorization");
     const idToken = authHeader?.split("Bearer ")[1];

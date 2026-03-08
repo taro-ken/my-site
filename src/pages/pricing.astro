@@ -79,7 +79,7 @@ if (sessionCookie) {
           </li>
         </ul>
 
-        <div class="mt-auto">
+        <div class="mt-auto flex flex-col gap-4">
           {isPremium ? (
             <button disabled class="w-full py-4 px-4 bg-zinc-900 border border-zinc-800 text-zinc-500 font-bold rounded-sm cursor-not-allowed uppercase tracking-widest text-xs">
               現在のプラン
@@ -91,11 +91,23 @@ if (sessionCookie) {
               </button>
             </form>
           ) : (
-            <a href="/login" class="block text-center w-full py-4 px-4 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
+            <a href="/register?redirect=/pricing" class="block text-center w-full py-4 px-4 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
               今すぐ登録する
             </a>
           )}
+
+          {isLoggedIn && (
+            <form action="/api/auth/signout" method="POST">
+              <button type="submit" class="w-full py-3 px-4 bg-transparent border border-zinc-800 hover:bg-zinc-900 text-zinc-400 font-bold text-xs tracking-[0.1em] uppercase rounded-sm transition-colors">
+                ログアウト
+              </button>
+            </form>
+          )}
         </div>
+      </div>
+      
+      <div class="mt-8 text-center">
+        <a href="/tokushoho" class="text-xs text-zinc-500 hover:text-white underline underline-offset-4 transition-colors">特定商取引法に基づく表記</a>
       </div>
     </div>
   </main>

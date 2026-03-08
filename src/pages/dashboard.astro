@@ -6,7 +6,7 @@ const sessionCookie = Astro.cookies.get("session")?.value;
 
 if (!sessionCookie) {
   console.log("[dashboard.astro] sessionCookie is missing from Astro.cookies");
-  return Astro.redirect("/login");
+  return Astro.redirect("/pricing");
 }
 
 let user;
@@ -56,7 +56,7 @@ try {
   Astro.cookies.delete("session", { path: "/" });
   Astro.cookies.delete("isLoggedIn", { path: "/" });
   Astro.cookies.delete("isPremium", { path: "/" });
-  return Astro.redirect("/login");
+  return Astro.redirect("/pricing");
 }
 ---
 
@@ -128,21 +128,26 @@ try {
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
 <script is:inline>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
-    authDomain: "fitw-prod.firebaseapp.com",
-    projectId: "fitw-prod",
-    storageBucket: "fitw-prod.firebasestorage.app",
-    messagingSenderId: "208896639763",
-    appId: "1:208896639763:web:dbdbf3a44a7010da6450e6"
-  };
+  document.addEventListener('astro:page-load', () => {
+    const btn = document.getElementById('signout-btn');
+    if (!btn) return;
 
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
+      authDomain: "fitw-prod.firebaseapp.com",
+      projectId: "fitw-prod",
+      storageBucket: "fitw-prod.firebasestorage.app",
+      messagingSenderId: "208896639763",
+      appId: "1:208896639763:web:dbdbf3a44a7010da6450e6"
+    };
 
-  document.getElementById('signout-btn').addEventListener('click', async function() {
-    await firebase.auth().signOut();
-    window.location.assign('/api/auth/signout');
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    btn.addEventListener('click', async function() {
+      await firebase.auth().signOut();
+      window.location.assign('/api/auth/signout');
+    });
   });
 </script>

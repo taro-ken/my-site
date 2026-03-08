@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { adminAuth, adminDb } from "../../../lib/firebase/server";
 
-export const POST: APIRoute = async ({ request, cookies, redirect }) => {
+export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
     const formData = await request.formData();
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
