@@ -26,7 +26,7 @@ export const ALL: APIRoute = async ({ cookies, redirect, url }) => {
                 },
             ],
             success_url: `${url.origin}/dashboard?session_id={CHECKOUT_SESSION_ID}&success=true`,
-            cancel_url: `${url.origin}/pricing?canceled=true`,
+            cancel_url: `${url.origin}/membership?canceled=true`,
         });
 
         if (!session.url) {

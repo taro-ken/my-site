@@ -161,7 +161,7 @@ let showSuccess = registeredParam === "true";
           } else if (redirectUrl) {
             window.location.assign(redirectUrl);
           } else {
-            window.location.assign(data.url || '/pricing');
+            window.location.assign(data.url || '/membership');
           }
         } else {
           throw new Error('session_error');

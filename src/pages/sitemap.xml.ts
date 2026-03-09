@@ -11,7 +11,7 @@ const staticPages = [
   '/services',
   '/contact',
   '/blog',
-  '/pricing',
+  '/membership',
 ];
 
 export const GET: APIRoute = async () => {

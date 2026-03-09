@@ -58,12 +58,11 @@ export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
 
             if (isPremium) {
                 return new Response(JSON.stringify({ success: true, url: "/dashboard" }), { status: 200 });
-            } else {
-                return new Response(JSON.stringify({ success: true, url: "/pricing" }), { status: 200 });
             }
+            return new Response(JSON.stringify({ success: true, url: "/membership" }), { status: 200 });
         } catch {
             cookies.set("isPremium", "false", { path: "/" });
-            return new Response(JSON.stringify({ success: true, url: "/pricing" }), { status: 200 });
+            return new Response(JSON.stringify({ success: true, url: "/membership" }), { status: 200 });
         }
     } catch (error: any) {
         console.error("Session creation error", error);

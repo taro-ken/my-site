@@ -6,7 +6,7 @@ interface Props {
 
 const { isLoggedIn = false, isPremium = false } = Astro.props;
 
-const authUrl = isLoggedIn ? (isPremium ? '/dashboard' : '/pricing') : '/pricing';
+const authUrl = isLoggedIn ? (isPremium ? '/dashboard' : '/membership') : '/membership';
 const authText = isLoggedIn ? 'Account' : 'Membership';
 ---
 
