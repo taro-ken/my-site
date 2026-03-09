@@ -1,10 +1,12 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
 import vercelAnalytics from '@vercel/analytics/astro';
+import vercelSpeedInsights from '@vercel/speed-insights/astro';
 import Navigation from '../components/Navigation.astro';
 import '../styles/global.css';
 
 const Analytics = vercelAnalytics;
+const SpeedInsights = vercelSpeedInsights;
 
 interface Props {
   title: string;
@@ -90,6 +92,7 @@ const { isLoggedIn, isPremium } = Astro.locals;
 		{!hideNav && <Navigation isLoggedIn={isLoggedIn} isPremium={isPremium} />}
 		<slot />
 		<Analytics />
+		<SpeedInsights />
 	</body>
 </html>
 <style is:global>
