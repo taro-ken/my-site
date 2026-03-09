@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getBlogDetail, getBlogs, type BlogItem } from '../../lib/cms';
-import { adminAuth, adminDb } from '../../lib/firebase/server';
 
 const { slug } = Astro.params;
 
@@ -37,32 +36,9 @@ try {
   return Astro.redirect('/404');
 }
 
-// Access Control Logic
-let hasAccess = true;
-let isSubscribed = false;
-let isLoggedIn = false;
-
-if (blog.is_premium) {
-  hasAccess = false; // Default to locked
-  
-  const sessionCookie = Astro.cookies.get("session")?.value;
-
-  if (sessionCookie) {
-    try {
-      const decodedToken = await adminAuth.verifySessionCookie(sessionCookie, true);
-      isLoggedIn = true;
-      
-      // Check subscription status in Firestore
-      const doc = await adminDb.collection('users').doc(decodedToken.uid).get();
-      if (doc.exists && doc.data()?.stripe_status === 'active') {
-        hasAccess = true;
-        isSubscribed = true;
-      }
-    } catch (err) {
-      // Invalid token or error fetching user, keep access locked
-    }
-  }
-}
+// Access Control Logic from Middleware
+const { isLoggedIn, isPremium: isSubscribed } = Astro.locals;
+const hasAccess = !blog.is_premium || isSubscribed;
 // Helper to strip HTML and get excerpt
 const getExcerpt = (html: string) => {
   const text = html.replace(/<[^>]*>?/gm, '');

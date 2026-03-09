@@ -1,62 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { adminAuth, adminDb } from '../lib/firebase/server';
 
-const sessionCookie = Astro.cookies.get("session")?.value;
+const { isLoggedIn, isPremium, user } = Astro.locals;
 
-if (!sessionCookie) {
-  console.log("[dashboard.astro] sessionCookie is missing from Astro.cookies");
+// Redirect strictly unauthorized users
+if (!isLoggedIn || !user) {
   return Astro.redirect("/pricing");
 }
 
-let user;
-let stripeStatus = 'free';
+let stripeStatus = isPremium ? 'active' : 'free';
 
-try {
-  const decodedToken = await adminAuth.verifySessionCookie(sessionCookie, true);
-  user = await adminAuth.getUser(decodedToken.uid);
-
-  const userDoc = await adminDb.collection('users').doc(user.uid).get();
-  
-  if (userDoc.exists) {
-    const data = userDoc.data();
-    if (data?.stripe_status === 'active') {
-      stripeStatus = 'active';
-    } else {
-      // Small delay and retry in case of webhook lag
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      const retryDoc = await adminDb.collection('users').doc(user.uid).get();
-      if (retryDoc.exists && retryDoc.data()?.stripe_status === 'active') {
-        stripeStatus = 'active';
-      }
-    }
-  }
-
-  // Sync isPremium cookie
-  if (stripeStatus === 'active') {
-    Astro.cookies.set("isPremium", "true", {
-      path: "/",
-      httpOnly: false,
-      secure: import.meta.env.PROD,
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 5,
-    });
-  } else {
-    Astro.cookies.set("isPremium", "false", { path: "/" });
-  }
-
-  // Non-subscribers cannot access dashboard
-  if (stripeStatus !== 'active') {
-    console.log(`[dashboard.astro] stripeStatus is ${stripeStatus}, redirecting to /`);
-    return Astro.redirect("/");
-  }
-
-} catch (error) {
-  console.error("[dashboard.astro] Session verification failed:", error);
-  Astro.cookies.delete("session", { path: "/" });
-  Astro.cookies.delete("isLoggedIn", { path: "/" });
-  Astro.cookies.delete("isPremium", { path: "/" });
-  return Astro.redirect("/pricing");
+// Non-subscribers cannot access dashboard
+if (!isPremium) {
+  console.log(`[dashboard.astro] user is not premium, redirecting to /`);
+  return Astro.redirect("/");
 }
 ---
 

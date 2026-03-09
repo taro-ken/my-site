@@ -99,7 +99,7 @@ const socialLinks = [
             <a href={resource.link} class="block mb-6 overflow-hidden bg-zinc-900 aspect-[16/10] rounded-[4px]">
               {resource.image ? (
                 <img 
-                  src={resource.image} 
+                  src={`${resource.image}?w=800&q=80&fmt=webp`} 
                   alt={resource.title} 
                   class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   loading="lazy"
@@ -147,7 +147,7 @@ const socialLinks = [
             <a href={`/blog/${blog.id}`} class="block mb-4 overflow-hidden bg-zinc-900 aspect-[16/10] relative rounded-[4px]">
               {blog.eyecatch ? (
                 <img 
-                  src={blog.eyecatch.url} 
+                  src={`${blog.eyecatch.url}?w=600&q=80&fmt=webp`} 
                   alt={blog.title} 
                   class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   loading="lazy"
