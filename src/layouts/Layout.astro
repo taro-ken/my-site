@@ -1,5 +1,4 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
 import vercelAnalytics from '@vercel/analytics/astro';
 import vercelSpeedInsights from '@vercel/speed-insights/astro';
 import Navigation from '../components/Navigation.astro';
@@ -73,7 +72,6 @@ const { isLoggedIn, isPremium } = Astro.locals;
     <!-- Google Search Console -->
     <meta name="google-site-verification" content="VzFebweoHfSUMDIuEQc2sgzHkvI7jwvZZIcTbgs2rVM" />
 
-    <ViewTransitions />
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -98,45 +96,13 @@ const { isLoggedIn, isPremium } = Astro.locals;
 		<SpeedInsights />
 
 		<script>
-			// Loading Bar Logic
-			document.addEventListener('astro:before-preparation', () => {
-				const container = document.getElementById('loading-bar-container');
-				const bar = document.getElementById('loading-bar');
-				if (container && bar) {
-					container.classList.add('loading');
-					bar.style.width = '30%';
-					
-					// Progressive loading simulation
-					let width = 30;
-					const interval = setInterval(() => {
-						if (width < 90) {
-							width += Math.random() * 10;
-							bar.style.width = `${width}%`;
-						} else {
-							clearInterval(interval);
-						}
-					}, 200);
-
-					document.addEventListener('astro:page-load', () => {
-						clearInterval(interval);
-						bar.style.width = '100%';
-						setTimeout(() => {
-							container.classList.remove('loading');
-							setTimeout(() => {
-								bar.style.width = '0%';
-							}, 300);
-						}, 200);
-					}, { once: true });
-				}
-			});
-
-			// Fix for Safari Swipe-back / History issues
-			// Ensuring the page is properly restored from cache or reloaded if needed
+			// Basic Page Load Reset
 			window.addEventListener('pageshow', (event) => {
-				if (event.persisted) {
-					// Page was restored from bfcache
-					const container = document.getElementById('loading-bar-container');
-					if (container) container.classList.remove('loading');
+				const container = document.getElementById('loading-bar-container');
+				if (container) {
+					container.classList.remove('loading');
+					const bar = document.getElementById('loading-bar');
+					if (bar) bar.style.width = '0%';
 				}
 			});
 		</script>
