@@ -89,10 +89,57 @@ const { isLoggedIn, isPremium } = Astro.locals;
     })} />
 	</head>
 	<body class="bg-black min-h-screen">
+		<div id="loading-bar-container">
+			<div id="loading-bar"></div>
+		</div>
 		{!hideNav && <Navigation isLoggedIn={isLoggedIn} isPremium={isPremium} />}
 		<slot />
 		<Analytics />
 		<SpeedInsights />
+
+		<script>
+			// Loading Bar Logic
+			document.addEventListener('astro:before-preparation', () => {
+				const container = document.getElementById('loading-bar-container');
+				const bar = document.getElementById('loading-bar');
+				if (container && bar) {
+					container.classList.add('loading');
+					bar.style.width = '30%';
+					
+					// Progressive loading simulation
+					let width = 30;
+					const interval = setInterval(() => {
+						if (width < 90) {
+							width += Math.random() * 10;
+							bar.style.width = `${width}%`;
+						} else {
+							clearInterval(interval);
+						}
+					}, 200);
+
+					document.addEventListener('astro:page-load', () => {
+						clearInterval(interval);
+						bar.style.width = '100%';
+						setTimeout(() => {
+							container.classList.remove('loading');
+							setTimeout(() => {
+								bar.style.width = '0%';
+							}, 300);
+						}, 200);
+					}, { once: true });
+				}
+			});
+
+			// Fix for Safari Swipe-back / History issues
+			// Ensuring the page is properly restored from cache or reloaded if needed
+			window.addEventListener('pageshow', (event) => {
+				if (event.persisted) {
+					// Page was restored from bfcache
+					const container = document.getElementById('loading-bar-container');
+					if (container) container.classList.remove('loading');
+				}
+			});
+		</script>
 	</body>
 </html>
 <style is:global>

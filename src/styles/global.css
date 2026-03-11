@@ -34,3 +34,28 @@ body {
 .section-title {
 	@apply text-base font-semibold pb-0;
 }
+
+/* Loading Bar Styles */
+#loading-bar-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 2px;
+	z-index: 9999;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+#loading-bar {
+	width: 0%;
+	height: 100%;
+	background: linear-gradient(to right, #0784b5, #ffffff);
+	box-shadow: 0 0 10px rgba(7, 132, 181, 0.7);
+	transition: width 0.3s ease;
+}
+
+#loading-bar-container.loading {
+	opacity: 1;
+}
