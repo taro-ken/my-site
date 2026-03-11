@@ -46,6 +46,25 @@ const getExcerpt = (html: string) => {
 };
 
 const blogDescription = blog ? getExcerpt(blog.content) : "";
+
+// Standard prose classes used throughout the article
+const proseClasses = "prose prose-invert prose-base max-w-none prose-p:text-zinc-100 prose-p:leading-[1.8] prose-p:mb-6 prose-headings:text-white prose-headings:font-black prose-headings:tracking-tight prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3 prose-a:text-zinc-400 prose-a:underline prose-a:underline-offset-4 prose-a:decoration-zinc-700 hover:prose-a:text-white hover:prose-a:decoration-white prose-strong:text-white prose-ul:text-zinc-100 prose-ol:text-zinc-100 prose-li:marker:text-zinc-500 prose-blockquote:border-l-4 prose-blockquote:border-[#BF953F] prose-blockquote:pl-6 prose-blockquote:not-italic prose-blockquote:text-zinc-300";
+
+// Paywall Logic: Split content by [[more]] marker
+// Handles cases where it might be wrapped in <p> tags by the rich editor
+const PAYWALL_REGEX = /<p>\s*\[\[more\]\]\s*<\/p>|\[\[more\]\]/g;
+const hasMarker = PAYWALL_REGEX.test(blog.content);
+
+let displayContent = blog.content;
+let freePart = blog.content;
+
+if (hasMarker) {
+  const parts = blog.content.split(PAYWALL_REGEX);
+  freePart = parts[0];
+  displayContent = parts.join(''); // Full content without marker
+}
+
+const finalContent = hasAccess ? displayContent : freePart;
 ---
 
 <Layout 
@@ -87,47 +106,54 @@ const blogDescription = blog ? getExcerpt(blog.content) : "";
       )}
 
       <!-- Content Area -->
-      <div class="prose prose-invert prose-base max-w-none 
-                  prose-p:text-zinc-100 prose-p:leading-[1.8] prose-p:mb-6
-                  prose-headings:text-white prose-headings:font-black prose-headings:tracking-tight
-                  prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4
-                  prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3
-                  prose-a:text-zinc-400 prose-a:underline prose-a:underline-offset-4 prose-a:decoration-zinc-700 hover:prose-a:text-white hover:prose-a:decoration-white
-                  prose-strong:text-white
-                  prose-ul:text-zinc-100 prose-ol:text-zinc-100
-                  prose-li:marker:text-zinc-500
-                  prose-blockquote:border-l-4 prose-blockquote:border-[#BF953F] prose-blockquote:pl-6 prose-blockquote:not-italic prose-blockquote:text-zinc-300">
+      <div class={proseClasses}>
         
         {hasAccess ? (
-          <div set:html={blog.content} />
+          <div set:html={finalContent} />
         ) : (
-          <div class="relative">
-            <div class="h-[65vh] overflow-hidden relative select-none">
-               <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black z-10"></div>
-               <div class="opacity-40 blur-[8px] pointer-events-none" set:html={blog.content}></div>
-            </div>
+          <>
+            {/* Show free content with the same prose styling */}
+            {hasMarker ? (
+              <div set:html={freePart} class="mb-4" />
+            ) : null}
             
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-4 z-20">
-              <div class="max-w-md mx-auto p-[1px] bg-gradient-to-b from-zinc-700 to-zinc-900 rounded-lg shadow-2xl not-prose">
-                <div class="bg-black p-8 md:p-12 rounded-lg text-center">
-                  <h3 class="text-2xl font-black text-white mb-4 tracking-tight">会員限定コンテンツです</h3>
-                  <p class="text-zinc-400 mb-8 text-sm leading-relaxed font-medium">
-                    この記事の続きを読んで、毎週配信される人間の可能性、インターネット、未来に関する深い考察を受け取るには、プレミアムメンバーにご登録ください。
-                  </p>
-                  <a href="/membership" class="block w-full py-4 px-6 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.1em] transition-colors rounded-sm no-underline">
-                    メンバーに登録する
-                  </a>
-                  {!isLoggedIn && (
-                    <div class="mt-6 pt-6 border-t border-zinc-900">
-                      <p class="text-xs text-zinc-500 font-medium tracking-wide">
-                        すでに登録済みですか？ <a href="/login" class="text-white hover:underline underline-offset-4 transition-all ml-1">ログインはこちら</a>
-                      </p>
-                    </div>
-                  )}
+            {/* Paywall Overlay Section - Escape prose for positioning */}
+            <div class="not-prose relative mt-8">
+              {/* Blurred Content Background */}
+              <div class={`${hasMarker ? 'h-[40vh]' : 'h-[75vh]'} overflow-hidden relative select-none`}>
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black z-10"></div>
+                {/* 
+                   Full content is shown blurred behind the card. 
+                   We wrapped it in prose again so it looks like the article.
+                */}
+                <div class={`${proseClasses} opacity-50 blur-[4px] pointer-events-none p-4 origin-top`}>
+                  <div set:html={blog.content.replace(PAYWALL_REGEX, '')} />
+                </div>
+              </div>
+              
+              {/* The "Popup" */}
+              <div class="absolute inset-0 flex items-center justify-center z-20 px-4">
+                <div class="w-full max-w-md p-[1px] bg-gradient-to-b from-zinc-700 to-zinc-900 rounded-lg shadow-[0_25px_50px_-12px_rgba(0,0,0,1)]">
+                  <div class="bg-black/95 backdrop-blur-md p-8 md:p-12 rounded-lg text-center">
+                    <h3 class="text-xl md:text-2xl font-black text-white mb-4 tracking-tight">会員限定コンテンツです</h3>
+                    <p class="text-zinc-400 mb-8 text-sm leading-relaxed font-medium">
+                      この記事の続きを読んで、毎週配信される人間の可能性、インターネット、未来に関する深い考察を受け取るには、プレミアムメンバーにご登録ください。
+                    </p>
+                    <a href="/membership" class="block w-full py-4 px-6 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.1em] transition-colors rounded-sm no-underline">
+                      メンバーに登録する
+                    </a>
+                    {!isLoggedIn && (
+                      <div class="mt-6 pt-6 border-t border-zinc-900">
+                        <p class="text-xs text-zinc-500 font-medium tracking-wide">
+                          すでに登録済みですか？ <a href="/login" class="text-white hover:underline underline-offset-4 transition-all ml-1">ログインはこちら</a>
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
 
