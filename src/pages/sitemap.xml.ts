@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 
 import { getBlogs } from '../lib/cms';
 
-const siteUrl = 'https://kentaro.vercel.app';
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://kentaro.life';
 
 const staticPages = [
   '',
