@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getBlogs, type BlogItem } from '../lib/cms';
+import NewsletterPopup from '../components/NewsletterPopup';
 
 export const prerender = false;
 
@@ -73,12 +74,16 @@ const socialLinks = [
       <p class="text-sm md:text-base text-zinc-400 font-medium max-w-xl mb-6 leading-relaxed">
         よりシンプルに、そして本質へ。
       </p>
-      <a href="/blog" class="flex items-center text-sm font-bold hover:text-zinc-300 transition-colors border-b border-zinc-700 pb-1">
+      <button 
+        id="newsletter-trigger"
+        class="flex items-center text-sm font-bold transition-colors border-b pb-1 cursor-pointer bg-transparent hover:opacity-80"
+        style="color: #2D5A58; border-color: #2D5A58;"
+      >
         <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
         </svg>
-        Read the latest articles
-      </a>
+        最新情報を購読
+      </button>
     </section>
 
     {/* Resources Section - Freedom & Focus */}
@@ -236,6 +241,8 @@ const socialLinks = [
 
   </main>
 
+  <NewsletterPopup client:load />
+
   {/* Clean Minimalist Footer */}
   <footer class="bg-black text-white py-6 px-6 border-t border-zinc-900">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-end items-start gap-12 w-full">
@@ -258,6 +265,18 @@ const socialLinks = [
     </div>
   </footer>
 </Layout>
+
+<script>
+  // Script to handle modal trigger
+  const trigger = document.getElementById('newsletter-trigger');
+  if (trigger) {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('open-newsletter-modal'));
+    });
+  }
+</script>
+
 <style>
   html {
     background-color: black;
