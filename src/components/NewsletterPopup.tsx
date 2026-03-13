@@ -92,8 +92,14 @@ export default function NewsletterPopup() {
                 width: 100% !important;
                 border: none !important;
               }
-              .formkit-powered-by-convertkit-container {
+              .formkit-powered-by-convertkit-container,
+              .formkit-powered-by-convertkit {
                 display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
               }
               /* Ensure the Kit form's own modal styles don't conflict or appear */
               .formkit-modal {

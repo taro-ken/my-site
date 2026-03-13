@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>E-book受け取り</title>
     <meta name="description" content="E-book受け取りページ" />
-    <style>
+    <style is:global>
       * {
         margin: 0;
         padding: 0;
@@ -33,8 +33,14 @@
         max-width: 800px;
         width: 100%;
       }
-      .formkit-powered-by-convertkit-container {
+      .formkit-powered-by-convertkit-container,
+      .formkit-powered-by-convertkit {
         display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
 
     </style>
