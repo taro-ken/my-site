@@ -9,6 +9,12 @@ export default function NewsletterPopup() {
         const handleOpenModal = () => setIsOpen(true);
         window.addEventListener('open-newsletter-modal', handleOpenModal);
 
+        // Check URL parameters or path on mount
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('newsletter') === 'true' || window.location.pathname === '/letter') {
+            setIsOpen(true);
+        }
+
         return () => {
             window.removeEventListener('open-newsletter-modal', handleOpenModal);
         };
@@ -54,7 +60,7 @@ export default function NewsletterPopup() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
                         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                        className="relative w-full max-w-xl bg-zinc-950 border border-zinc-800 rounded-lg shadow-2xl overflow-hidden p-8 flex flex-col items-center"
+                        className="relative w-full max-w-xl bg-zinc-950 border border-zinc-800 rounded-lg shadow-2xl overflow-hidden pt-8 pb-4 px-8 flex flex-col items-center"
                     >
                         {/* Close Button */}
                         <button
@@ -63,18 +69,18 @@ export default function NewsletterPopup() {
                             aria-label="Close modal"
                         >
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
 
                         <div className="w-full">
-                            <h2 className="text-2xl font-black mb-2 text-center text-white">最新情報を購読</h2>
-                            <p className="text-zinc-400 text-sm mb-8 text-center">
+                            <h2 className="text-2xl font-black mb-1 text-center text-white">最新情報を購読</h2>
+                            <p className="text-zinc-400 text-xs mb-1 text-center leading-relaxed">
                                 よりシンプルに、より本質的な視点を。<br />最新の記事やプロジェクトのアップデートをお届けします。
                             </p>
 
                             {/* Kit Form Placeholder/Target */}
-                            <div id="kit-form-container" className="min-h-[300px] flex items-center justify-center bg-zinc-900/10 rounded-md">
+                            <div id="kit-form-container" className="flex items-center justify-center bg-zinc-900/5 rounded-md">
                                 {/* Kit script will inject form here */}
                             </div>
                         </div>
