@@ -20,7 +20,7 @@ if (errorParam === "email_exists") {
     <div class="max-w-md w-full rounded-2xl p-8 sm:p-10 shadow-2xl bg-zinc-950 border border-white/10">
       <div class="text-center mb-8">
         <h1 class="text-3xl font-black mb-3 tracking-tight">アカウントを作成</h1>
-        <p class="text-zinc-400 text-sm font-medium">登録してプレミアム記事をアンロックし、サブスクリプションを管理しましょう。</p>
+        <p class="text-zinc-400 text-sm font-medium">登録してメンバーシップにアクセスしましょう。</p>
       </div>
 
       <div id="error-msg" class={`mb-4 p-3 rounded-md text-sm bg-red-950/50 text-red-500 border border-red-900/50 text-center font-medium ${errorMessage ? '' : 'hidden'}`}>
@@ -100,9 +100,10 @@ if (errorParam === "email_exists") {
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
 <script is:inline>
-  document.addEventListener('astro:page-load', () => {
+  function initRegister() {
     const btn = document.getElementById('register-btn');
-    if (!btn) return;
+    if (!btn || btn.dataset.initialized) return;
+    btn.dataset.initialized = "true";
 
     // Firebase config - PUBLIC values, safe to expose client-side
     const firebaseConfig = {
@@ -119,13 +120,40 @@ if (errorParam === "email_exists") {
       firebase.initializeApp(firebaseConfig);
     }
 
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    function updateButtonStyle() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      
+      if (email && password) {
+        btn.classList.remove('bg-white', 'hover:bg-zinc-200');
+        btn.classList.add('bg-[#94C843]', 'hover:bg-[#86b53c]');
+      } else {
+        btn.classList.add('bg-white', 'hover:bg-zinc-200');
+        btn.classList.remove('bg-[#94C843]', 'hover:bg-[#86b53c]');
+      }
+    }
+
+    emailInput.addEventListener('input', updateButtonStyle);
+    passwordInput.addEventListener('input', updateButtonStyle);
+
     btn.addEventListener('click', async function() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = emailInput.value;
+      const password = passwordInput.value;
       const errorMsg = document.getElementById('error-msg');
 
       if (!email || !password) {
         errorMsg.textContent = 'メールアドレスとパスワードを入力してください。';
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+
+      // Strict password validation: 6+ chars, alphanumeric
+      const isAlphanumeric = /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
+      if (password.length < 6 || !isAlphanumeric) {
+        errorMsg.textContent = 'パスワードは6文字以上で、半角英字と数字の両方を含めてください。';
         errorMsg.classList.remove('hidden');
         return;
       }
@@ -148,7 +176,7 @@ if (errorParam === "email_exists") {
         if (code === 'auth/email-already-in-use') {
           errorMsg.innerHTML = 'このメールアドレスはすでに登録されています。<br><a href="/login" class="underline font-bold mt-1 inline-block">ログインはこちら</a>';
         } else if (code === 'auth/weak-password') {
-          errorMsg.textContent = 'パスワードは6文字以上で入力してください。';
+          errorMsg.textContent = 'パスワードは6文字以上で、半角英字と数字の両方を含めてください。';
         } else {
           // Show raw error code for debugging
           errorMsg.textContent = '登録エラー: ' + (code || error.message || '不明なエラー');
@@ -156,7 +184,15 @@ if (errorParam === "email_exists") {
         errorMsg.classList.remove('hidden');
         btn.textContent = '登録する';
         btn.disabled = false;
+        updateButtonStyle(); // Restore color if it was lime
       }
     });
-  });
+  }
+
+  // Initialize register logic
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRegister);
+  } else {
+    initRegister();
+  }
 </script>

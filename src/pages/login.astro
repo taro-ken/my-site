@@ -21,7 +21,7 @@ let showSuccess = registeredParam === "true";
     <div class="max-w-md w-full rounded-2xl p-8 sm:p-10 shadow-2xl bg-zinc-950 border border-white/10">
       <div class="text-center mb-8">
         <h1 class="text-3xl font-black mb-3 tracking-tight">おかえりなさい</h1>
-        <p class="text-zinc-400 text-sm font-medium">ログインしてプレミアムコンテンツにアクセスし、サブスクリプションを管理しましょう。</p>
+        <p class="text-zinc-400 text-sm font-medium">ログインしてメンバーシップを管理。</p>
       </div>
 
       {showSuccess && (
@@ -106,9 +106,10 @@ let showSuccess = registeredParam === "true";
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
 <script is:inline>
-  document.addEventListener('astro:page-load', () => {
+  function initLogin() {
     const btn = document.getElementById('login-btn');
-    if (!btn) return;
+    if (!btn || btn.dataset.initialized) return;
+    btn.dataset.initialized = "true";
 
     // Firebase config - PUBLIC values, safe to expose client-side
     const firebaseConfig = {
@@ -125,9 +126,28 @@ let showSuccess = registeredParam === "true";
       firebase.initializeApp(firebaseConfig);
     }
 
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    function updateButtonStyle() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      
+      if (email && password) {
+        btn.classList.remove('bg-white', 'hover:bg-zinc-200');
+        btn.classList.add('bg-[#94C843]', 'hover:bg-[#86b53c]');
+      } else {
+        btn.classList.add('bg-white', 'hover:bg-zinc-200');
+        btn.classList.remove('bg-[#94C843]', 'hover:bg-[#86b53c]');
+      }
+    }
+
+    emailInput.addEventListener('input', updateButtonStyle);
+    passwordInput.addEventListener('input', updateButtonStyle);
+
     btn.addEventListener('click', async function() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = emailInput.value;
+      const password = passwordInput.value;
       const errorMsg = document.getElementById('error-msg');
 
       if (!email || !password) {
@@ -179,7 +199,15 @@ let showSuccess = registeredParam === "true";
         errorMsg.classList.remove('hidden');
         btn.textContent = 'ログイン';
         btn.disabled = false;
+        updateButtonStyle(); // Restore color if it was lime
       }
     });
-  });
+  }
+
+  // Initialize login logic
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLogin);
+  } else {
+    initLogin();
+  }
 </script>

@@ -85,9 +85,10 @@ if (!isPremium) {
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
 <script is:inline>
-  document.addEventListener('astro:page-load', () => {
+  function initDashboard() {
     const btn = document.getElementById('signout-btn');
-    if (!btn) return;
+    if (!btn || btn.dataset.initialized) return;
+    btn.dataset.initialized = "true";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
@@ -106,5 +107,12 @@ if (!isPremium) {
       await firebase.auth().signOut();
       window.location.assign('/api/auth/signout');
     });
-  });
+  }
+
+  // Initialize dashboard logic
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDashboard);
+  } else {
+    initDashboard();
+  }
 </script>
