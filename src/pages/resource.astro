@@ -1,0 +1,143 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { adminAuth, adminDb } from '../lib/firebase/server';
+
+const sessionCookie = Astro.cookies.get("session")?.value;
+
+let isLoggedIn = false;
+let isPremium = false;
+
+if (sessionCookie) {
+  try {
+    const decodedToken = await adminAuth.verifySessionCookie(sessionCookie);
+    isLoggedIn = true;
+    
+    // Check Firestore for premium status
+    const doc = await adminDb.collection('users').doc(decodedToken.uid).get();
+    if (doc.exists && doc.data()?.stripe_status === 'active') {
+      isPremium = true;
+    }
+  } catch (err) {
+    // Invalid or expired token
+  }
+}
+
+// Redirect unauthorized users to membership page
+if (!isPremium) {
+  return Astro.redirect('/membership');
+}
+
+const resources = [
+  {
+    category: "Source Code",
+    title: "YouTube Short Generator",
+    description: "Automate YouTube Shorts creation and uploading with Python.",
+    type: "Code",
+    downloadLabel: "Get Code (GitHub)",
+    fileName: "youtube_short.zip",
+    link: "/api/download/youtube_short.zip"
+  },
+  {
+    category: "Automation",
+    title: "Note.com Auto-Post",
+    description: "Script to schedule and automate posts on Note.com.",
+    type: "Script",
+    downloadLabel: "Download Zip",
+    fileName: "asset.zip",
+    link: "asset.zip"
+  },
+  {
+    category: "Prompts",
+    title: "High-Conversion Copywriting",
+    description: "The exact prompt I use to generate sales copy that converts.",
+    type: "Prompt",
+    downloadLabel: "Copy Prompt",
+    fileName: "copywriting_prompt.txt",
+    link: "/api/download/copywriting_prompt.txt"
+  },
+  {
+    category: "Templates",
+    title: "EDC Checklist",
+    description: "Minimalist EDC (Every Day Carry) template for organized living.",
+    type: "Spreadsheet",
+    downloadLabel: "Google Sheets Template",
+    fileName: "edc_checklist.url",
+    link: "https://docs.google.com/spreadsheets/d/1ZfYt8YYkRPaoxQR2m1OBn5EeVa-SHrXNxwwY3pvqzc0/template/preview"
+  }
+];
+---
+
+<Layout 
+  title="Resources - The Essence"
+  description="Premium resources including source code, prompts, and templates."
+  isLoggedIn={isLoggedIn}
+  isPremium={isPremium}
+>
+  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-[#94C843] selection:text-black">
+    <div class="max-w-7xl mx-auto w-full">
+      <div class="mb-16">
+        <p class="text-[#94C843] tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">Exclusive Resources</p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6">
+          Premium Materials
+        </h1>
+        <p class="text-xs md:text-sm text-zinc-400 max-w-2xl font-medium leading-relaxed">
+          メンバー限定のソースコード、プロンプト、テンプレートを公開しています。<br />
+          すべてあなたのプロジェクトや生活の最適化に活用いただけます。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {resources.map((resource) => (
+          <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-8 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+            <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#94C843] opacity-30 group-hover:opacity-100 transition-opacity"></div>
+            
+            <div class="flex justify-between items-start mb-6">
+              <span class="text-[10px] font-bold tracking-widest uppercase text-[#94C843] bg-[#94C843]/10 px-3 py-1 rounded-full">
+                {resource.category}
+              </span>
+              <span class="text-[10px] font-medium text-zinc-600 uppercase tracking-tighter">
+                {resource.type}
+              </span>
+            </div>
+
+            <h3 class="text-xl font-black text-white mb-3 group-hover:text-[#94C843] transition-colors">{resource.title}</h3>
+            <p class="text-sm text-zinc-500 mb-8 leading-relaxed font-medium">
+              {resource.description}
+            </p>
+
+            {resource.link.startsWith('http') ? (
+              <a 
+                href={resource.link} 
+                class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white group/link relative"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="relative z-10">{resource.downloadLabel}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="translate-x-0 group-hover/link:translate-x-1 transition-transform">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+                <div class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#94C843] group-hover/link:w-full transition-all duration-300"></div>
+              </a>
+            ) : (
+              <form action="/api/download" method="POST" class="inline">
+                <input type="hidden" name="file" value={resource.link} />
+                <button 
+                  type="submit"
+                  class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white group/link relative cursor-pointer"
+                >
+                  <span class="relative z-10">{resource.downloadLabel}</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="translate-x-0 group-hover/link:translate-x-1 transition-transform">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  </svg>
+                  <div class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#94C843] group-hover/link:w-full transition-all duration-300"></div>
+                </button>
+              </form>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  </main>
+</Layout>

@@ -85,14 +85,18 @@ if (sessionCookie) {
             </button>
           ) : isLoggedIn ? (
             <form action="/api/stripe/checkout" method="POST">
-              <button type="submit" class="w-full py-4 px-4 bg-[#94C843] hover:bg-[#86b53c] text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
+              <button id="main-cta-button" type="submit" class="w-full py-4 px-4 bg-[#94C843] hover:bg-[#86b53c] text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
                 今すぐ登録する
               </button>
             </form>
           ) : (
-            <a href="/register?redirect=/membership" class="block text-center w-full py-4 px-4 bg-[#94C843] hover:bg-[#86b53c] text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
+            <a id="main-cta-button" href="/register?redirect=/membership" class="block text-center w-full py-4 px-4 bg-[#94C843] hover:bg-[#86b53c] text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
               今すぐ登録する
             </a>
+          )}
+
+          {isPremium && (
+            <div id="main-cta-button" class="hidden"></div>
           )}
 
           {isLoggedIn && (
@@ -105,9 +109,162 @@ if (sessionCookie) {
         </div>
       </div>
       
-      <div class="mt-8 text-center">
-        <a href="/tokushoho" class="text-xs text-zinc-500 hover:text-white underline underline-offset-4 transition-colors">特定商取引法に基づく表記</a>
+    </div>
+
+    <div class="max-w-md w-full mx-auto mt-24 mb-16">
+      <h2 class="text-white text-xl md:text-2xl font-black text-center mb-12 leading-relaxed">
+        加入特典
+      </h2>
+
+      <div class="space-y-6">
+        <!-- Benefit 1 -->
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden group">
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#94C843] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+          <div class="relative pl-6">
+            <div class="absolute left-0 top-2 w-1.5 h-1.5 bg-[#94C843] rounded-full"></div>
+            <h3 class="text-white font-black text-lg mb-2 leading-none">限定記事の閲覧</h3>
+            <p class="text-sm text-zinc-400 mb-4">メンバー限定記事が閲覧可能になります。</p>
+            <ul class="space-y-2 text-xs md:text-sm text-zinc-500 pl-4 border-l border-zinc-800">
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                ミニマリズム実践記録、使用ツールの共有
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                資産状況や FIRE までの道のりとハウツー
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                クリエイター戦略
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                開発中のログ・未公開プロジェクトの公開
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                人的資本を最大化するための健康管理法
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Benefit 2 -->
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden group">
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#94C843] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+          <div class="relative pl-6">
+            <div class="absolute left-0 top-2 w-1.5 h-1.5 bg-[#94C843] rounded-full"></div>
+            <h3 class="text-white font-black text-lg mb-2 leading-none">リソース共有</h3>
+            <p class="text-sm text-zinc-400 mb-4">実際に使用しているソースコードやプロンプトの公開します</p>
+            <ul class="space-y-2 text-xs md:text-sm text-zinc-500 pl-4 border-l border-zinc-800">
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                YouTube ショート動画自動生成、投稿
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                Note 投稿自動化
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                コンテンツ作成プロンプト
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                持ち物リストテンプレート
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                iPhone の便利ショートカット
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Benefit 3 -->
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden group">
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#94C843] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+          <div class="relative pl-6">
+            <div class="absolute left-0 top-2 w-1.5 h-1.5 bg-[#94C843] rounded-full"></div>
+            <h3 class="text-white font-black text-lg mb-2 leading-none">コミュニティスレッドへの招待</h3>
+            <ul class="space-y-2 text-xs md:text-sm text-zinc-500 pl-4 border-l border-zinc-800">
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                同じ価値観のメンバー同士交流できます。
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Benefit 4 -->
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden group">
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#94C843] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+          <div class="relative pl-6">
+            <div class="absolute left-0 top-2 w-1.5 h-1.5 bg-[#94C843] rounded-full"></div>
+            <h3 class="text-white font-black text-lg mb-2 leading-none">月1でのソロディスカッション権</h3>
+            <ul class="space-y-2 text-xs md:text-sm text-zinc-500 pl-4 border-l border-zinc-800">
+              <li class="flex items-center gap-2">
+                <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+                キャリア相談やお悩みなど、30分の対話が可能です。
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Sticky Floating Button -->
+    {!isPremium && (
+      <div 
+        id="floating-cta" 
+        class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-[340px] z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-500 ease-out"
+      >
+        <div class="relative group pointer-events-auto">
+          <div class="absolute -inset-1 bg-gradient-to-r from-[#94C843] to-[#7aa437] rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+          <a 
+            href={isLoggedIn ? "javascript:void(0)" : "/register?redirect=/membership"}
+            onclick={isLoggedIn ? "document.querySelector('form[action=\"/api/stripe/checkout\"]')?.submit()" : ""}
+            class="relative block w-full bg-white text-black text-center py-4 px-8 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform active:scale-95"
+          >
+            Join The Essence
+          </a>
+        </div>
+      </div>
+    )}
+
+    <div class="mt-24 mb-8 text-center">
+      <a href="/tokushoho" class="text-xs text-zinc-500 hover:text-white underline underline-offset-4 transition-colors">特定商取引法に基づく表記</a>
+    </div>
   </main>
+
+  <style>
+    #floating-cta.visible {
+      opacity: 1;
+      translate: -50% 0;
+      pointer-events: auto;
+    }
+  </style>
+
+  <script>
+    const mainButton = document.getElementById('main-cta-button');
+    const floatingCta = document.getElementById('floating-cta');
+
+    if (mainButton && floatingCta) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          // When main button is NO LONGER intersecting (visible), show floating CTA
+          if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+            floatingCta.classList.add('visible');
+          } else {
+            floatingCta.classList.remove('visible');
+          }
+        });
+      }, {
+        threshold: 0,
+        rootMargin: '0px'
+      });
+
+      observer.observe(mainButton);
+    }
+  </script>
 </Layout>

@@ -20,6 +20,7 @@ const authText = isLoggedIn ? 'Account' : 'Membership';
     <nav class="hidden md:flex items-center gap-8 relative z-[110]">
       <a href="/blog" class="text-sm font-medium tracking-wide hover:opacity-70 transition-opacity">Blog</a>
       <a href="/services" class="text-sm font-medium tracking-wide hover:opacity-70 transition-opacity">Service</a>
+      <a href="/resource" class="text-sm font-medium tracking-wide hover:opacity-70 transition-opacity">Resource</a>
       <a href="/all-item-list" class="text-sm font-medium tracking-wide hover:opacity-70 transition-opacity">Gear</a>
       <a href="/contact" class="text-sm font-medium tracking-wide hover:opacity-70 transition-opacity">Contact</a>
       <a href={authUrl} id="desktop-auth-link" class="text-white hover:opacity-70 transition-opacity ml-2" aria-label="Account">
@@ -38,6 +39,7 @@ const authText = isLoggedIn ? 'Account' : 'Membership';
     <div id="mobile-menu" class="md:hidden fixed top-0 left-0 w-full h-screen bg-black/98 backdrop-blur-2xl flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-opacity duration-300 z-[110]">
       <a href="/blog" class="text-xl font-medium tracking-widest uppercase hover:opacity-70 transition-opacity mobile-link">Blog</a>
       <a href="/services" class="text-xl font-medium tracking-widest uppercase hover:opacity-70 transition-opacity mobile-link">Service</a>
+      <a href="/resource" class="text-xl font-medium tracking-widest uppercase hover:opacity-70 transition-opacity mobile-link">Resource</a>
       <a href="/all-item-list" class="text-xl font-medium tracking-widest uppercase hover:opacity-70 transition-opacity mobile-link">Gear</a>
       <a href="/contact" class="text-xl font-medium tracking-widest uppercase hover:opacity-70 transition-opacity mobile-link">Contact</a>
       <a href={authUrl} id="mobile-auth-link" class="text-xl font-medium tracking-widest uppercase hover:opacity-70 transition-opacity mobile-link mt-8">{authText}</a>

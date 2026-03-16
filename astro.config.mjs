@@ -10,7 +10,7 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   integrations: [icon(), react()],
-  prefetch: true,
+  prefetch: false,
   vite: {
     plugins: [tailwindcss()],
   },
