@@ -79,87 +79,96 @@ const projects = [
   canonicalUrl="https://kentaro.life/personal-projects"
   hideNav={true}
 >
-  <div class="content">
-      <nav class="main">
-        <div class="container">
-          <div class="back-nav-container">
-            <a href="/" class="back-nav-button w-inline-block"
-              ><img src="/assets/back.svg" loading="lazy" alt="" class="back-nav-img" />
-              <div>Back</div></a
-            >
-          </div>
-          <div class="content-container">
-            <h1 style="font-size: 1.8rem; margin-bottom: 0.1rem;">Personal Projects</h1>
-            
-            <!-- Languages Section -->
-            <section class="skills-section" style="margin-top: 1rem;">
-              <h2 class="section-title">Languages</h2>
-              <div class="flex flex-wrap gap-2 mt-0">
-                {languages.map((language) => (
-                  <span class="skill-chip">{language}</span>
-                ))}
-              </div>
-            </section>
-            
-            <!-- Tools Section -->
-            <section class="skills-section" style="margin-top: -1rem;">
-              <h2 class="section-title">Tools</h2>
-              <div class="flex flex-wrap gap-2 mt-0">
-                {tools.map((tool) => (
-                  <span class="skill-chip">{tool}</span>
-                ))}
-              </div>
-            </section>
-            
-            <section class="items-container">
-                <div class="resouce-items">
-                    {projects.map(project => (
-                      <Project 
-                        title={project.title} 
-                        desc={project.desc}
-                        tech={project.tech}
-                        images={project.images}
-                        image={project.image}
-                        url={project.url}
-                        storeUrl={project.storeUrl}
-                      />
-                    ))}
-                  </div>
-            </section>
-          </div>
+    <main class="content-wrapper min-h-screen pt-24 pb-20">
+      <div class="max-w-4xl mx-auto px-6">
+        <div class="mb-12">
+          <a href="/" class="back-link group">
+            <img src="/assets/back.svg" loading="lazy" alt="" class="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+            <span class="text-sm font-medium">Back</span>
+          </a>
         </div>
-      </nav>
-    </div>
 
-    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+        <div class="space-y-16">
+          <header>
+            <h1 class="text-4xl font-bold tracking-tight mb-8">Personal Projects</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <!-- Languages Section -->
+              <section>
+                <h2 class="text-lg font-semibold mb-4 text-neutral-400">Languages</h2>
+                <div class="flex flex-wrap gap-2">
+                  {languages.map((language) => (
+                    <span class="skill-chip">{language}</span>
+                  ))}
+                </div>
+              </section>
+              
+              <!-- Tools Section -->
+              <section>
+                <h2 class="text-lg font-semibold mb-4 text-neutral-400">Tools</h2>
+                <div class="flex flex-wrap gap-2">
+                  {tools.map((tool) => (
+                    <span class="skill-chip">{tool}</span>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </header>
+
+          <section>
+            <div class="flex flex-col gap-12">
+              {projects.map(project => (
+                <Project 
+                  title={project.title} 
+                  desc={project.desc}
+                  tech={project.tech}
+                  images={project.images}
+                  image={project.image}
+                  url={project.url}
+                  storeUrl={project.storeUrl}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
   </Layout>
 
 <style>
+  .content-wrapper {
+    background: radial-gradient(circle at top right, rgba(20, 20, 20, 0.8), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(15, 15, 15, 0.8), transparent 40%);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #888;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .back-link:hover {
+    color: #fff;
+  }
+
   .skill-chip {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
-    background-color: #0c0c0c;
-    color: #ffffff;
-    border-radius: 0.5rem;
-    font-size: 0.75rem;
+    padding: 0.4rem 1rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #eee;
+    border-radius: 9999px;
+    font-size: 0.8rem;
     font-weight: 500;
+    transition: all 0.2s ease;
   }
-  
-  .skills-section {
-    margin-bottom: 1rem;
-    text-align: left;
-    width: 100%;
-  }
-  
-  .skills-section .section-title {
-    text-align: left !important;
-    margin-bottom: 0.5rem;
-    width: 100%;
-    margin-left: 0 !important;
-  }
-  
-  .skills-section .flex {
-    justify-content: flex-start !important;
-    margin-left: 0 !important;
+
+  .skill-chip:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
   }
 </style>
