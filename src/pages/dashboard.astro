@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { adminDb } from '../lib/firebase/server';
 
 const { isLoggedIn, isPremium, user } = Astro.locals;
 
@@ -9,6 +10,23 @@ if (!isLoggedIn || !user) {
 }
 
 let stripeStatus = isPremium ? 'active' : 'free';
+let discordLinked = false;
+
+// Fetch additional user data from Firestore
+if (isPremium && user?.uid) {
+  const userDoc = await adminDb.collection('users').doc(user.uid).get();
+  if (userDoc.exists) {
+    const data = userDoc.data();
+    discordLinked = data?.discord_linked === true;
+  }
+}
+
+// Env vars for Discord direct link
+const guildId = import.meta.env.DISCORD_GUILD_ID;
+const channelId = import.meta.env.DISCORD_CHANNEL_ID;
+const discordDirectLink = channelId 
+  ? `https://discord.com/channels/${guildId}/${channelId}`
+  : `https://discord.com/channels/${guildId}`;
 
 // Non-subscribers cannot access dashboard
 if (!isPremium) {
@@ -87,21 +105,28 @@ if (!isPremium) {
         <p class="text-zinc-400 text-sm mb-6">限定コミュニティへの参加や、個別の相談セッションをご利用いただけます。</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Discord -->
-          <!-- TODO: href="#" をDiscordの招待URLに変更してください -->
-          <a href="#" target="_blank" rel="noopener noreferrer" class="flex items-center p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group/link">
-            <div class="w-10 h-10 rounded-full bg-[#5865F2]/20 flex items-center justify-center mr-4 text-[#5865F2] group-hover/link:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
-            </div>
-            <div>
-              <p class="font-bold text-white text-sm mb-0.5">Discordコミュニティ</p>
-              <p class="text-[11px] text-zinc-400">限定チャンネルに参加する</p>
-            </div>
-          </a>
+          <!-- Discord (動的切り替え) -->
+          <div class="flex flex-col gap-2">
+            <a href={discordLinked ? discordDirectLink : "/api/discord/login"} target={discordLinked ? "_blank" : "_self"} rel={discordLinked ? "noopener noreferrer" : ""} class="flex items-center p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group/link h-full">
+              <div class="w-10 h-10 rounded-full bg-[#5865F2]/20 flex items-center justify-center mr-4 text-[#5865F2] group-hover/link:scale-110 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+              </div>
+              <div>
+                <p class="font-bold text-white text-sm mb-0.5">Discordコミュニティ</p>
+                <p class="text-[11px] text-zinc-400">
+                  {discordLinked ? "チャットに参加する" : "限定チャンネルに参加する"}
+                </p>
+              </div>
+            </a>
+            {discordLinked && (
+              <a href="/api/discord/login" class="text-[10px] text-zinc-600 hover:text-zinc-400 text-right px-2 transition-colors">
+                連携をやり直す
+              </a>
+            )}
+          </div>
 
           <!-- Form Session -->
-          <!-- TODO: href="#" をGoogleフォームやCalendlyのカレンダーURL等に変更してください -->
-          <a href="#" target="_blank" rel="noopener noreferrer" class="flex items-center p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group/link">
+          <a href="https://forms.gle/zhsetfGTYVcVwpw9A" target="_blank" rel="noopener noreferrer" class="flex items-center p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group/link">
             <div class="w-10 h-10 rounded-full bg-[#94C843]/20 flex items-center justify-center mr-4 text-[#94C843] group-hover/link:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
             </div>
