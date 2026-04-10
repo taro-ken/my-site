@@ -64,10 +64,10 @@ const resources = [
   isLoggedIn={isLoggedIn}
   isPremium={isPremium}
 >
-  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-[#94C843] selection:text-black">
+  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-accent selection:text-black">
     <div class="max-w-7xl mx-auto w-full">
       <div class="mb-16">
-        <p class="text-[#94C843] tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">Exclusive Resources</p>
+        <p class="text-accent tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">Exclusive Resources</p>
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6">
           Premium Materials
         </h1>
@@ -80,10 +80,10 @@ const resources = [
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {resources.map((resource) => (
           <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-8 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
-            <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#94C843] opacity-30 group-hover:opacity-100 transition-opacity"></div>
+            <div class="absolute left-0 top-0 bottom-0 w-1 bg-accent opacity-30 group-hover:opacity-100 transition-opacity"></div>
             
             <div class="flex justify-between items-start mb-6">
-              <span class="text-[10px] font-bold tracking-widest uppercase text-[#94C843] bg-[#94C843]/10 px-3 py-1 rounded-full">
+              <span class="text-[10px] font-bold tracking-widest uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
                 {resource.category}
               </span>
               <span class="text-[10px] font-medium text-zinc-600 uppercase tracking-tighter">
@@ -91,7 +91,7 @@ const resources = [
               </span>
             </div>
 
-            <h3 class="text-xl font-black text-white mb-3 group-hover:text-[#94C843] transition-colors">{resource.title}</h3>
+            <h3 class="text-xl font-black text-white mb-3 group-hover:text-accent transition-colors">{resource.title}</h3>
             <p class="text-sm text-zinc-500 mb-8 leading-relaxed font-medium">
               {resource.description}
             </p>
@@ -107,7 +107,7 @@ const resources = [
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="translate-x-0 group-hover/link:translate-x-1 transition-transform">
                   <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                 </svg>
-                <div class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#94C843] group-hover/link:w-full transition-all duration-300"></div>
+                <div class="absolute -bottom-1 left-0 w-0 h-[2px] bg-accent group-hover/link:w-full transition-all duration-300"></div>
               </a>
             ) : (
               <form action="/api/download" method="POST" class="inline">
@@ -120,7 +120,7 @@ const resources = [
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="translate-x-0 group-hover/link:translate-x-1 transition-transform">
                     <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                   </svg>
-                  <div class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#94C843] group-hover/link:w-full transition-all duration-300"></div>
+                  <div class="absolute -bottom-1 left-0 w-0 h-[2px] bg-accent group-hover/link:w-full transition-all duration-300"></div>
                 </button>
               </form>
             )}
@@ -128,7 +128,5 @@ const resources = [
         ))}
       </div>
     </div>
-  </main>
-
   </main>
 </Layout>

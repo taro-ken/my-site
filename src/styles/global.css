@@ -8,6 +8,11 @@
 	--color-foreground: #ffffff;
 	--color-background: #000000;
 	--color-primary: #0784b5;
+
+	/* サイト全体のアクセント（濃い青）。ここを変えるとボタン・見出し下線・ニュースレター CTA などがまとめて変わる */
+	--color-accent: #0284c7;
+	--color-accent-hover: #0369a1;
+	--color-accent-deep: #075985;
 }
 
 html {
