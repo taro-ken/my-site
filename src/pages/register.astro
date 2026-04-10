@@ -13,6 +13,15 @@ if (errorParam === "email_exists") {
 } else if (errorParam) {
   errorMessage = "server_error";
 }
+
+const firebasePublicConfig = {
+  apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+  authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+};
 ---
 
 <Layout title="Register - taro.">
@@ -99,21 +108,14 @@ if (errorParam === "email_exists") {
 <!-- Load Firebase SDK from CDN using is:inline to bypass Astro module bundling entirely -->
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
-<script is:inline>
+<script is:inline define:vars={{ firebasePublicConfig }}>
   function initRegister() {
     const btn = document.getElementById('register-btn');
     if (!btn || btn.dataset.initialized) return;
     btn.dataset.initialized = "true";
 
     // Firebase config - PUBLIC values, safe to expose client-side
-    const firebaseConfig = {
-      apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
-      authDomain: "fitw-prod.firebaseapp.com",
-      projectId: "fitw-prod",
-      storageBucket: "fitw-prod.firebasestorage.app",
-      messagingSenderId: "208896639763",
-      appId: "1:208896639763:web:dbdbf3a44a7010da6450e6"
-    };
+    const firebaseConfig = firebasePublicConfig;
 
     // Initialize Firebase (guard against double-init)
     if (typeof firebase !== 'undefined' && !firebase.apps.length) {

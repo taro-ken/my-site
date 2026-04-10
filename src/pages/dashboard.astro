@@ -28,6 +28,15 @@ const discordDirectLink = channelId
   ? `https://discord.com/channels/${guildId}/${channelId}`
   : `https://discord.com/channels/${guildId}`;
 
+const firebasePublicConfig = {
+  apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+  authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+};
+
 // Non-subscribers cannot access dashboard
 if (!isPremium) {
   console.log(`[dashboard.astro] user is not premium, redirecting to /`);
@@ -143,20 +152,13 @@ if (!isPremium) {
 
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
 <script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
-<script is:inline>
+<script is:inline define:vars={{ firebasePublicConfig }}>
   function initDashboard() {
     const btn = document.getElementById('signout-btn');
     if (!btn || btn.dataset.initialized) return;
     btn.dataset.initialized = "true";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDgGGWqX9c4dw_gSSgKkNySWquQBSzQXQM",
-      authDomain: "fitw-prod.firebaseapp.com",
-      projectId: "fitw-prod",
-      storageBucket: "fitw-prod.firebasestorage.app",
-      messagingSenderId: "208896639763",
-      appId: "1:208896639763:web:dbdbf3a44a7010da6450e6"
-    };
+    const firebaseConfig = firebasePublicConfig;
 
     if (typeof firebase !== 'undefined' && !firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
