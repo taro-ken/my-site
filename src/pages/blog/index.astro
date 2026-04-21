@@ -12,9 +12,7 @@ let errorMsg = null;
 
 try {
   const blogsResponse = await getBlogs(catId ? { filters: `category[equals]${catId}` } : undefined);
-  blogs = hiddenRoadmapId
-    ? blogsResponse.contents.filter((blog) => blog.id !== hiddenRoadmapId)
-    : blogsResponse.contents;
+  blogs = blogsResponse.contents.filter((blog) => blog.id !== hiddenRoadmapId);
   
   const catsResponse = await getCategories();
   categories = catsResponse.contents;

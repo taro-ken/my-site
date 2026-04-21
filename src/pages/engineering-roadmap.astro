@@ -1,0 +1,493 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { marked } from 'marked';
+import { adminAuth, adminDb } from '../lib/firebase/server';
+import { hasLearningMaterialsPurchase } from '../lib/learning-materials-access';
+import { verifyLearningMaterialsCheckoutSessionForUser } from '../lib/stripe-materials';
+import { getBlogDetail, type BlogItem } from '../lib/cms';
+import publicMarkdown from '../content/engineering-roadmap-public.md?raw';
+import paidMarkdown from '../content/engineering-roadmap-paid.md?raw';
+
+export const prerender = false;
+
+const priceDisplay = import.meta.env.PUBLIC_MATERIALS_PRICE_LABEL || '¥3,980';
+const hasCheckout = Boolean(import.meta.env.PUBLIC_STRIPE_MATERIALS_PRICE_ID);
+const canceled = Astro.url.searchParams.get('canceled') === '1';
+const shouldAutoCheckout = Astro.url.searchParams.get('checkout') === '1';
+const sessionId = Astro.url.searchParams.get('session_id');
+const isLoggedIn = Astro.locals.isLoggedIn;
+const loginHref = '/login?redirect=' + encodeURIComponent('/engineering-roadmap?checkout=1#purchase');
+const roadmapCmsId = (import.meta.env.MICROCMS_ENGINEERING_ROADMAP_ID as string | undefined) || 'gpx2f-h9gox';
+
+const sessionCookie = Astro.cookies.get('session')?.value;
+let uid: string | null = null;
+if (sessionCookie) {
+  try {
+    uid = (await adminAuth.verifySessionCookie(sessionCookie, true)).uid;
+  } catch {
+    uid = null;
+  }
+}
+const purchased = uid ? await hasLearningMaterialsPurchase(uid) : false;
+const instantAccess = uid && sessionId
+  ? (await verifyLearningMaterialsCheckoutSessionForUser(sessionId, uid)).ok
+  : false;
+
+// Webhook遅延対策: 決済成功リダイレクト直後にこのページでも購入フラグを確定保存
+if (uid && instantAccess && !purchased) {
+  await adminDb.collection('users').doc(uid).set(
+    {
+      learning_materials_purchased: true,
+      learning_materials_purchased_at: new Date(),
+      updatedAt: new Date(),
+    },
+    { merge: true }
+  );
+}
+const canReadPaid = purchased || instantAccess;
+
+marked.setOptions({ breaks: true, gfm: true });
+const PAYWALL_REGEX = /<p>\s*\[\[more\]\]\s*<\/p>|\[\[more\]\]/g;
+const INFO_MARKER_REGEX = /<p>\s*\[\[info\]\]\s*<\/p>|\[\[info\]\]/g;
+
+type TocItem = {
+  level: 2 | 3;
+  text: string;
+};
+
+const stripTags = (html: string) => html.replace(/<[^>]+>/g, '').trim();
+const escapeHtml = (text: string) =>
+  text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+const decodeEntities = (text: string) =>
+  text
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+
+const extractTocItems = (html: string): TocItem[] => {
+  const items: TocItem[] = [];
+  const matches = html.matchAll(/<h([23])[^>]*>([\s\S]*?)<\/h\1>/gi);
+  for (const m of matches) {
+    const level = Number(m[1]) as 2 | 3;
+    const text = decodeEntities(stripTags(m[2] || ''));
+    if (!text) continue;
+    items.push({ level, text });
+  }
+  return items;
+};
+
+const buildInfoTocHtml = (items: TocItem[]) => {
+  if (!items.length) return '';
+  let sectionNo = 0;
+  const rows = items.map((item) => {
+    const safeText = escapeHtml(item.text);
+    if (item.level === 2) {
+      sectionNo += 1;
+      return `
+        <li class="roadmap-info__row roadmap-info__row--h2">
+          <span class="roadmap-info__index">${String(sectionNo).padStart(2, '0')}.</span>
+          <span class="roadmap-info__label">${safeText}</span>
+        </li>
+      `;
+    }
+    return `
+      <li class="roadmap-info__row roadmap-info__row--h3">
+        <span class="roadmap-info__dot"></span>
+        <span class="roadmap-info__label">${safeText}</span>
+      </li>
+    `;
+  }).join('');
+
+  return `
+    <div class="not-prose roadmap-info">
+      <details open>
+        <summary>
+          <span class="roadmap-info__title">目次</span>
+        </summary>
+        <ol>${rows}</ol>
+      </details>
+    </div>
+  `;
+};
+
+let cmsArticle: BlogItem | null = null;
+if (roadmapCmsId) {
+  try {
+    cmsArticle = await getBlogDetail(roadmapCmsId);
+  } catch (error) {
+    console.error('[engineering-roadmap] Failed to fetch MicroCMS article:', error);
+  }
+}
+
+let publicHtml = await marked.parse(publicMarkdown);
+let paidHtml = canReadPaid ? await marked.parse(paidMarkdown) : '';
+let tocSourceHtml = await marked.parse(`${publicMarkdown}\n\n${paidMarkdown}`);
+let articleTitle = 'あえて今から未経験でエンジニアになり、最短で収入を4倍にする方法';
+let publishedAt = '2026年4月19日';
+
+if (cmsArticle) {
+  articleTitle = cmsArticle.title;
+  publishedAt = new Date(cmsArticle.publishedAt).toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  const raw = cmsArticle.content || '';
+  if (PAYWALL_REGEX.test(raw)) {
+    const parts = raw.split(PAYWALL_REGEX);
+    const freePart = parts[0] ?? '';
+    const paidPart = parts.slice(1).join('');
+    const fullPart = parts.join('');
+    publicHtml = freePart;
+    paidHtml = canReadPaid ? paidPart : '';
+    tocSourceHtml = fullPart;
+  } else {
+    // [[more]] が無い場合は全体公開扱い
+    publicHtml = raw;
+    paidHtml = '';
+    tocSourceHtml = raw;
+  }
+}
+
+const infoTocHtml = buildInfoTocHtml(extractTocItems(tocSourceHtml));
+publicHtml = publicHtml.replace(INFO_MARKER_REGEX, infoTocHtml);
+paidHtml = paidHtml.replace(INFO_MARKER_REGEX, '');
+---
+
+<Layout
+  title={`${articleTitle} | Taro Essence`}
+  description="AI時代に未経験からエンジニアを目指すロードマップと収入を伸ばす具体的な方法。note 掲載記事と同内容を、kentaro.life で購入者限定公開。"
+  canonicalUrl="https://kentaro.life/engineering-roadmap"
+>
+  <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pb-20 md:pb-24">
+    <article class="max-w-[680px] mx-auto px-4 sm:px-5 pt-24 md:pt-28">
+      <header class="mb-10 md:mb-12 text-center border-b border-zinc-900 pb-8">
+        <p class="text-zinc-600 text-[10px] tracking-[0.2em] uppercase mb-3">Materials</p>
+        <h1 class="text-xl sm:text-2xl md:text-[1.65rem] font-black tracking-tight text-white leading-snug text-balance">
+          {articleTitle}
+        </h1>
+      </header>
+
+      <section class="mb-8 md:mb-10 rounded-xl border border-zinc-800 bg-zinc-950/70 p-4 md:p-5">
+        <h2 class="text-lg md:text-2xl font-black tracking-tight text-white mb-4 md:mb-5 leading-tight text-center">
+          こんな悩みを抱えていませんか？
+        </h2>
+        <ul class="space-y-2.5 md:space-y-3 text-[12px] md:text-[15px] leading-relaxed md:leading-[1.6] font-bold text-zinc-100">
+          <li class="flex gap-3">
+            <span class="text-accent shrink-0 text-sm md:text-base">✓</span>
+            <span>今の仕事を続けても、3年後の収入がほとんど変わらない気がする。</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="text-accent shrink-0 text-sm md:text-base">✓</span>
+            <span>未経験からエンジニアを目指したいが、何から始めるべきか分からない。</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="text-accent shrink-0 text-sm md:text-base">✓</span>
+            <span>AI時代にプログラミングを学ぶ意味があるのか、不安で動けない。</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="text-accent shrink-0 text-sm md:text-base">✓</span>
+            <span>学習しても案件獲得・転職につながる道筋が見えず、途中で止まってしまう。</span>
+          </li>
+        </ul>
+      </section>
+
+      <div
+        class:list={[
+          'article-body prose prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight',
+          'prose-p:text-[15px] prose-p:leading-relaxed prose-p:text-zinc-300',
+          'prose-strong:text-white prose-blockquote:border-accent prose-blockquote:text-zinc-400',
+          'prose-li:text-zinc-300 prose-ul:text-[15px]',
+          'prose-h2:text-2xl prose-h2:md:text-3xl prose-h2:mt-11 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-accent',
+          'prose-h3:text-xl prose-h3:md:text-2xl prose-h3:mt-7 prose-h3:mb-3',
+        ]}
+        set:html={publicHtml}
+      />
+
+      {!canReadPaid && (
+        <div class="mt-14 md:mt-16">
+          <section id="purchase" class="scroll-mt-24 rounded-sm border border-zinc-700/70 bg-zinc-900 py-8 px-4 md:py-10 md:px-6 text-center">
+            <h2 class="text-xl md:text-3xl font-black tracking-tight text-white mb-4">今すぐ始める</h2>
+            <p class="text-2xl md:text-4xl font-black text-white mb-5">{priceDisplay}</p>
+            <p class="text-sm md:text-xl font-bold text-white leading-snug mb-7">
+              未経験から始める完全ガイド<br />
+              <span class="inline-flex items-center gap-2 text-[11px] md:text-base font-semibold">
+                <span class="h-2 w-2 rounded-full bg-accent"></span>
+                直接質問できる特典付き
+              </span>
+            </p>
+
+            {hasCheckout ? (
+              isLoggedIn ? (
+                <form id="materials-checkout-form" method="POST" action="/api/stripe/checkout-materials" class="inline-block">
+                  <button
+                    type="submit"
+                    class="min-w-[180px] md:min-w-[210px] rounded-full bg-white text-black font-black text-lg md:text-2xl py-3 md:py-3.5 px-8 md:px-10 hover:bg-zinc-200 transition-colors"
+                  >
+                    購入する
+                  </button>
+                </form>
+              ) : (
+                <a
+                  href={loginHref}
+                  class="inline-flex min-w-[180px] md:min-w-[210px] items-center justify-center rounded-full bg-white text-black font-black text-lg md:text-2xl py-3 md:py-3.5 px-8 md:px-10 hover:bg-zinc-200 transition-colors"
+                >
+                  購入する
+                </a>
+              )
+            ) : (
+              <p class="text-zinc-400 text-sm">購入は準備中です（PUBLIC_STRIPE_MATERIALS_PRICE_ID を設定してください）。</p>
+            )}
+
+            {isLoggedIn && shouldAutoCheckout && hasCheckout && !canReadPaid && (
+              <>
+                <p class="mt-4 text-zinc-400 text-xs">ログインを確認しました。決済ページへ移動しています...</p>
+                <script is:inline>
+                  const form = document.getElementById('materials-checkout-form');
+                  if (form instanceof HTMLFormElement) {
+                    setTimeout(() => form.submit(), 150);
+                  }
+                </script>
+              </>
+            )}
+
+            <p class="mt-8 md:mt-9 text-[10px] md:text-sm font-semibold text-zinc-300 leading-relaxed">
+              ※ ストライプ決済で安全にお支払いいただけます<br />
+              ※ 購入後すぐにアクセス可能
+            </p>
+          </section>
+        </div>
+      )}
+
+      {canReadPaid && (
+        <div class="mt-12 md:mt-14">
+          <div
+            class:list={[
+              'article-body prose prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight',
+              'prose-p:text-[15px] prose-p:leading-relaxed prose-p:text-zinc-300',
+              'prose-strong:text-white prose-blockquote:border-accent prose-blockquote:text-zinc-400',
+              'prose-li:text-zinc-300 prose-ul:text-[15px]',
+              'prose-h2:text-2xl prose-h2:md:text-3xl prose-h2:mt-11 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-accent',
+              'prose-h3:text-xl prose-h3:md:text-2xl prose-h3:mt-7 prose-h3:mb-3',
+            ]}
+            set:html={paidHtml}
+          />
+        </div>
+      )}
+
+      <footer class="mt-16 pt-8 border-t border-zinc-900 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <a
+          href="/product#materials"
+          class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-zinc-600 hover:text-accent transition-colors"
+        >
+          ← Learning Materials
+        </a>
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-zinc-600 hover:text-accent transition-colors"
+        >
+          Home
+        </a>
+      </footer>
+    </article>
+
+    <script is:inline>
+      (() => {
+        const initCopyButtons = () => {
+          const blocks = document.querySelectorAll('.article-body pre');
+          blocks.forEach((pre) => {
+            if (!(pre instanceof HTMLElement)) return;
+            if (pre.dataset.copyReady === '1') return;
+
+            pre.dataset.copyReady = '1';
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'copy-code-btn';
+            button.textContent = 'コピー';
+            button.setAttribute('aria-label', 'コードをコピー');
+
+            button.addEventListener('click', async () => {
+              const codeEl = pre.querySelector('code');
+              const text = codeEl?.textContent ?? pre.textContent ?? '';
+              if (!text) return;
+              try {
+                await navigator.clipboard.writeText(text);
+                button.textContent = 'コピー完了';
+                setTimeout(() => {
+                  button.textContent = 'コピー';
+                }, 1200);
+              } catch {
+                button.textContent = '失敗';
+                setTimeout(() => {
+                  button.textContent = 'コピー';
+                }, 1200);
+              }
+            });
+
+            pre.appendChild(button);
+          });
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initCopyButtons);
+        } else {
+          initCopyButtons();
+        }
+      })();
+    </script>
+  </main>
+</Layout>
+
+<style>
+  html {
+    background-color: black;
+  }
+  .article-body :global(blockquote) {
+    border-left: 2px solid var(--color-accent);
+    padding-left: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-style: normal;
+  }
+  .article-body :global(blockquote p) {
+    font-style: normal;
+  }
+  .article-body :global(blockquote p::before),
+  .article-body :global(blockquote p::after) {
+    content: none !important;
+  }
+  .article-body :global(pre) {
+    position: relative;
+    background: #0b1020;
+    border: 1px solid rgba(82, 82, 91, 0.7);
+    border-radius: 0.65rem;
+    padding: 1rem 1rem 0.9rem;
+    overflow-x: auto;
+  }
+  .article-body :global(pre code) {
+    background: transparent !important;
+    color: #e4e4e7;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    display: block;
+    white-space: pre;
+  }
+  :global(.copy-code-btn) {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    border: 1px solid rgba(113, 113, 122, 0.9);
+    background: rgba(24, 24, 27, 0.9);
+    color: #e4e4e7;
+    border-radius: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.28rem 0.5rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+  }
+  :global(.copy-code-btn:hover) {
+    background: rgba(39, 39, 42, 0.95);
+    border-color: rgba(161, 161, 170, 0.9);
+  }
+  .article-body :global(.roadmap-info) {
+    margin: 1.25rem 0 1.75rem;
+    border: 1px solid rgba(63, 63, 70, 0.9);
+    border-radius: 0.95rem;
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0.92) 0%, rgba(9, 9, 11, 0.96) 100%);
+    box-shadow:
+      0 18px 35px -22px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  }
+  .article-body :global(.roadmap-info details) {
+    padding: 0.9rem 1rem 0.85rem;
+  }
+  .article-body :global(.roadmap-info summary) {
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #f3f4f6;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+  }
+  .article-body :global(.roadmap-info__title) {
+    font-weight: 900;
+  }
+  .article-body :global(.roadmap-info summary::-webkit-details-marker) {
+    display: none;
+  }
+  .article-body :global(.roadmap-info summary::before) {
+    content: '▾';
+    color: var(--color-accent);
+    font-size: 0.92rem;
+    transition: transform 0.2s ease;
+  }
+  .article-body :global(.roadmap-info details:not([open]) summary::before) {
+    transform: rotate(-90deg);
+  }
+  .article-body :global(.roadmap-info ol) {
+    margin: 0.8rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid rgba(63, 63, 70, 0.8);
+  }
+  .article-body :global(.roadmap-info__row) {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(63, 63, 70, 0.65);
+  }
+  .article-body :global(.roadmap-info__row:last-child) {
+    border-bottom: none;
+  }
+  .article-body :global(.roadmap-info__row--h2) {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #f4f4f5;
+    padding: 0.72rem 0.12rem;
+  }
+  .article-body :global(.roadmap-info__row--h3) {
+    font-size: 0.93rem;
+    font-weight: 600;
+    padding: 0.56rem 0.12rem 0.56rem 1.18rem;
+    color: #cbd5e1;
+  }
+  .article-body :global(.roadmap-info__index) {
+    flex: 0 0 auto;
+    min-width: 2.2rem;
+    font-size: 0.8rem;
+    line-height: 1;
+    padding: 0.32rem 0.36rem;
+    border-radius: 0.35rem;
+    background: linear-gradient(180deg, #111827, #030712);
+    color: #e2e8f0;
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+  .article-body :global(.roadmap-info__dot) {
+    width: 0.36rem;
+    height: 0.36rem;
+    border-radius: 9999px;
+    background: var(--color-accent);
+    opacity: 1;
+    flex: 0 0 auto;
+  }
+  .article-body :global(.roadmap-info__label) {
+    min-width: 0;
+    word-break: break-word;
+  }
+</style>

@@ -1,0 +1,124 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { adminAuth } from '../../lib/firebase/server';
+import { verifyLearningMaterialsCheckoutSessionForUser } from '../../lib/stripe-materials';
+import { hasLearningMaterialsPurchase } from '../../lib/learning-materials-access';
+
+export const prerender = false;
+
+const sessionCookie = Astro.cookies.get('session')?.value;
+let uid: string | null = null;
+if (sessionCookie) {
+  try {
+    const t = await adminAuth.verifySessionCookie(sessionCookie, true);
+    uid = t.uid;
+  } catch {
+    uid = null;
+  }
+}
+
+if (!uid) {
+  const dest = Astro.url.pathname + Astro.url.search;
+  return Astro.redirect('/login?redirect=' + encodeURIComponent(dest || '/purchase/materials'));
+}
+
+const purchased = await hasLearningMaterialsPurchase(uid);
+const sessionId = Astro.url.searchParams.get('session_id');
+
+type State = 'ok' | 'library' | 'invalid' | 'need_purchase';
+let state: State;
+
+if (sessionId) {
+  const v = await verifyLearningMaterialsCheckoutSessionForUser(sessionId, uid);
+  if (v.ok) {
+    state = 'ok';
+  } else if (purchased) {
+    state = 'library';
+  } else {
+    state = 'invalid';
+  }
+} else if (purchased) {
+  state = 'library';
+} else {
+  state = 'need_purchase';
+}
+---
+
+<Layout
+  title="教材 · Taro Essence"
+  description="教材の購入とダウンロード"
+  canonicalUrl="https://kentaro.life/purchase/materials"
+>
+  <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pb-16 md:pb-20">
+    <div class="max-w-lg mx-auto px-4 sm:px-5 pt-24 md:pt-28 text-center">
+      {state === 'need_purchase' && (
+        <>
+          <h1 class="text-xl md:text-2xl font-black tracking-tight mb-3">教材を購入していません</h1>
+          <p class="text-zinc-500 text-xs md:text-sm leading-relaxed mb-8">
+            ログイン中のアカウントで教材（買い切り）をまだ購入していない状態です。購入後は、このページにいつでもアクセスしてダウンロードできます。
+          </p>
+          <a
+            href="/engineering-roadmap#purchase"
+            class="inline-flex text-xs font-bold uppercase tracking-[0.35em] text-accent hover:text-white transition-colors"
+          >
+            購入ページへ
+          </a>
+        </>
+      )}
+
+      {state === 'invalid' && (
+        <>
+          <h1 class="text-xl md:text-2xl font-black tracking-tight mb-3">確認できませんでした</h1>
+          <p class="text-zinc-500 text-xs md:text-sm leading-relaxed mb-8">
+            決済が完了していないか、URL が無効です。すでに購入済みの場合は、session_id なしでこのページを開き直してください。
+          </p>
+          <a
+            href="/purchase/materials"
+            class="inline-flex text-xs font-bold uppercase tracking-[0.35em] text-accent hover:text-white transition-colors mb-6"
+          >
+            購入済みページを開く
+          </a>
+          <div>
+            <a
+              href="/engineering-roadmap#purchase"
+              class="inline-flex text-xs font-bold uppercase tracking-[0.35em] text-zinc-600 hover:text-accent transition-colors"
+            >
+              購入ページへ
+            </a>
+          </div>
+        </>
+      )}
+
+      {(state === 'ok' || state === 'library') && (
+        <>
+          <p class="text-zinc-500 tracking-[0.25em] text-[9px] uppercase mb-2 font-bold">Materials</p>
+          <h1 class="text-xl md:text-2xl font-black tracking-tight mb-3">
+            {state === 'ok' ? '購入ありがとうございます' : '教材ダウンロード'}
+          </h1>
+          <p class="text-zinc-500 text-xs md:text-sm leading-relaxed mb-8">
+            {state === 'ok'
+              ? '以下から教材データを取得できます。ログインした状態で、このページをブックマークすると、いつでも戻れます。'
+              : 'ログイン中のアカウントで購入済みです。いつでもダウンロードできます。'}
+          </p>
+          <a
+            href={state === 'ok' && sessionId
+              ? `/api/materials/download?session_id=${encodeURIComponent(sessionId)}`
+              : '/api/materials/download'}
+            class="inline-flex items-center justify-center w-full sm:w-auto min-w-[200px] py-3.5 px-6 bg-accent hover:bg-accent-hover text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm transition-colors"
+          >
+            教材をダウンロード
+          </a>
+          <p class="mt-8 text-[10px] text-zinc-600 leading-relaxed">
+            ダウンロードに問題がある場合は、お問い合わせからご連絡ください。
+          </p>
+        </>
+      )}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  html {
+    background-color: black;
+  }
+</style>

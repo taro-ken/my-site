@@ -4,13 +4,16 @@ import { getBlogs, type BlogItem } from '../lib/cms';
 import NewsletterPopup from '../components/NewsletterPopup';
 
 export const prerender = false;
+const hiddenRoadmapId = (import.meta.env.MICROCMS_ENGINEERING_ROADMAP_ID as string | undefined) || 'gpx2f-h9gox';
 
 // Fetch latest blogs for the homepage
 let latestBlogs: BlogItem[] = [];
 try {
   // Assuming getBlogs() can take parameters like limit, or we just slice the array
   const response = await getBlogs();
-  latestBlogs = response.contents.slice(0, 6); // Get top 6 most recent
+  latestBlogs = response.contents
+    .filter((blog) => blog.id !== hiddenRoadmapId)
+    .slice(0, 6); // Get top 6 most recent (excluding roadmap article)
 } catch (error) {
   console.error("Failed to fetch latest blogs for homepage:", error);
 }
@@ -130,6 +133,15 @@ const socialLinks = [
             </a>
           </div>
         ))}
+      </div>
+
+      <div class="text-center mt-10 md:mt-12">
+        <a
+          href="/product"
+          class="inline-flex items-center justify-center gap-2 px-8 py-3 border border-zinc-700 hover:border-accent text-sm font-bold tracking-[0.2em] uppercase text-white hover:text-accent transition-colors rounded-sm"
+        >
+          View All
+        </a>
       </div>
     </section>
 

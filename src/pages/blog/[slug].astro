@@ -30,12 +30,8 @@ try {
     })
   ]);
   
-  const prevCandidates = hiddenRoadmapId
-    ? prevResponse.contents.filter((post) => post.id !== hiddenRoadmapId)
-    : prevResponse.contents;
-  const nextCandidates = hiddenRoadmapId
-    ? nextResponse.contents.filter((post) => post.id !== hiddenRoadmapId)
-    : nextResponse.contents;
+  const prevCandidates = prevResponse.contents.filter((post) => post.id !== hiddenRoadmapId);
+  const nextCandidates = nextResponse.contents.filter((post) => post.id !== hiddenRoadmapId);
 
   prevPost = prevCandidates[0] || null;
   nextPost = nextCandidates[0] || null;

@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { stripe } from '../../../lib/stripe';
 import { adminDb } from '../../../lib/firebase/server';
+import { LEARNING_MATERIALS_PRODUCT } from '../../../lib/stripe-materials';
 
 export const POST: APIRoute = async ({ request }) => {
     const signature = request.headers.get('stripe-signature');
@@ -20,14 +21,37 @@ export const POST: APIRoute = async ({ request }) => {
             case 'checkout.session.completed': {
                 const session = event.data.object;
 
-                // This is the Firebase UID we passed in checkout.ts
+                // 買い切り教材（ログイン済み UID が client_reference_id）
+                if (session.mode === 'payment' && session.metadata?.product === LEARNING_MATERIALS_PRODUCT) {
+                    const uid = session.client_reference_id;
+                    if (uid) {
+                        await adminDb.collection('users').doc(uid).set(
+                            {
+                                learning_materials_purchased: true,
+                                learning_materials_purchased_at: new Date(),
+                                updatedAt: new Date(),
+                            },
+                            { merge: true }
+                        );
+                        console.log(`[webhook.ts] learning_materials purchase recorded for uid=${uid}`);
+                    } else {
+                        console.warn('[webhook.ts] learning_materials checkout without client_reference_id');
+                    }
+                    break;
+                }
+
+                // サブスク（従来）：Firebase UID 連携
+                if (session.mode !== 'subscription') {
+                    console.warn(`[webhook.ts] checkout.session.completed: unhandled mode=${session.mode}`);
+                    break;
+                }
+
                 const userId = session.client_reference_id;
                 const customerId = session.customer as string;
                 const subscriptionId = session.subscription as string;
 
                 if (userId) {
                     console.log(`[webhook.ts] Updating Firestore for userId: ${userId}`);
-                    // Update user's metadata in Firestore
                     await adminDb.collection('users').doc(userId).set({
                         stripe_customer_id: customerId,
                         stripe_subscription_id: subscriptionId,
@@ -36,7 +60,7 @@ export const POST: APIRoute = async ({ request }) => {
                     }, { merge: true });
                     console.log(`[webhook.ts] Successfully updated Firestore for ${userId}`);
                 } else {
-                    console.warn(`[webhook.ts] Warning: No client_reference_id found on session obj!`);
+                    console.warn(`[webhook.ts] Warning: subscription checkout without client_reference_id`);
                 }
                 break;
             }

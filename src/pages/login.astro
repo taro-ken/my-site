@@ -175,13 +175,13 @@ const firebasePublicConfig = {
           const data = await res.json();
           const urlParams = new URLSearchParams(window.location.search);
           const redirectUrl = urlParams.get('redirect');
+          const safeRedirectUrl = redirectUrl && redirectUrl.startsWith('/') ? redirectUrl : null;
           
-          // If the backend says they go to the dashboard (meaning they are premium),
-          // prioritize the dashboard over any ?redirect= param like /pricing
-          if (data.url === '/dashboard') {
+          // redirect が指定されている場合は最優先
+          if (safeRedirectUrl) {
+            window.location.assign(safeRedirectUrl);
+          } else if (data.url === '/dashboard') {
             window.location.assign('/dashboard');
-          } else if (redirectUrl) {
-            window.location.assign(redirectUrl);
           } else {
             window.location.assign(data.url || '/membership');
           }
