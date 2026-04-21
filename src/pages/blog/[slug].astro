@@ -11,6 +11,7 @@ if (!slug) {
 let blog: BlogItem | null = null;
 let prevPost: BlogItem | null = null;
 let nextPost: BlogItem | null = null;
+const hiddenRoadmapId = (import.meta.env.MICROCMS_ENGINEERING_ROADMAP_ID as string | undefined) || 'gpx2f-h9gox';
 
 try {
   blog = await getBlogDetail(slug);
@@ -20,17 +21,24 @@ try {
     getBlogs({ 
       filters: `publishedAt[less_than]${blog.publishedAt}`, 
       orders: '-publishedAt', 
-      limit: 1 
+      limit: 5 
     }),
     getBlogs({ 
       filters: `publishedAt[greater_than]${blog.publishedAt}`, 
       orders: 'publishedAt', 
-      limit: 1 
+      limit: 5 
     })
   ]);
   
-  prevPost = prevResponse.contents[0] || null;
-  nextPost = nextResponse.contents[0] || null;
+  const prevCandidates = hiddenRoadmapId
+    ? prevResponse.contents.filter((post) => post.id !== hiddenRoadmapId)
+    : prevResponse.contents;
+  const nextCandidates = hiddenRoadmapId
+    ? nextResponse.contents.filter((post) => post.id !== hiddenRoadmapId)
+    : nextResponse.contents;
+
+  prevPost = prevCandidates[0] || null;
+  nextPost = nextCandidates[0] || null;
 } catch (error) {
   console.error(error);
   return Astro.redirect('/404');

@@ -4,6 +4,7 @@ import { getBlogs, getCategories, type BlogItem, type Category } from '../../lib
 
 const url = new URL(Astro.request.url);
 const catId = url.searchParams.get('category');
+const hiddenRoadmapId = (import.meta.env.MICROCMS_ENGINEERING_ROADMAP_ID as string | undefined) || 'gpx2f-h9gox';
 
 let blogs: BlogItem[] = [];
 let categories: Category[] = [];
@@ -11,7 +12,9 @@ let errorMsg = null;
 
 try {
   const blogsResponse = await getBlogs(catId ? { filters: `category[equals]${catId}` } : undefined);
-  blogs = blogsResponse.contents;
+  blogs = hiddenRoadmapId
+    ? blogsResponse.contents.filter((blog) => blog.id !== hiddenRoadmapId)
+    : blogsResponse.contents;
   
   const catsResponse = await getCategories();
   categories = catsResponse.contents;
