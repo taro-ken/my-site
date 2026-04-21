@@ -118,6 +118,39 @@ const buildInfoTocHtml = (items: TocItem[]) => {
   `;
 };
 
+const TIMELINE_OPEN_RE = /(?:<p[^>]*>\s*)?\[\[\s*TIMELINE\s*\]\](?:\s*<\/p>)?/i;
+const TIMELINE_CLOSE_RE = /(?:<p[^>]*>\s*)?\[\[\s*\/\s*TIMELINE\s*\]\](?:\s*<\/p>)?/i;
+
+const applyTimelineMarkers = (html: string) => {
+  // 1) 通常ケース: [[TIMELINE]] ... [[/TIMELINE]]
+  let out = html.replace(
+    /(?:<p[^>]*>\s*)?\[\[\s*TIMELINE\s*\]\](?:\s*<\/p>)?([\s\S]*?)(?:<p[^>]*>\s*)?\[\[\s*\/\s*TIMELINE\s*\]\](?:\s*<\/p>)?/gi,
+    (_m, inner) => `<section class="timeline-compact-quote">${inner}</section>`
+  );
+
+  // 2) フォールバック: 開始タグのみある場合は、直後の blockquote を縮小対象にする
+  const openMatch = TIMELINE_OPEN_RE.exec(out);
+  if (openMatch && !TIMELINE_CLOSE_RE.test(out.slice(openMatch.index))) {
+    const after = out.slice(openMatch.index + openMatch[0].length);
+    const quote = /<blockquote[\s\S]*?<\/blockquote>/i.exec(after);
+    if (quote) {
+      const qStart = openMatch.index + openMatch[0].length + quote.index;
+      const qEnd = qStart + quote[0].length;
+      out =
+        out.slice(0, qStart) +
+        `<section class="timeline-compact-quote">${quote[0]}</section>` +
+        out.slice(qEnd);
+    }
+  }
+
+  // 3) マーカー文字列は最終的に必ず消す（表示事故防止）
+  out = out
+    .replace(/(?:<p[^>]*>\s*)?\[\[\s*TIMELINE\s*\]\](?:\s*<\/p>)?/gi, '')
+    .replace(/(?:<p[^>]*>\s*)?\[\[\s*\/\s*TIMELINE\s*\]\](?:\s*<\/p>)?/gi, '');
+
+  return out;
+};
+
 let cmsArticle: BlogItem | null = null;
 if (roadmapCmsId) {
   try {
@@ -160,6 +193,8 @@ if (cmsArticle) {
 const infoTocHtml = buildInfoTocHtml(extractTocItems(tocSourceHtml));
 publicHtml = publicHtml.replace(INFO_MARKER_REGEX, infoTocHtml);
 paidHtml = paidHtml.replace(INFO_MARKER_REGEX, '');
+publicHtml = applyTimelineMarkers(publicHtml);
+paidHtml = applyTimelineMarkers(paidHtml);
 ---
 
 <Layout
@@ -364,6 +399,13 @@ paidHtml = paidHtml.replace(INFO_MARKER_REGEX, '');
   .article-body :global(blockquote p::after) {
     content: none !important;
   }
+  .article-body :global(blockquote p),
+  .article-body :global(blockquote li),
+  .article-body :global(blockquote ul),
+  .article-body :global(blockquote ol) {
+    font-size: 0.86rem !important;
+    line-height: 1.4 !important;
+  }
   .article-body :global(pre) {
     position: relative;
     background: #0b1020;
@@ -489,5 +531,46 @@ paidHtml = paidHtml.replace(INFO_MARKER_REGEX, '');
   .article-body :global(.roadmap-info__label) {
     min-width: 0;
     word-break: break-word;
+  }
+  .article-body :global(.timeline-compact-quote) {
+    margin-top: 0.9rem;
+    margin-bottom: 0.9rem;
+  }
+  .article-body :global(.timeline-compact-quote blockquote) {
+    padding-left: 0.8rem !important;
+  }
+  .article-body :global(.timeline-compact-quote blockquote p),
+  .article-body :global(.timeline-compact-quote blockquote li),
+  .article-body :global(.timeline-compact-quote blockquote ul),
+  .article-body :global(.timeline-compact-quote blockquote ol) {
+    font-size: 0.8rem !important;
+    line-height: 1.28 !important;
+    letter-spacing: -0.005em !important;
+  }
+  .article-body :global(.timeline-compact-quote blockquote ul),
+  .article-body :global(.timeline-compact-quote blockquote ol) {
+    margin-top: 0.4rem !important;
+    margin-bottom: 0.4rem !important;
+    padding-left: 1rem !important;
+  }
+  .article-body :global(.timeline-compact-quote blockquote strong) {
+    font-size: 1em !important;
+    font-weight: 700 !important;
+  }
+  @media (max-width: 900px) {
+    .article-body :global(blockquote p),
+    .article-body :global(blockquote li),
+    .article-body :global(blockquote ul),
+    .article-body :global(blockquote ol) {
+      font-size: 0.74rem !important;
+      line-height: 1.28 !important;
+    }
+    .article-body :global(.timeline-compact-quote blockquote p),
+    .article-body :global(.timeline-compact-quote blockquote li),
+    .article-body :global(.timeline-compact-quote blockquote ul),
+    .article-body :global(.timeline-compact-quote blockquote ol) {
+      font-size: 0.7rem !important;
+      line-height: 1.22 !important;
+    }
   }
 </style>
