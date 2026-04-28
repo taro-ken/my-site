@@ -51,6 +51,33 @@ export const getBlogs = async (queries?: any) => {
     return await microcmsClient.get<BlogResponse>({ endpoint: "blogs", queries });
 };
 
+// Fetch all blogs with pagination support (microCMS default limit is 10)
+export const getAllBlogs = async (queries?: any) => {
+    const limit = 100;
+    let offset = 0;
+    let totalCount = 0;
+    const contents: BlogItem[] = [];
+
+    do {
+        const response = await getBlogs({
+            ...queries,
+            limit,
+            offset,
+        });
+
+        totalCount = response.totalCount;
+        contents.push(...response.contents);
+        offset += response.contents.length;
+    } while (offset < totalCount);
+
+    return {
+        totalCount,
+        offset: 0,
+        limit: contents.length,
+        contents,
+    } satisfies BlogResponse;
+};
+
 // Fetch list of categories
 export const getCategories = async (queries?: any) => {
     return await microcmsClient.get<CategoryResponse>({ endpoint: "categories", queries });
