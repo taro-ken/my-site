@@ -21,7 +21,14 @@ try {
   console.error('Gear review list fetch failed:', e);
 }
 
-const stripHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
+/** ブログ詳細と同様に [[more]] を除去して全文表示（メンバー閲覧ページのため） */
+const PAYWALL_REGEX = /<p>\s*\[\[more\]\]\s*<\/p>|\[\[more\]\]/g;
+function fullArticleHtml(raw: string) {
+  return raw.split(PAYWALL_REGEX).join('');
+}
+
+const proseClasses =
+  'prose prose-invert prose-base max-w-none prose-p:text-zinc-100 prose-p:leading-[1.8] prose-p:mb-6 prose-headings:text-white prose-headings:font-black prose-headings:tracking-tight prose-h2:text-xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-2 prose-h2:border-b prose-h2:border-accent prose-h3:text-lg prose-h3:mt-10 prose-h3:mb-4 prose-h3:pl-4 prose-h3:border-l-4 prose-h3:border-zinc-800 prose-a:text-zinc-400 prose-a:underline prose-a:underline-offset-4 prose-a:decoration-zinc-700 hover:prose-a:text-white hover:prose-a:decoration-white prose-strong:text-white prose-ul:text-zinc-100 prose-ol:text-zinc-100 prose-li:marker:text-zinc-500 prose-blockquote:border-l-2 prose-blockquote:border-zinc-600 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:font-light prose-blockquote:text-zinc-300 prose-img:rounded-[4px]';
 ---
 
 <Layout
@@ -47,32 +54,20 @@ const stripHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
       </div>
 
       {gearBlogs.length > 0 && (
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+        <div class="flex flex-col gap-20 md:gap-24">
           {gearBlogs.map((blog) => (
-            <article class="flex flex-col group">
-              <a href={`/gear-review/${blog.id}`} class="block mb-4 overflow-hidden bg-zinc-900 aspect-[16/10] relative rounded-[4px]">
-                {blog.eyecatch ? (
+            <article class="text-left">
+              {blog.eyecatch && (
+                <figure class="mb-10 md:mb-12">
                   <img
-                    src={`${blog.eyecatch.url}?w=600&q=80&fmt=webp`}
+                    src={`${blog.eyecatch.url}?w=1200&q=85&fmt=webp`}
                     alt={blog.title}
-                    class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    class="w-full h-auto object-cover rounded-[4px]"
                     loading="lazy"
                   />
-                ) : (
-                  <div class="w-full h-full flex items-center justify-center text-zinc-600">
-                    <span class="tracking-widest uppercase text-[10px]">No Image</span>
-                  </div>
-                )}
-              </a>
-              <a href={`/gear-review/${blog.id}`} class="flex flex-col flex-1">
-                <h2 class="text-lg font-bold mb-2 leading-snug group-hover:text-zinc-300 transition-colors line-clamp-3">
-                  {blog.title}
-                </h2>
-                <p class="text-zinc-500 text-xs md:text-sm leading-relaxed line-clamp-3">
-                  {stripHtml(blog.content).slice(0, 120)}
-                  {stripHtml(blog.content).length > 120 ? '…' : ''}
-                </p>
-              </a>
+                </figure>
+              )}
+              <div class={proseClasses} set:html={fullArticleHtml(blog.content)} />
             </article>
           ))}
         </div>
@@ -80,3 +75,10 @@ const stripHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
     </div>
   </main>
 </Layout>
+
+<style is:global>
+  .prose blockquote p::before,
+  .prose blockquote p::after {
+    content: none !important;
+  }
+</style>
