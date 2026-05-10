@@ -168,7 +168,8 @@ const firebasePublicConfig = {
 
         const res = await fetch('/api/auth/signin', {
           method: 'POST',
-          headers: { Authorization: 'Bearer ' + idToken }
+          headers: { Authorization: 'Bearer ' + idToken },
+          credentials: 'same-origin',
         });
 
         if (res.ok) {

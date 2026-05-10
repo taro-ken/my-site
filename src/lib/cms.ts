@@ -24,6 +24,8 @@ export type BlogItem = {
     title: string;
     content: string;
     is_premium: boolean;
+    /** true の記事は /gear-review のみ（ブログ一覧・HP等には出さない） */
+    gearlist?: boolean;
     eyecatch?: {
         url: string;
         height: number;
@@ -31,6 +33,17 @@ export type BlogItem = {
     };
     category?: Category;
 };
+
+/** microCMS filters: ギアレビュー専用記事を通常のブログ一覧から除外 */
+export const FILTER_EXCLUDE_GEARLIST = "gearlist[equals]false";
+/** ギアレビューページ用 */
+export const FILTER_INCLUDE_GEARLIST = "gearlist[equals]true";
+
+export function mergeBlogFilters(...parts: (string | undefined)[]): string | undefined {
+    const valid = parts.filter((p): p is string => Boolean(p));
+    if (valid.length === 0) return undefined;
+    return valid.length === 1 ? valid[0] : valid.join("[and]");
+}
 
 export type CategoryResponse = {
     totalCount: number;

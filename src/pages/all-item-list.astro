@@ -62,10 +62,26 @@ const noteHTML = await fetchNoteHTML();
               <p class="text-zinc-400 font-medium max-w-2xl text-sm md:text-base">
                 生活を身軽にする、厳選された持ち物と愛用品のリスト
               </p>
+              <div class="mt-8 flex justify-center w-full">
+                <a
+                  href="/gear-review"
+                  class="text-accent underline underline-offset-4 decoration-accent font-semibold text-sm hover:opacity-80 transition-opacity"
+                >
+                  写真付きフルレビュー
+                </a>
+              </div>
             </div>
             <section class="items-container">
               <div class="note-content md:prose-invert" set:html={noteHTML}></div>
       </section>
+      <div class="mt-16 flex justify-center w-full">
+        <a
+          href="/gear-review"
+          class="text-accent underline underline-offset-4 decoration-accent font-semibold text-sm hover:opacity-80 transition-opacity"
+        >
+          写真付きフルレビュー
+        </a>
+      </div>
     </div>
   </main>
 
@@ -94,7 +110,6 @@ const noteHTML = await fetchNoteHTML();
       applyStyles();
       document.addEventListener('astro:after-swap', applyStyles);
     </script>
-  </div>
 </Layout>
 
 <style is:global>

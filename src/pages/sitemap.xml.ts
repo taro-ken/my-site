@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-import { getBlogs } from '../lib/cms';
+import { getBlogs, FILTER_EXCLUDE_GEARLIST } from '../lib/cms';
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://kentaro.life';
 
@@ -18,8 +18,8 @@ export const GET: APIRoute = async () => {
   // Fetch blogs for dynamic URLs
   let blogs: any[] = [];
   try {
-    const response = await getBlogs({ limit: 100 });
-    blogs = response.contents;
+    const response = await getBlogs({ limit: 100, filters: FILTER_EXCLUDE_GEARLIST });
+    blogs = response.contents.filter((b: { gearlist?: boolean }) => !b.gearlist);
   } catch (error) {
     console.error("Sitemap: Failed to fetch blogs", error);
   }

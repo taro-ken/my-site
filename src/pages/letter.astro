@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getBlogs, type BlogItem } from '../lib/cms';
+import { getBlogs, FILTER_EXCLUDE_GEARLIST, type BlogItem } from '../lib/cms';
 import NewsletterPopup from '../components/NewsletterPopup';
 
 export const prerender = false;
@@ -9,8 +9,14 @@ export const prerender = false;
 let latestBlogs: BlogItem[] = [];
 try {
   // Assuming getBlogs() can take parameters like limit, or we just slice the array
-  const response = await getBlogs();
-  latestBlogs = response.contents.slice(0, 6); // Get top 6 most recent
+  const response = await getBlogs({
+    filters: FILTER_EXCLUDE_GEARLIST,
+    orders: '-publishedAt',
+    limit: 20,
+  });
+  latestBlogs = response.contents
+    .filter((blog) => !blog.gearlist)
+    .slice(0, 6);
 } catch (error) {
   console.error("Failed to fetch latest blogs for homepage:", error);
 }

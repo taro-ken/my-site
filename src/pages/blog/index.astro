@@ -1,6 +1,13 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getAllBlogs, getCategories, type BlogItem, type Category } from '../../lib/cms';
+import {
+  getAllBlogs,
+  getCategories,
+  mergeBlogFilters,
+  FILTER_EXCLUDE_GEARLIST,
+  type BlogItem,
+  type Category,
+} from '../../lib/cms';
 
 const url = new URL(Astro.request.url);
 const catId = url.searchParams.get('category');
@@ -11,8 +18,12 @@ let categories: Category[] = [];
 let errorMsg = null;
 
 try {
-  const blogsResponse = await getAllBlogs(catId ? { filters: `category[equals]${catId}` } : undefined);
-  blogs = blogsResponse.contents.filter((blog) => blog.id !== hiddenRoadmapId);
+  const listFilters = mergeBlogFilters(
+    catId ? `category[equals]${catId}` : undefined,
+    FILTER_EXCLUDE_GEARLIST
+  );
+  const blogsResponse = await getAllBlogs(listFilters ? { filters: listFilters } : undefined);
+  blogs = blogsResponse.contents.filter((blog) => blog.id !== hiddenRoadmapId && !blog.gearlist);
   
   const catsResponse = await getCategories();
   categories = catsResponse.contents;
