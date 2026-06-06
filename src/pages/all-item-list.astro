@@ -4,7 +4,7 @@ import '../styles/global.css';
 
 
 // Noteページから動的にデータを取得
-const NOTE_URL = "https://note.com/preview/nd4a6cfe2b88c?prev_access_key=ec9243280409c7967a709e4272de3df4";
+const NOTE_URL = "https://note.com/taro_essence/n/n48d515eac42c";
 
 // NoteページのHTMLを直接取得
 async function fetchNoteHTML() {
@@ -31,6 +31,7 @@ async function fetchNoteHTML() {
       content = content.replace(/<p[^>]*>全ての持ち物をリスト化し[^<]*<\/p>/gs, '');
       content = content.replace(/<p[^>]*>新しい物を購入する際は[^<]*<\/p>/gs, '');
       content = content.replace(/<p[^>]*>※冷蔵庫・洗濯機は[^<]*<\/p>/gs, '');
+      content = content.replace(/<p[^>]*>\s*<a[^>]*>[^<]*全アイテムはこちら[^<]*<\/a>\s*<\/p>/gi, '');
       
       content = content.replace(/<ul[^>]*>[\s\S]*?<\/ul>/s, '');
       content = content.replace(/^\s*・\s*/gm, '');
