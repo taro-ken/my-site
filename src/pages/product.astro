@@ -84,6 +84,15 @@ const categories: {
         linkText: 'View App',
         external: true,
       },
+      {
+        title: '持ち物リスト管理',
+        description:
+          '所持品の登録・分類・購入日・使用頻度を一覧で管理。欲しいものリストとあわせて、持ち物を見極め身軽にするためのツール。',
+        link: 'https://minimalist-item.vercel.app/',
+        image: '/assets/app/belongings-list.png',
+        linkText: 'View App',
+        external: true,
+      },
     ],
   },
 ];
@@ -94,17 +103,18 @@ const categories: {
   description="ブック・ガイド、アプリ、教材。Freedom & Focus のリソース一覧。"
   canonicalUrl="https://kentaro.life/product"
 >
-  <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pb-16 md:pb-20">
-    <div class="max-w-5xl mx-auto px-4 sm:px-5 pt-24 md:pt-28 pb-5">
-      <p class="text-zinc-500 tracking-[0.25em] text-[9px] uppercase mb-2 font-bold text-center">Resources</p>
-      <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-center mb-2">Freedom & Focus</h1>
-      <p class="text-zinc-500 font-medium text-center max-w-xl mx-auto text-[10px] md:text-[11px] leading-relaxed">
-
-      </p>
-    </div>
+  <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pt-32 pb-32 px-5">
+    <div class="max-w-5xl mx-auto w-full">
+      <div class="text-center mb-12 flex flex-col items-center">
+        <p class="text-zinc-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">Resources</p>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-4">Freedom &amp; Focus</h1>
+        <p class="text-zinc-400 font-medium max-w-2xl text-sm md:text-base">
+          ブック・ガイド、アプリ、教材をまとめたリソース一覧
+        </p>
+      </div>
 
     {categories.map((cat) => (
-      <section id={cat.id} class="max-w-5xl mx-auto px-4 sm:px-5 py-5 md:py-6 border-t border-zinc-900/80 scroll-mt-20">
+      <section id={cat.id} class="py-5 md:py-6 border-t border-zinc-900/80 scroll-mt-20">
         <div class="mb-4 md:mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
           {cat.materialsPage ? (
             <a
@@ -177,13 +187,14 @@ const categories: {
       </section>
     ))}
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-5 pt-6 pb-3 text-center">
+    <div class="pt-6 pb-3 text-center">
       <a
         href="/"
         class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.35em] text-zinc-600 hover:text-accent transition-colors"
       >
         ← Back to Home
       </a>
+    </div>
     </div>
   </main>
 </Layout>

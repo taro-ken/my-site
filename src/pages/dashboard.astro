@@ -156,6 +156,7 @@ if (!isPremium) {
   function initDashboard() {
     const btn = document.getElementById('signout-btn');
     if (!btn || btn.dataset.initialized) return;
+    if (document.documentElement.classList.contains('app-embed')) return;
     btn.dataset.initialized = "true";
 
     const firebaseConfig = firebasePublicConfig;
@@ -164,8 +165,17 @@ if (!isPremium) {
       firebase.initializeApp(firebaseConfig);
     }
 
-    btn.addEventListener('click', async function() {
-      await firebase.auth().signOut();
+    btn.addEventListener('click', async function(event) {
+      event.preventDefault();
+
+      try {
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+          await firebase.auth().signOut();
+        }
+      } catch (error) {
+        // App WebView では Firebase セッションが無い場合がある
+      }
+
       window.location.assign('/api/auth/signout');
     });
   }

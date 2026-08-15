@@ -32,11 +32,12 @@ const currentUrl = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
 const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? ogImage : '/' + ogImage}`;
 
 // Global session and premium status check from middleware
-const { isLoggedIn, isPremium } = Astro.locals;
+const { isLoggedIn, isPremium, isAppEmbed } = Astro.locals;
+const showNavigation = !hideNav && !isAppEmbed;
 ---
 
 <!doctype html>
-<html lang="ja" class="bg-black text-white">
+<html lang="ja" class:list={['bg-black text-white', isAppEmbed && 'app-embed']}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
@@ -91,7 +92,7 @@ const { isLoggedIn, isPremium } = Astro.locals;
 		<div id="loading-bar-container">
 			<div id="loading-bar"></div>
 		</div>
-		{!hideNav && <Navigation isLoggedIn={isLoggedIn} isPremium={isPremium} />}
+		{showNavigation && <Navigation isLoggedIn={isLoggedIn} isPremium={isPremium} />}
 		<slot />
 		<Analytics />
 		<SpeedInsights />
@@ -134,5 +135,33 @@ const { isLoggedIn, isPremium } = Astro.locals;
 			Bitstream Vera Sans Mono,
 			Courier New,
 			monospace;
+	}
+	html.app-embed main [class*='pt-24'],
+	html.app-embed main [class*='pt-28'],
+	html.app-embed main [class*='pt-32'] {
+		padding-top: calc(env(safe-area-inset-top, 0px) + 1rem) !important;
+	}
+	html.app-embed main > div[class*='pt-24'],
+	html.app-embed main > div[class*='pt-28'],
+	html.app-embed main > div > div[class*='pt-24'],
+	html.app-embed main > div > div[class*='pt-28'] {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	html.app-embed main > div[class*='pt-24'] > p,
+	html.app-embed main > div[class*='pt-28'] > p,
+	html.app-embed main > div[class*='pt-24'] > h1,
+	html.app-embed main > div[class*='pt-28'] > h1,
+	html.app-embed main > div > div[class*='pt-24'] > p,
+	html.app-embed main > div > div[class*='pt-28'] > p,
+	html.app-embed main > div > div[class*='pt-24'] > h1,
+	html.app-embed main > div > div[class*='pt-28'] > h1,
+	html.app-embed main > div > div[class*='text-center'] > p,
+	html.app-embed main > div > div[class*='text-center'] > h1 {
+		display: none !important;
+	}
+	html.app-embed main > div > div[class*='text-center'] {
+		margin-bottom: 0 !important;
 	}
 </style>

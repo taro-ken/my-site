@@ -7,11 +7,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
     // Initialize locals
     context.locals.isLoggedIn = false;
     context.locals.isPremium = false;
+    context.locals.isAppEmbed = false;
     context.locals.user = null;
 
     // Don't run auth logic for API routes (critical for webhooks & auth calls)
     if (context.url.pathname.startsWith("/api/")) {
         return next();
+    }
+
+    const userAgent = context.request.headers.get("user-agent") ?? "";
+    if (userAgent.includes("TaroEssenceApp") || context.url.searchParams.has("app")) {
+        context.locals.isAppEmbed = true;
     }
 
     if (sessionCookie) {
