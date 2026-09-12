@@ -22,15 +22,6 @@ if (sessionCookie) {
   }
 }
 
-/** ログイン／登録完了後の遷移先（同一オリジンのパスのみ許可） */
-const rawRedirect = Astro.url.searchParams.get('redirect');
-const postAuthRedirect =
-  rawRedirect &&
-  rawRedirect.startsWith('/') &&
-  !rawRedirect.startsWith('//') &&
-  !rawRedirect.includes('://')
-    ? rawRedirect
-    : '/membership';
 ---
 
 <Layout 
@@ -93,28 +84,11 @@ const postAuthRedirect =
             <button disabled class="w-full py-4 px-4 bg-zinc-900 border border-zinc-800 text-zinc-500 font-bold rounded-sm cursor-not-allowed uppercase tracking-widest text-xs">
               現在のプラン
             </button>
-          ) : isLoggedIn ? (
-            <form action="/api/stripe/checkout" method="POST">
-              <button id="main-cta-button" type="submit" class="w-full py-4 px-4 bg-accent hover:bg-accent-hover text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
-                今すぐ登録する
-              </button>
-            </form>
           ) : (
-            <>
-              <a id="main-cta-button" href={`/register?redirect=${encodeURIComponent(postAuthRedirect)}`} class="block text-center w-full py-4 px-4 bg-accent hover:bg-accent-hover text-black font-black text-xs tracking-[0.15em] uppercase rounded-sm shadow-xl transition-colors">
-                今すぐ登録する
-              </a>
-              <p class="text-center text-sm text-zinc-500 font-medium leading-relaxed">
-                すでにアカウントをお持ちの方は
-                <a href={`/login?redirect=${encodeURIComponent(postAuthRedirect)}`} class="text-accent hover:text-accent-hover underline underline-offset-4 decoration-accent/50 font-semibold transition-colors">
-                  ログイン
-                </a>
-              </p>
-            </>
-          )}
-
-          {isPremium && (
-            <div id="main-cta-button" class="hidden"></div>
+            <p class="text-center text-sm text-zinc-400 font-medium leading-relaxed">
+              ご登録・お支払いはEssenceアプリから行ってください。<br />
+              Webからのお申し込みは受け付けておりません。
+            </p>
           )}
 
           {isLoggedIn && (
@@ -231,58 +205,8 @@ const postAuthRedirect =
       </div>
     </div>
 
-    <!-- Sticky Floating Button -->
-    {!isPremium && (
-      <div 
-        id="floating-cta" 
-        class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-[340px] z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-500 ease-out"
-      >
-        <div class="relative group pointer-events-auto">
-          <div class="absolute -inset-1 bg-gradient-to-r from-accent to-accent-deep rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-          <a 
-            href={isLoggedIn ? "javascript:void(0)" : `/register?redirect=${encodeURIComponent(postAuthRedirect)}`}
-            onclick={isLoggedIn ? "document.querySelector('form[action=\"/api/stripe/checkout\"]')?.submit()" : ""}
-            class="relative block w-full bg-white text-black text-center py-4 px-8 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform active:scale-95"
-          >
-            Join The Essence
-          </a>
-        </div>
-      </div>
-    )}
-
     <div class="mt-24 mb-8 text-center">
       <a href="/tokushoho" class="text-xs text-zinc-500 hover:text-white underline underline-offset-4 transition-colors">特定商取引法に基づく表記</a>
     </div>
   </main>
-
-  <style>
-    #floating-cta.visible {
-      opacity: 1;
-      translate: -50% 0;
-      pointer-events: auto;
-    }
-  </style>
-
-  <script>
-    const mainButton = document.getElementById('main-cta-button');
-    const floatingCta = document.getElementById('floating-cta');
-
-    if (mainButton && floatingCta) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          // When main button is NO LONGER intersecting (visible), show floating CTA
-          if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-            floatingCta.classList.add('visible');
-          } else {
-            floatingCta.classList.remove('visible');
-          }
-        });
-      }, {
-        threshold: 0,
-        rootMargin: '0px'
-      });
-
-      observer.observe(mainButton);
-    }
-  </script>
 </Layout>

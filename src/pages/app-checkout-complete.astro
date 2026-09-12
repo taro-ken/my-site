@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const status = Astro.url.searchParams.get('status') === 'canceled' ? 'canceled' : 'success';
+---
+
+<Layout title="Essence" hideNav={true}>
+  <main class="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden font-sans selection:bg-white selection:text-black">
+    <div class="max-w-md w-full rounded-2xl p-8 sm:p-10 shadow-2xl bg-zinc-950 border border-white/10 text-center">
+      {status === 'success' ? (
+        <>
+          <div class="mx-auto mb-6 h-14 w-14 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+            <svg class="h-7 w-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </div>
+          <h1 class="text-2xl font-black mb-3 tracking-tight">決済が完了しました</h1>
+          <p class="text-zinc-400 text-sm font-medium">
+            会員登録ありがとうございます。<br />
+            このタブを閉じて、Essenceアプリに戻ってください。
+          </p>
+        </>
+      ) : (
+        <>
+          <div class="mx-auto mb-6 h-14 w-14 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center">
+            <svg class="h-7 w-7 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h1 class="text-2xl font-black mb-3 tracking-tight">決済はキャンセルされました</h1>
+          <p class="text-zinc-400 text-sm font-medium">
+            このタブを閉じて、Essenceアプリに戻ってください。<br />
+            もう一度お試しになりたい場合は、アプリの「Webで決済する」からやり直せます。
+          </p>
+        </>
+      )}
+    </div>
+  </main>
+</Layout>
