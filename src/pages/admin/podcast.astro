@@ -63,12 +63,21 @@ const episodes = snapshot.docs.map((doc) => {
         <p class="text-sm text-zinc-500">まだありません。</p>
       )}
       {episodes.map((ep) => (
-        <div class="p-4 rounded-xl bg-zinc-950 border border-white/10">
-          <p class="text-xs text-zinc-500 mb-1">
-            {ep.publishedAt ? ep.publishedAt.toLocaleDateString('ja-JP') : '-'} ・ {Math.round(ep.durationSeconds / 60)}分
-          </p>
-          <p class="font-bold text-sm">{ep.title}</p>
-          {ep.subtitle && <p class="text-xs text-zinc-400 mt-1">{ep.subtitle}</p>}
+        <div class="p-4 rounded-xl bg-zinc-950 border border-white/10 flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <p class="text-xs text-zinc-500 mb-1">
+              {ep.publishedAt ? ep.publishedAt.toLocaleDateString('ja-JP') : '-'} ・ {Math.round(ep.durationSeconds / 60)}分
+            </p>
+            <p class="font-bold text-sm">{ep.title}</p>
+            {ep.subtitle && <p class="text-xs text-zinc-400 mt-1">{ep.subtitle}</p>}
+          </div>
+          <button
+            data-delete-id={ep.id}
+            data-delete-title={ep.title}
+            class="delete-btn shrink-0 px-3 py-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold transition-colors"
+          >
+            削除
+          </button>
         </div>
       ))}
     </div>
@@ -142,5 +151,23 @@ const episodes = snapshot.docs.map((doc) => {
       statusEl.classList.add('text-red-400');
       submitBtn.disabled = false;
     }
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.delete-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.deleteId!;
+      const title = btn.dataset.deleteTitle;
+      if (!confirm(`「${title}」を削除します。よろしいですか?`)) return;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/podcast/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('削除に失敗しました');
+        window.location.reload();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : '削除に失敗しました');
+        btn.disabled = false;
+      }
+    });
   });
 </script>
