@@ -26,17 +26,20 @@ export const GET: APIRoute = async ({ request, params }) => {
         return new Response(JSON.stringify({ error: "Invalid token" }), { status: 401 });
     }
 
-    const userDoc = await adminDb.collection("users").doc(uid).get();
-    if (userDoc.data()?.stripe_status !== "active") {
-        return new Response(JSON.stringify({ error: "Subscription required" }), { status: 403 });
-    }
-
     const episodeId = params.id;
     if (!episodeId) {
         return new Response(JSON.stringify({ error: "Missing episode id" }), { status: 400 });
     }
 
-    const episodeDoc = await adminDb.collection("podcastEpisodes").doc(episodeId).get();
+    // 会員チェックとエピソード存在チェックは互いに依存しないため並列に投げてレイテンシを縮める。
+    const [userDoc, episodeDoc] = await Promise.all([
+        adminDb.collection("users").doc(uid).get(),
+        adminDb.collection("podcastEpisodes").doc(episodeId).get(),
+    ]);
+
+    if (userDoc.data()?.stripe_status !== "active") {
+        return new Response(JSON.stringify({ error: "Subscription required" }), { status: 403 });
+    }
     if (!episodeDoc.exists) {
         return new Response(JSON.stringify({ error: "Episode not found" }), { status: 404 });
     }
