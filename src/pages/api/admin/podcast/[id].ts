@@ -35,3 +35,40 @@ export const DELETE: APIRoute = async ({ params, cookies }) => {
         headers: { "Content-Type": "application/json" },
     });
 };
+
+/**
+ * 管理者専用: タイトル・概要など、音声を含まないメタデータのみを編集する。
+ */
+export const PATCH: APIRoute = async ({ params, request, cookies }) => {
+    const admin = await requireAdmin(cookies);
+    if (!admin) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
+    const episodeId = params.id;
+    if (!episodeId) {
+        return new Response(JSON.stringify({ error: "Missing episode id" }), { status: 400 });
+    }
+
+    let body: { title?: string; subtitle?: string };
+    try {
+        body = await request.json();
+    } catch {
+        return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
+    }
+
+    const { title, subtitle } = body;
+    if (!title) {
+        return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
+    }
+
+    await adminDb.collection("podcastEpisodes").doc(episodeId).update({
+        title,
+        subtitle: subtitle ?? "",
+    });
+
+    return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+    });
+};
