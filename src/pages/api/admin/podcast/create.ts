@@ -17,15 +17,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
     }
 
-    let body: { title?: string; subtitle?: string; publishedAt?: string; durationSeconds?: number };
+    let body: { title?: string; subtitle?: string; durationSeconds?: number };
     try {
         body = await request.json();
     } catch {
         return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
     }
 
-    const { title, subtitle, publishedAt, durationSeconds } = body;
-    if (!title || !publishedAt || !durationSeconds) {
+    const { title, subtitle, durationSeconds } = body;
+    if (!title || !durationSeconds) {
         return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
     }
 
@@ -33,7 +33,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     await docRef.set({
         title,
         subtitle: subtitle ?? "",
-        publishedAt: new Date(publishedAt),
+        publishedAt: new Date(),
         durationSeconds: Math.round(durationSeconds),
     });
 

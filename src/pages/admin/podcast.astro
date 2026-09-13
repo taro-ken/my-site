@@ -43,12 +43,6 @@ const episodes = snapshot.docs.map((doc) => {
       </div>
 
       <div>
-        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">配信日</label>
-        <input name="publishedAt" type="date" required
-          class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30" />
-      </div>
-
-      <div>
         <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">音声ファイル(m4a / mp3)</label>
         <input name="audio" type="file" accept="audio/*" required
           class="w-full text-sm text-zinc-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-white/10 file:text-white file:text-xs file:font-bold file:uppercase file:tracking-wider" />
@@ -109,7 +103,6 @@ const episodes = snapshot.docs.map((doc) => {
       const formData = new FormData(form);
       const title = formData.get('title') as string;
       const subtitle = formData.get('subtitle') as string;
-      const publishedAt = formData.get('publishedAt') as string;
       const file = formData.get('audio') as File;
 
       if (!file || file.size === 0) {
@@ -123,7 +116,7 @@ const episodes = snapshot.docs.map((doc) => {
       const createRes = await fetch('/api/admin/podcast/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, subtitle, publishedAt, durationSeconds }),
+        body: JSON.stringify({ title, subtitle, durationSeconds }),
       });
       if (!createRes.ok) {
         const err = await createRes.json().catch(() => ({}));
