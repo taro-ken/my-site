@@ -1,0 +1,130 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { requireAdmin } from '../../lib/admin';
+import { adminDb } from '../../lib/firebase/server';
+
+const admin = await requireAdmin(Astro.cookies);
+if (!admin) {
+  return Astro.redirect('/');
+}
+
+const threadsSnapshot = await adminDb
+  .collection('boardThreads')
+  .orderBy('lastActivityAt', 'desc')
+  .get();
+
+const threads = await Promise.all(
+  threadsSnapshot.docs.map(async (doc) => {
+    const data = doc.data();
+    const repliesSnapshot = await doc.ref.collection('replies').orderBy('createdAt', 'asc').get();
+    const replies = repliesSnapshot.docs.map((replyDoc) => {
+      const replyData = replyDoc.data();
+      return {
+        id: replyDoc.id,
+        body: replyData.body as string,
+        authorName: replyData.authorName as string,
+        createdAt: replyData.createdAt?.toDate?.() ?? null,
+      };
+    });
+    return {
+      id: doc.id,
+      title: data.title as string,
+      body: data.body as string,
+      authorName: data.authorName as string,
+      createdAt: data.createdAt?.toDate?.() ?? null,
+      replies,
+    };
+  })
+);
+---
+
+<Layout title="掲示板管理 - taro." description="掲示板のトピック・返信を削除する(管理者専用)">
+  <main class="min-h-screen bg-black text-white p-8 pt-24 max-w-2xl mx-auto">
+    <h1 class="text-2xl md:text-4xl font-black tracking-tight mb-10">掲示板管理</h1>
+    <p class="text-sm text-zinc-500 mb-8">不適切なトピック・返信を削除できます。取り消しはできません。</p>
+
+    <div class="space-y-4">
+      {threads.length === 0 && <p class="text-sm text-zinc-500">まだトピックがありません。</p>}
+      {threads.map((thread) => (
+        <div class="thread-card p-4 rounded-xl bg-zinc-950 border border-white/10" data-thread-id={thread.id}>
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <p class="text-xs text-zinc-500 mb-1">
+                {thread.authorName} ・ {thread.createdAt ? thread.createdAt.toLocaleString('ja-JP') : '-'}
+              </p>
+              <p class="font-bold text-sm">{thread.title}</p>
+              <p class="text-xs text-zinc-400 mt-1 line-clamp-3 whitespace-pre-wrap">{thread.body}</p>
+            </div>
+            <button
+              data-delete-thread={thread.id}
+              data-delete-title={thread.title}
+              class="delete-thread-btn shrink-0 px-3 py-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold transition-colors"
+            >
+              トピックごと削除
+            </button>
+          </div>
+
+          {thread.replies.length > 0 && (
+            <div class="mt-4 pl-4 border-l border-white/10 space-y-3">
+              {thread.replies.map((reply) => (
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <p class="text-xs text-zinc-500 mb-0.5">
+                      {reply.authorName} ・ {reply.createdAt ? reply.createdAt.toLocaleString('ja-JP') : '-'}
+                    </p>
+                    <p class="text-xs text-zinc-300 whitespace-pre-wrap">{reply.body}</p>
+                  </div>
+                  <button
+                    data-delete-reply={reply.id}
+                    data-thread-id={thread.id}
+                    class="delete-reply-btn shrink-0 px-2 py-1 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[10px] font-bold transition-colors"
+                  >
+                    削除
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.delete-thread-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.deleteThread!;
+      const title = btn.dataset.deleteTitle;
+      if (!confirm(`トピック「${title}」を返信ごと削除します。よろしいですか?`)) return;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/board/threads/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('削除に失敗しました');
+        window.location.reload();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : '削除に失敗しました');
+        btn.disabled = false;
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.delete-reply-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const threadId = btn.dataset.threadId!;
+      const replyId = btn.dataset.deleteReply!;
+      if (!confirm('この返信を削除します。よろしいですか?')) return;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/board/threads/${threadId}/replies/${replyId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('削除に失敗しました');
+        window.location.reload();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : '削除に失敗しました');
+        btn.disabled = false;
+      }
+    });
+  });
+</script>
