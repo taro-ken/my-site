@@ -3,7 +3,7 @@ import { adminDb } from "../../../../../lib/firebase/server";
 import { requireAdmin } from "../../../../../lib/admin";
 
 /**
- * 管理者専用: 掲示板のトピックを、その下の返信ごと削除する。
+ * 管理者専用: 掲示板の投稿を、その下の返信ごと削除する。
  */
 export const DELETE: APIRoute = async ({ params, cookies }) => {
     const admin = await requireAdmin(cookies);
@@ -11,13 +11,13 @@ export const DELETE: APIRoute = async ({ params, cookies }) => {
         return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
     }
 
-    const threadId = params.id;
-    if (!threadId) {
-        return new Response(JSON.stringify({ error: "Missing thread id" }), { status: 400 });
+    const postId = params.id;
+    if (!postId) {
+        return new Response(JSON.stringify({ error: "Missing post id" }), { status: 400 });
     }
 
-    const threadRef = adminDb.collection("boardThreads").doc(threadId);
-    await adminDb.recursiveDelete(threadRef);
+    const postRef = adminDb.collection("boardPosts").doc(postId);
+    await adminDb.recursiveDelete(postRef);
 
     return new Response(JSON.stringify({ ok: true }), {
         status: 200,
