@@ -211,21 +211,16 @@ const courses = await Promise.all(
           throw new Error('動画ファイルを選択してください');
         }
 
-        statusEl.textContent = 'レッスンを作成中...';
-        const createRes = await fetch(`/api/admin/courses/${courseId}/lessons/create`, {
+        // アップロードが完全に終わるまでFirestoreにレッスンを作らない。
+        // 逆順にすると、動画のないレッスンが一瞬会員に見えてしまう。
+        statusEl.textContent = 'アップロードURLを発行中...';
+        const uploadUrlRes = await fetch(`/api/admin/courses/${courseId}/lessons/upload-url`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: formData.get('title'),
-            description: formData.get('description'),
-            chapterTitle: formData.get('chapterTitle'),
-          }),
         });
-        if (!createRes.ok) {
-          const err = await createRes.json().catch(() => ({}));
-          throw new Error(err.error || '追加に失敗しました');
+        if (!uploadUrlRes.ok) {
+          throw new Error('アップロードURLの発行に失敗しました');
         }
-        const { uploadUrl } = await createRes.json();
+        const { lessonId, uploadUrl } = await uploadUrlRes.json();
 
         statusEl.textContent = '動画をアップロード中...';
         const uploadRes = await fetch(uploadUrl, {
@@ -235,6 +230,22 @@ const courses = await Promise.all(
         });
         if (!uploadRes.ok) {
           throw new Error('動画のアップロードに失敗しました');
+        }
+
+        statusEl.textContent = 'レッスンを作成中...';
+        const createRes = await fetch(`/api/admin/courses/${courseId}/lessons/create`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            lessonId,
+            title: formData.get('title'),
+            description: formData.get('description'),
+            chapterTitle: formData.get('chapterTitle'),
+          }),
+        });
+        if (!createRes.ok) {
+          const err = await createRes.json().catch(() => ({}));
+          throw new Error(err.error || '追加に失敗しました');
         }
 
         window.location.reload();
