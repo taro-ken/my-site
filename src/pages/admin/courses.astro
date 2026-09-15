@@ -23,7 +23,6 @@ const courses = await Promise.all(
         id: lessonDoc.id,
         title: lessonData.title as string,
         description: (lessonData.description as string) ?? '',
-        youtubeVideoId: lessonData.youtubeVideoId as string,
         chapterTitle: (lessonData.chapterTitle as string) ?? null,
       };
     });
@@ -90,7 +89,6 @@ const courses = await Promise.all(
                 <div class="min-w-0">
                   {lesson.chapterTitle && <p class="text-[10px] font-bold text-emerald-400 mb-0.5">{lesson.chapterTitle}</p>}
                   <p class="text-xs font-bold text-zinc-200">{lesson.title}</p>
-                  <p class="text-[10px] text-zinc-500">{lesson.youtubeVideoId}</p>
                 </div>
                 <button
                   data-delete-lesson={lesson.id}
@@ -108,10 +106,10 @@ const courses = await Promise.all(
               class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
             <input name="title" type="text" placeholder="レッスンタイトル" required
               class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
-            <input name="youtubeUrl" type="text" placeholder="YouTube URL(非公開)または動画ID" required
-              class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
             <textarea name="description" rows="2" placeholder="説明(任意)"
               class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30 resize-y"></textarea>
+            <input name="video" type="file" accept="video/*" required
+              class="w-full text-xs text-zinc-300 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-white/10 file:text-white file:text-[10px] file:font-bold file:uppercase file:tracking-wider" />
             <button type="submit"
               class="lesson-submit-btn w-full py-2 px-4 bg-white/10 text-white text-xs font-bold rounded-md hover:bg-white/20 transition-colors disabled:opacity-50">
               レッスンを追加
@@ -208,20 +206,37 @@ const courses = await Promise.all(
 
       try {
         const formData = new FormData(form);
-        const res = await fetch(`/api/admin/courses/${courseId}/lessons/create`, {
+        const file = formData.get('video') as File;
+        if (!file || file.size === 0) {
+          throw new Error('動画ファイルを選択してください');
+        }
+
+        statusEl.textContent = 'レッスンを作成中...';
+        const createRes = await fetch(`/api/admin/courses/${courseId}/lessons/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             title: formData.get('title'),
             description: formData.get('description'),
-            youtubeUrl: formData.get('youtubeUrl'),
             chapterTitle: formData.get('chapterTitle'),
           }),
         });
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
+        if (!createRes.ok) {
+          const err = await createRes.json().catch(() => ({}));
           throw new Error(err.error || '追加に失敗しました');
         }
+        const { uploadUrl } = await createRes.json();
+
+        statusEl.textContent = '動画をアップロード中...';
+        const uploadRes = await fetch(uploadUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'video/mp4' },
+          body: file,
+        });
+        if (!uploadRes.ok) {
+          throw new Error('動画のアップロードに失敗しました');
+        }
+
         window.location.reload();
       } catch (error) {
         statusEl.textContent = error instanceof Error ? error.message : '予期せぬエラーが発生しました';

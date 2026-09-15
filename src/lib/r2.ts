@@ -20,3 +20,9 @@ export const PODCAST_AUDIO_CONTENT_TYPE = "audio/mp4";
 export function podcastAudioKey(episodeId: string): string {
     return `${episodeId}.m4a`;
 }
+
+export const COURSE_VIDEO_CONTENT_TYPE = "video/mp4";
+
+export function courseVideoKey(courseId: string, lessonId: string): string {
+    return `courses/${courseId}/lessons/${lessonId}.mp4`;
+}
