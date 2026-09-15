@@ -35,14 +35,14 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
         return new Response(JSON.stringify({ error: "Missing course id" }), { status: 400 });
     }
 
-    let body: { title?: string; description?: string; youtubeUrl?: string };
+    let body: { title?: string; description?: string; youtubeUrl?: string; chapterTitle?: string };
     try {
         body = await request.json();
     } catch {
         return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
     }
 
-    const { title, description, youtubeUrl } = body;
+    const { title, description, youtubeUrl, chapterTitle } = body;
     if (!title || !youtubeUrl) {
         return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
     }
@@ -63,6 +63,7 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
             description: description ?? "",
             youtubeVideoId,
             position: countSnapshot.data().count,
+            chapterTitle: chapterTitle || null,
         });
         tx.update(courseRef, { lessonCount: countSnapshot.data().count + 1 });
     });
