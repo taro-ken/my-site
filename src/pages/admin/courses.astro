@@ -1,0 +1,227 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { requireAdmin } from '../../lib/admin';
+import { adminDb } from '../../lib/firebase/server';
+
+const admin = await requireAdmin(Astro.cookies);
+if (!admin) {
+  return Astro.redirect('/');
+}
+
+const coursesSnapshot = await adminDb
+  .collection('courses')
+  .orderBy('position', 'asc')
+  .get();
+
+const courses = await Promise.all(
+  coursesSnapshot.docs.map(async (doc) => {
+    const data = doc.data();
+    const lessonsSnapshot = await doc.ref.collection('lessons').orderBy('position', 'asc').get();
+    const lessons = lessonsSnapshot.docs.map((lessonDoc) => {
+      const lessonData = lessonDoc.data();
+      return {
+        id: lessonDoc.id,
+        title: lessonData.title as string,
+        description: (lessonData.description as string) ?? '',
+        youtubeVideoId: lessonData.youtubeVideoId as string,
+      };
+    });
+    return {
+      id: doc.id,
+      title: data.title as string,
+      description: (data.description as string) ?? '',
+      thumbnailUrl: (data.thumbnailUrl as string) ?? '',
+      lessons,
+    };
+  })
+);
+---
+
+<Layout title="講座管理 - taro." description="スキル講座・レッスンの管理(管理者専用)">
+  <main class="min-h-screen bg-black text-white p-8 pt-24 max-w-2xl mx-auto">
+    <h1 class="text-2xl md:text-4xl font-black tracking-tight mb-10">講座管理</h1>
+
+    <form id="course-form" class="p-6 rounded-2xl bg-zinc-950 border border-white/10 shadow-xl space-y-5">
+      <h2 class="text-sm font-bold uppercase tracking-wider text-zinc-500">新しい講座を作成</h2>
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">タイトル</label>
+        <input name="title" type="text" required
+          class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30" />
+      </div>
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">説明</label>
+        <textarea name="description" rows="3"
+          class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30 resize-y"></textarea>
+      </div>
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">サムネイルURL(任意)</label>
+        <input name="thumbnailUrl" type="url"
+          class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30" />
+      </div>
+      <button type="submit" id="course-submit-btn"
+        class="w-full py-3 px-4 bg-white text-black font-bold text-sm tracking-wide rounded-md hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        講座を作成
+      </button>
+      <p id="course-status" class="text-sm text-center min-h-[1.25rem]"></p>
+    </form>
+
+    <div class="space-y-4 mt-10">
+      {courses.length === 0 && <p class="text-sm text-zinc-500">まだ講座がありません。</p>}
+      {courses.map((course) => (
+        <div class="course-card p-4 rounded-xl bg-zinc-950 border border-white/10" data-course-id={course.id}>
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <p class="font-bold text-sm">{course.title}</p>
+              {course.description && <p class="text-xs text-zinc-400 mt-1 whitespace-pre-wrap">{course.description}</p>}
+            </div>
+            <button
+              data-delete-course={course.id}
+              data-delete-title={course.title}
+              class="delete-course-btn shrink-0 px-3 py-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold transition-colors"
+            >
+              講座ごと削除
+            </button>
+          </div>
+
+          <div class="mt-4 pl-4 border-l border-white/10 space-y-3">
+            {course.lessons.map((lesson) => (
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-xs font-bold text-zinc-200">{lesson.title}</p>
+                  <p class="text-[10px] text-zinc-500">{lesson.youtubeVideoId}</p>
+                </div>
+                <button
+                  data-delete-lesson={lesson.id}
+                  data-course-id={course.id}
+                  class="delete-lesson-btn shrink-0 px-2 py-1 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[10px] font-bold transition-colors"
+                >
+                  削除
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <form class="lesson-form mt-4 pt-4 border-t border-white/10 space-y-2" data-course-id={course.id}>
+            <input name="title" type="text" placeholder="レッスンタイトル" required
+              class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
+            <input name="youtubeUrl" type="text" placeholder="YouTube URL(非公開)または動画ID" required
+              class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
+            <textarea name="description" rows="2" placeholder="説明(任意)"
+              class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30 resize-y"></textarea>
+            <button type="submit"
+              class="lesson-submit-btn w-full py-2 px-4 bg-white/10 text-white text-xs font-bold rounded-md hover:bg-white/20 transition-colors disabled:opacity-50">
+              レッスンを追加
+            </button>
+            <p class="lesson-status text-xs text-red-400"></p>
+          </form>
+        </div>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const courseForm = document.getElementById('course-form') as HTMLFormElement;
+  const courseSubmitBtn = document.getElementById('course-submit-btn') as HTMLButtonElement;
+  const courseStatusEl = document.getElementById('course-status') as HTMLParagraphElement;
+
+  courseForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    courseSubmitBtn.disabled = true;
+    courseStatusEl.textContent = '';
+    courseStatusEl.classList.remove('text-red-400', 'text-emerald-400');
+
+    try {
+      const formData = new FormData(courseForm);
+      const res = await fetch('/api/admin/courses/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.get('title'),
+          description: formData.get('description'),
+          thumbnailUrl: formData.get('thumbnailUrl'),
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || '作成に失敗しました');
+      }
+      courseStatusEl.textContent = '作成しました。';
+      courseStatusEl.classList.add('text-emerald-400');
+      setTimeout(() => window.location.reload(), 500);
+    } catch (error) {
+      courseStatusEl.textContent = error instanceof Error ? error.message : '予期せぬエラーが発生しました';
+      courseStatusEl.classList.add('text-red-400');
+      courseSubmitBtn.disabled = false;
+    }
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.delete-course-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.deleteCourse!;
+      const title = btn.dataset.deleteTitle;
+      if (!confirm(`講座「${title}」をレッスンごと削除します。よろしいですか?`)) return;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/courses/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('削除に失敗しました');
+        window.location.reload();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : '削除に失敗しました');
+        btn.disabled = false;
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.delete-lesson-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const courseId = btn.dataset.courseId!;
+      const lessonId = btn.dataset.deleteLesson!;
+      if (!confirm('このレッスンを削除します。よろしいですか?')) return;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/courses/${courseId}/lessons/${lessonId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('削除に失敗しました');
+        window.location.reload();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : '削除に失敗しました');
+        btn.disabled = false;
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLFormElement>('.lesson-form').forEach((form) => {
+    const courseId = form.dataset.courseId!;
+    const submitBtn = form.querySelector<HTMLButtonElement>('.lesson-submit-btn')!;
+    const statusEl = form.querySelector<HTMLParagraphElement>('.lesson-status')!;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      submitBtn.disabled = true;
+      statusEl.textContent = '';
+
+      try {
+        const formData = new FormData(form);
+        const res = await fetch(`/api/admin/courses/${courseId}/lessons/create`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: formData.get('title'),
+            description: formData.get('description'),
+            youtubeUrl: formData.get('youtubeUrl'),
+          }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || '追加に失敗しました');
+        }
+        window.location.reload();
+      } catch (error) {
+        statusEl.textContent = error instanceof Error ? error.message : '予期せぬエラーが発生しました';
+        submitBtn.disabled = false;
+      }
+    });
+  });
+</script>
