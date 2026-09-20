@@ -1,0 +1,921 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// App Store公開後にURLを入れると、ヒーローと最下部にダウンロードボタンが表示される。
+const APP_STORE_URL = '';
+
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://kentaro.life';
+const pageUrl = `${siteUrl}/essence`;
+
+const icons: Record<string, string> = {
+  mic: '<path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8"/>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
+  play: '<circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/>',
+  chat: '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 1 1 21 11.5z"/>',
+  box: '<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M8 7h8M8 11h5"/>',
+  timer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/>',
+  yen: '<circle cx="12" cy="12" r="10"/><path d="M8 7l4 5 4-5M8 12h8M8 15h8M12 12v6"/>',
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.5-7.5"/>',
+  heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
+  check: '<path d="M5 13l4 4L19 7"/>',
+  chevron: '<path d="M9 18l6-6-6-6"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+};
+
+const homeSections = [
+  {
+    label: 'コンテンツ',
+    rows: [
+      { t: 'Podcast', d: '心を整えるための音声コンテンツ。' },
+      { t: 'Blog', d: 'ミニマリズムと暮らしについて綴る。' },
+      { t: 'Skills', d: '人生を軽くするためのスキルを学ぶ。' },
+      { t: 'Community', d: 'メンバー同士の唯一の交流の場。' },
+    ],
+  },
+  {
+    label: 'ツール',
+    rows: [
+      { t: 'Item List', d: '持っているものを記録し、本当に必要なものだけを残す。' },
+      { t: 'Personal', d: '自分を記録し、整えるための場所。' },
+    ],
+  },
+];
+
+const wave = Array.from({ length: 34 }, (_, i) => Math.round(22 + Math.abs(Math.sin(i * 1.7) * 55 + Math.cos(i * 0.9) * 20)));
+
+const features = [
+  {
+    id: 'podcast', en: 'Podcast', jp: '耳から、思考を整える。', icon: 'mic', color: '#34D399',
+    body: '心を整えるための音声コンテンツ。画面を移動しても再生を続けられるミニプレイヤーと、ロック画面からの操作に対応しています。',
+  },
+  {
+    id: 'blog', en: 'Blog', jp: '暮らしを綴る記事。', icon: 'file', color: '#0891B2',
+    body: 'ミニマリズムと暮らしについての記事を、アプリの中でそのまま。カテゴリで絞り込み、前後の記事へ移動できます。',
+  },
+  {
+    id: 'skills', en: 'Skills', jp: '人生を軽くするスキル。', icon: 'play', color: '#10B981',
+    body: 'スキルを身につけるための動画講座。章ごとに整理され、視聴済みのレッスンを記録して進捗が分かります。',
+  },
+  {
+    id: 'community', en: 'Community', jp: '本音を話せる、小さな場所。', icon: 'chat', color: '#0D9488',
+    body: 'メンバー同士の唯一の交流の場。ニックネームで参加し、投稿と返信ができます。フォロー数やいいね数を競う仕組みはなく、不適切な投稿は運営が削除します。',
+  },
+  {
+    id: 'items', en: 'Item List', jp: '持ち物を、見える化する。', icon: 'box', color: '#34D399',
+    body: '持っているものを記録し、本当に必要なものだけを残す。カテゴリ管理、購入からの経過日数、ウィッシュリストに対応。Web版「Minima」とデータを共有します。',
+  },
+  {
+    id: 'personal', en: 'Personal', jp: '自分だけの、記録の場所。', icon: 'user', color: '#0891B2',
+    body: 'ジャーナル・ディープワーク・バランスシート・瞑想・ヘルスケア連携。ここでの記録は自分だけのもので、他のメンバーには表示されません。',
+  },
+];
+
+const personalTools = [
+  { icon: 'book', c: '#0D9488', t: 'ジャーナル', d: '日々の思考や出来事を書き留める。振り返りのための記録として、いつでも見返せます。' },
+  { icon: 'timer', c: '#10B981', t: 'ディープワーク', d: '集中して取り組んだ時間を計測。アプリを閉じても計測は続き、今日の合計時間を確認できます。' },
+  { icon: 'yen', c: '#0891B2', t: 'バランスシート', d: '資産と負債を書き出して、純資産をひと目で把握。お金の状態を客観的に見つめ直せます。' },
+  { icon: 'leaf', c: '#34D399', t: '瞑想', d: '5・10・15・20分、または1〜180分の自由設定のタイマー。BGMを選べて、セッションは履歴に残ります。' },
+  { icon: 'heart', c: '#0D9488', t: 'ヘルスケア連携', d: 'iPhoneの「ヘルスケア」と連携し、今日の歩数・日別の歩数・睡眠・ワークアウトを週単位で確認できます（読み取り専用）。' },
+];
+
+const personalCards = [
+  { t: 'ジャーナル', icon: 'book', c: '#0D9488', cap: '記録した数', v: '12', u: '件' },
+  { t: 'ディープワーク', icon: 'timer', c: '#10B981', cap: '今日の合計', v: '1h25m', u: '' },
+  { t: 'バランスシート', icon: 'yen', c: '#0891B2', cap: '純資産', v: '¥1,250,000', u: '' },
+  { t: '瞑想', icon: 'leaf', c: '#34D399', cap: '今週', v: '3', u: '回' },
+  { t: 'ヘルスケア', icon: 'heart', c: '#0D9488', cap: '今週の歩数', v: '42,180', u: '歩' },
+];
+
+const steps = [
+  { n: '01', icon: 'user', t: 'アカウントを作成', d: 'Essenceアプリを開き、アカウントを作成（またはログイン）します。' },
+  { n: '02', icon: 'card', t: 'メンバーシップに登録', d: 'アプリ内の案内から、月額990円のメンバーシップに登録します。決済はStripeで安全に処理されます。' },
+  { n: '03', icon: 'leaf', t: 'すべての機能を使う', d: 'ホーム画面から、Podcast・Blog・Skills・Community・Item List・Personalへ。' },
+];
+
+const pricingPoints = [
+  'Podcast・Skills（動画講座）を含む、すべての機能が使える',
+  'Communityへの参加',
+  'Personal（ジャーナル・ディープワーク・バランスシート・瞑想・ヘルスケア連携）',
+  'アプリの「設定」からいつでも解約可能',
+];
+
+const billingTerms = [
+  { k: '課金', v: '初回お申し込み時、およびその後1か月ごとに自動更新されます。' },
+  { k: '解約', v: 'アプリの「設定」→「サブスクリプションを解約する」からいつでも可能です。次回更新日の前日までに手続きすると、次回以降の請求は発生しません。手続き完了後は、直ちにご利用が終了します。' },
+  { k: '返金', v: 'デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。' },
+  { k: 'お支払い', v: 'クレジットカード（Stripe）／ Apple Pay' },
+];
+
+const faq = [
+  { q: 'Essenceとは、どんなアプリですか？', a: '「人生を軽くする思考・哲学」をテーマにした、メンバー向けのiPhoneアプリです。音声（Podcast）、記事（Blog）、スキル講座（Skills）、メンバー同士の交流（Community）、持ち物の記録（Item List）、自分自身を整えるツール（Personal）を1つにまとめています。' },
+  { q: '料金と支払い方法を教えてください。', a: '月額990円（税込）のメンバーシップです。お支払いはクレジットカード（Stripe）またはApple Payで、初回お申し込み時とその後1か月ごとに自動で決済されます。登録はアプリ内から行います。' },
+  { q: '解約するには？ 返金はできますか？', a: 'アプリの「設定」→「サブスクリプションを解約する」からいつでも解約できます。次回更新日の前日までに手続きすると、次回以降の請求は発生しません。デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。詳細は<a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>をご確認ください。' },
+  { q: 'Personalに記録した内容は、他の人に見えますか？', a: 'いいえ。ジャーナル、ディープワーク、バランスシート、瞑想の記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。' },
+  { q: 'ヘルスケアのデータは、何を取得しますか？', a: '歩数・睡眠時間・ワークアウトのみを、あなたの許可のもとで「読み取り」ます。ヘルスケアへの書き込みは一切行いません。表示のために、週ごとの集計値をあなたのアカウントに保存します。連携はiPhoneの設定からいつでも変更できます。' },
+  { q: 'Communityでの不適切な投稿はどうなりますか？', a: 'Communityはメンバー限定の場です。不適切な投稿は運営が確認のうえ削除します。ご自身の投稿は、いつでもご自身で削除できます。' },
+  { q: '対応端末を教えてください。', a: 'iOS 17以降を搭載したiPhoneに対応しています。Android版も今後リリースを予定しています。' },
+  { q: '問い合わせ先はどこですか？', a: '<a href="mailto:minimal@kentaro.life" class="underline underline-offset-4 hover:text-white">minimal@kentaro.life</a> までご連絡ください（対応時間: 10:00〜18:00 土日祝日を除く）。' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Essence',
+  url: pageUrl,
+  operatingSystem: 'iOS 17+',
+  applicationCategory: 'LifestyleApplication',
+  description: '人生を軽くする思考・哲学をテーマにした、メンバー向けiPhoneアプリ。Podcast、記事、スキル講座、コミュニティ、持ち物リスト、セルフマネジメントツールを1つに。',
+  image: `${siteUrl}/assets/essence/app-icon.png`,
+  offers: {
+    '@type': 'Offer',
+    price: '990',
+    priceCurrency: 'JPY',
+    description: '月額メンバーシップ（税込・1か月ごとの自動更新）',
+  },
+  publisher: { '@type': 'Person', name: 'Taro Essence', url: siteUrl },
+};
+---
+
+<Layout
+  title="Essence｜人生を軽くする、思考と哲学のiPhoneアプリ - taro."
+  description="Essenceは、ミニマリズム・思考・スキルを1つにまとめたメンバー向けiPhoneアプリ。Podcast、記事、スキル講座、コミュニティ、持ち物リスト、セルフマネジメントツールまで。月額990円（税込）。"
+  keywords="Essence, Taro Essence, ミニマリズム, 習慣, セルフマネジメント, Podcast, スキル, iPhoneアプリ"
+  ogImage="/assets/essence/app-icon.png"
+>
+  <script is:inline>document.documentElement.classList.add('js-reveal');</script>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <main class="essence-page bg-black text-white font-normal overflow-x-clip selection:bg-emerald-300 selection:text-black">
+
+    {/* ───────────── Hero ───────────── */}
+    <section class="hero relative isolate overflow-hidden pt-28 md:pt-36 pb-20 md:pb-28">
+      <div class="blob" style="width:520px;height:520px;left:-140px;top:-80px;background:#10B981;" aria-hidden="true"></div>
+      <div class="blob" style="width:480px;height:480px;right:-120px;top:120px;background:#0891B2;animation-delay:-6s;" aria-hidden="true"></div>
+      <div class="blob" style="width:360px;height:360px;left:35%;bottom:-160px;background:#34D399;opacity:.28;animation-delay:-11s;" aria-hidden="true"></div>
+
+      <div class="max-w-6xl mx-auto px-5 md:px-8 grid lg:grid-cols-[1.1fr_0.9fr] gap-14 lg:gap-8 items-center">
+        <div>
+
+          <h1 class="reveal text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08]" style="--d:80ms">
+            人生を、<br />
+            <span class="gradient-text">軽くする。</span>
+          </h1>
+
+          <p class="reveal mt-7 text-base md:text-lg leading-relaxed text-zinc-300 max-w-xl" style="--d:160ms">
+            Essenceは、思考・スキル・暮らしの記録をひとつにまとめた、メンバーのためのiPhoneアプリ。
+            耳で整え、学び、語り合い、自分自身を記録する。人生を軽くするための道具を、この1本に。
+          </p>
+
+          <div class="reveal mt-9 flex flex-wrap items-center gap-3" style="--d:240ms">
+            {APP_STORE_URL && (
+              <a href={APP_STORE_URL} class="btn-solid inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-200 transition-colors">
+                App Storeで入手
+              </a>
+            )}
+            <a href="#features" class="btn-glow inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold text-black">
+              機能を見る
+            </a>
+            <a href="#pricing" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 transition-colors">
+              料金・解約について
+            </a>
+          </div>
+
+          <ul class="reveal mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-400" style="--d:320ms">
+            <li class="flex items-center gap-2"><span class="dot"></span>iPhone（iOS 17以降）</li>
+            <li class="flex items-center gap-2"><span class="dot"></span>月額 ¥990（税込）</li>
+            <li class="flex items-center gap-2"><span class="dot"></span>いつでも解約可能</li>
+          </ul>
+          <p class="reveal mt-4 text-[11px] text-zinc-500" style="--d:380ms">Android版も今後リリース予定です。</p>
+        </div>
+
+        {/* Phone: Home screen */}
+        <div class="reveal relative mx-auto lg:ml-auto" style="--d:200ms">
+          <div class="phone-glow" aria-hidden="true"></div>
+          <div class="phone float" role="img" aria-label="Essenceのホーム画面のイメージ">
+            <div class="phone-bezel">
+              <div class="phone-screen">
+                <div class="island"></div>
+                <div class="screen-aurora a"></div>
+                <div class="screen-aurora b"></div>
+                <div class="home">
+                  <div class="home-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons.leaf} />
+                    <p>Essence</p>
+                  </div>
+                  {homeSections.map((sec) => (
+                    <div class="home-sec">
+                      <div class="home-sec-label"><span>{sec.label}</span><i></i></div>
+                      {sec.rows.map((r) => (
+                        <div class="home-row">
+                          <p class="t">{r.t}</p>
+                          <p class="d">{r.d}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                  <div class="home-row settings">
+                    <p class="t">Settings</p>
+                    <p class="d">アカウント・外観・外部連携の管理。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="mt-5 text-center text-[10px] text-zinc-500">画面はイメージです</p>
+        </div>
+      </div>
+    </section>
+
+    {/* ───────────── Features ───────────── */}
+    <section id="features" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32">
+      <div class="text-center mb-14">
+        <p class="reveal eyebrow">Features</p>
+        <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">ひとつのアプリで、整える。</h2>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-fr">
+        {features.map((f) => (
+          <article class="card reveal p-7 flex flex-col" style={`--c:${f.color}`}>
+            <div class="flex items-center gap-3 mb-5">
+              <span class="icon-chip" style={`--c:${f.color}`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[f.icon]} />
+              </span>
+              <span class="text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">{f.en}</span>
+            </div>
+            <h3 class="text-xl md:text-2xl font-black tracking-tight leading-snug">{f.jp}</h3>
+            <p class="mt-3 text-sm leading-[1.9] text-zinc-400 flex-1">{f.body}</p>
+
+            {/* 各カードの高さを揃えるため、ミニUIは固定高さの枠に収める */}
+            <div class="feature-visual mt-6" aria-hidden="true">
+              {f.id === 'podcast' && (
+                <div>
+                  <div class="flex items-end gap-[3px] h-14">
+                    {wave.map((h, k) => (
+                      <span class="wave-bar" style={`height:${h}%;animation-delay:${k * 55}ms`}></span>
+                    ))}
+                  </div>
+                  <div class="mt-3 flex items-center gap-3 text-[10px] text-zinc-500">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center bg-emerald-400 text-black">
+                      <svg viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3"><path d="M8 5v14l11-7z" /></svg>
+                    </span>
+                    <span>ミニプレイヤー</span>
+                    <span class="ml-auto">00:12</span>
+                  </div>
+                </div>
+              )}
+
+              {f.id === 'blog' && (
+                <div class="space-y-3">
+                  <div class="skeleton" style="width:92%"></div>
+                  <div class="skeleton" style="width:78%"></div>
+                  <div class="skeleton" style="width:86%"></div>
+                  <div class="skeleton" style="width:54%"></div>
+                </div>
+              )}
+
+              {f.id === 'skills' && (
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between text-[10px] text-zinc-500">
+                    <span>2/4レッスン完了</span><span class="text-emerald-300">50%</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-1/2 rounded-full" style="background:linear-gradient(90deg,#10B981,#0891B2)"></div></div>
+                  <div class="space-y-2">
+                    {['はじめに', '基本の考え方'].map((t) => (
+                      <div class="flex items-center gap-2.5 text-xs text-zinc-300">
+                        <span class="w-4 h-4 rounded-full flex items-center justify-center bg-emerald-400 text-black">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5" set:html={icons.check} />
+                        </span>{t}
+                      </div>
+                    ))}
+                    {['実践編 1', '実践編 2'].map((t) => (
+                      <div class="flex items-center gap-2.5 text-xs text-zinc-500">
+                        <span class="w-4 h-4 rounded-full border border-white/20"></span>{t}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {f.id === 'community' && (
+                <div class="text-xs">
+                  <div class="flex gap-3">
+                    <span class="w-7 h-7 shrink-0 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold">M</span>
+                    <div>
+                      <p class="font-bold text-zinc-200">mio <span class="ml-1 font-normal text-zinc-600">1時間前</span></p>
+                      <p class="mt-1 text-zinc-400 leading-relaxed">今日は使っていない服を3着手放しました。少し気持ちが軽い。</p>
+                    </div>
+                  </div>
+                  <div class="mt-3 ml-3.5 pl-6 border-l-2 border-white/10">
+                    <p class="font-bold text-zinc-200">ren <span class="ml-1 font-normal text-zinc-600">30分前</span></p>
+                    <p class="mt-1 text-zinc-400 leading-relaxed">わかります。手放すほど選ぶのも楽になりますよね。</p>
+                  </div>
+                </div>
+              )}
+
+              {f.id === 'items' && (
+                <div class="flex items-center gap-4">
+                  <span class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(52,211,153,.16);color:#34D399">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons.box} />
+                  </span>
+                  <div class="text-xs">
+                    <p class="font-bold text-sm text-zinc-100">サンプルアイテム</p>
+                    <p class="mt-0.5 text-zinc-500">¥12,000 ・ 週に3回</p>
+                    <p class="mt-0.5 text-[10px] text-zinc-600">購入から 214日</p>
+                  </div>
+                </div>
+              )}
+
+              {f.id === 'personal' && (
+                <div class="flex flex-wrap justify-center gap-2">
+                  {personalTools.map((p) => (
+                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] text-zinc-300">
+                      <svg viewBox="0 0 24 24" fill="none" stroke={p.c} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" set:html={icons[p.icon]} />
+                      {p.t}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+          </article>
+        ))}
+      </div>
+      <p class="mt-6 text-center text-[10px] text-zinc-600">画面や投稿はイメージです</p>
+    </section>
+
+    {/* ───────────── Personal deep-dive ───────────── */}
+    <section id="personal" class="relative isolate overflow-hidden border-y border-white/10 bg-[#030605]">
+      <div class="blob" style="width:420px;height:420px;right:-120px;top:20%;background:#0D9488;opacity:.28;" aria-hidden="true"></div>
+      <div class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 grid lg:grid-cols-2 gap-16 items-center">
+
+        <div class="order-2 lg:order-1">
+          <p class="reveal eyebrow">Personal</p>
+          <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight leading-[1.2]" style="--d:80ms">
+            自分を記録し、<br /><span class="gradient-text inline-block">整えるための</span><span class="gradient-text inline-block">5つの道具。</span>
+          </h2>
+          <p class="reveal mt-6 text-sm leading-[1.9] text-zinc-400" style="--d:120ms">
+            心・仕事・お金・体。バラバラになりがちな自分の状態を、ひとつの画面で確認できます。
+          </p>
+
+          <ul class="mt-10 space-y-6">
+            {personalTools.map((p, i) => (
+              <li class="reveal flex gap-4" style={`--d:${i * 70}ms`}>
+                <span class="icon-chip shrink-0" style={`--c:${p.c}`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[p.icon]} />
+                </span>
+                <div>
+                  <h3 class="font-bold text-base">{p.t}</h3>
+                  <p class="mt-1 text-sm leading-[1.85] text-zinc-400">{p.d}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div class="reveal mt-10 flex gap-3 rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.05] p-5 text-xs leading-[1.9] text-zinc-300">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0 mt-0.5" set:html={icons.lock} />
+            <p>Personalの記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。ヘルスケアのデータは歩数・睡眠・ワークアウトの読み取りのみで、書き込みは行いません。</p>
+          </div>
+        </div>
+
+        {/* Phone: Personal */}
+        <div class="reveal order-1 lg:order-2 relative mx-auto" style="--d:120ms">
+          <div class="phone-glow" aria-hidden="true"></div>
+          <div class="phone float-slow" role="img" aria-label="Personal画面のイメージ">
+            <div class="phone-bezel">
+              <div class="phone-screen">
+                <div class="island"></div>
+                <div class="screen-aurora a"></div>
+                <div class="screen-aurora b"></div>
+                <div class="pers">
+                  <p class="pers-title">Personal</p>
+                  <div class="pers-grid">
+                    {personalCards.map((c) => (
+                      <div class="pers-card" style={`--c:${c.c}`}>
+                        <div class="pers-card-top">
+                          <span class="pers-ico">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[c.icon]} />
+                          </span>
+                          <span class="pers-chev">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" set:html={icons.chevron} />
+                          </span>
+                        </div>
+                        <p class="pers-name">{c.t}</p>
+                        <p class="pers-cap">{c.cap}</p>
+                        <p class="pers-val">{c.v}<small>{c.u}</small></p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="mt-5 text-center text-[10px] text-zinc-500">画面・数値はイメージです</p>
+        </div>
+      </div>
+    </section>
+
+    {/* ───────────── Steps ───────────── */}
+    <section id="start" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32">
+      <div class="text-center mb-14">
+        <p class="reveal eyebrow">How it works</p>
+        <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">はじめかた</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        {steps.map((s, i) => (
+          <div class="card reveal p-8" style={`--c:#34D399;--d:${i * 90}ms`}>
+            <div class="flex items-center justify-between mb-8">
+              <span class="text-5xl font-black tracking-tight gradient-text-static">{s.n}</span>
+              <span class="icon-chip" style="--c:#34D399">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[s.icon]} />
+              </span>
+            </div>
+            <h3 class="text-lg font-black">{s.t}</h3>
+            <p class="mt-3 text-sm leading-[1.9] text-zinc-400">{s.d}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* ───────────── Pricing ───────────── */}
+    <section id="pricing" class="relative isolate overflow-hidden border-t border-white/10 py-24 md:py-32">
+      <div class="blob" style="width:520px;height:520px;left:50%;top:-120px;margin-left:-260px;background:#10B981;opacity:.22;" aria-hidden="true"></div>
+      <div class="max-w-5xl mx-auto px-5 md:px-8">
+        <div class="text-center mb-14">
+          <p class="reveal eyebrow">Pricing</p>
+          <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">シンプルな、ひとつのプラン。</h2>
+        </div>
+
+        <div class="grid lg:grid-cols-[1fr_1.05fr] gap-6 items-stretch">
+          <div class="reveal gborder">
+            <div class="gborder-inner p-8 md:p-10 h-full flex flex-col">
+              <p class="text-xs font-bold tracking-[0.22em] uppercase text-emerald-200/80">Essence Membership</p>
+              <div class="mt-6 flex items-end gap-2">
+                <span class="text-6xl md:text-7xl font-black tracking-tighter">¥990</span>
+                <span class="mb-2 text-sm font-bold text-zinc-400">/ 月（税込）</span>
+              </div>
+              <ul class="mt-8 space-y-4">
+                {pricingPoints.map((p) => (
+                  <li class="flex items-start gap-3 text-sm text-zinc-200 leading-relaxed">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0 mt-0.5" set:html={icons.check} />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+              <p class="mt-auto pt-8 text-xs leading-relaxed text-zinc-500">
+                登録・お支払いはEssenceアプリ内から行います。Webからのお申し込みは受け付けておりません。
+              </p>
+            </div>
+          </div>
+
+          <div class="reveal rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-8 md:p-10" style="--d:100ms">
+            <h3 class="text-base font-black">課金・解約・返金について</h3>
+            <dl class="mt-6 divide-y divide-white/10">
+              {billingTerms.map((b) => (
+                <div class="py-4 grid grid-cols-[5.5rem_1fr] gap-4 first:pt-0">
+                  <dt class="text-xs font-bold text-emerald-200/80">{b.k}</dt>
+                  <dd class="text-sm leading-[1.85] text-zinc-300">{b.v}</dd>
+                </div>
+              ))}
+            </dl>
+            <a href="/tokushoho" class="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-white underline underline-offset-4 transition-colors">
+              特定商取引法に基づく表記を見る
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" set:html={icons.chevron} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ───────────── FAQ ───────────── */}
+    <section id="faq" class="max-w-3xl mx-auto px-5 md:px-8 py-24 md:py-32">
+      <div class="text-center mb-12">
+        <p class="reveal eyebrow">FAQ</p>
+        <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">よくある質問</h2>
+      </div>
+      <div class="space-y-3">
+        {faq.map((f, i) => (
+          <details class="faq reveal" style={`--d:${(i % 4) * 50}ms`}>
+            <summary>
+              <span>{f.q}</span>
+              <span class="plus">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" set:html={icons.plus} />
+              </span>
+            </summary>
+            <p class="answer" set:html={f.a} />
+          </details>
+        ))}
+      </div>
+    </section>
+
+    {/* ───────────── Operator + closing CTA ───────────── */}
+    <section class="relative isolate overflow-hidden border-t border-white/10">
+      <div class="blob" style="width:560px;height:560px;left:50%;bottom:-320px;margin-left:-280px;background:#0891B2;opacity:.25;" aria-hidden="true"></div>
+      <div class="max-w-4xl mx-auto px-5 md:px-8 pt-24 md:pt-32 pb-16 text-center">
+        <img src="/assets/essence/app-icon.png" alt="Essence" width="72" height="72" class="reveal mx-auto w-[72px] h-[72px] rounded-[22%] shadow-[0_18px_60px_-12px_rgba(16,185,129,0.55)]" />
+        <h2 class="reveal mt-8 text-4xl md:text-6xl font-black tracking-tight leading-[1.15]" style="--d:80ms">
+          人生を、<span class="gradient-text">軽くしよう。</span>
+        </h2>
+        <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3" style="--d:160ms">
+          {APP_STORE_URL && (
+            <a href={APP_STORE_URL} class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-200 transition-colors">
+              App Storeで入手
+            </a>
+          )}
+          <a href="#pricing" class="btn-glow inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold text-black">料金を見る</a>
+          <a href="/contact" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 transition-colors">お問い合わせ</a>
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-5 md:px-8 pb-24">
+        <div class="reveal rounded-3xl border border-white/10 bg-white/[0.03] p-7 md:p-9">
+          <h3 class="text-xs font-bold tracking-[0.22em] uppercase text-zinc-400 mb-6">サービス運営者情報</h3>
+          <dl class="grid sm:grid-cols-[9rem_1fr] gap-x-6 gap-y-4 text-sm">
+            <dt class="text-zinc-500">サービス名</dt><dd class="text-zinc-200">Essence（iPhoneアプリ）</dd>
+            <dt class="text-zinc-500">運営者</dt><dd class="text-zinc-200">taro.（Taro Essence）</dd>
+            <dt class="text-zinc-500">料金</dt><dd class="text-zinc-200">月額990円（税込）／ 1か月ごとの自動更新</dd>
+            <dt class="text-zinc-500">お支払い方法</dt><dd class="text-zinc-200">クレジットカード（Stripe）／ Apple Pay</dd>
+            <dt class="text-zinc-500">お問い合わせ</dt>
+            <dd class="text-zinc-200">
+              <a href="mailto:minimal@kentaro.life" class="underline underline-offset-4 hover:text-white">minimal@kentaro.life</a>
+              <span class="block mt-1 text-xs text-zinc-500">10:00〜18:00 土日祝日を除く</span>
+            </dd>
+            <dt class="text-zinc-500">規約・表記</dt>
+            <dd class="text-zinc-200 flex flex-wrap gap-x-5 gap-y-1">
+              <a href="/privacy" class="underline underline-offset-4 hover:text-white">プライバシーポリシー</a>
+              <a href="/terms" class="underline underline-offset-4 hover:text-white">利用規約</a>
+              <a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>
+            </dd>
+          </dl>
+        </div>
+        <p class="mt-10 text-center text-[11px] text-zinc-600">© taro. All rights reserved.</p>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .essence-page {
+    --emerald: #10b981;
+    --teal: #0d9488;
+    --mint: #34d399;
+    --sea: #0891b2;
+  }
+
+  /* ── typography helpers ── */
+  .essence-page h1,
+  .essence-page h2,
+  .essence-page h3 {
+    text-wrap: balance;
+    word-break: auto-phrase;
+  }
+  .essence-page p,
+  .essence-page dd,
+  .essence-page li {
+    text-wrap: pretty;
+    word-break: auto-phrase;
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(110, 231, 183, 0.85);
+  }
+  .gradient-text {
+    background: linear-gradient(100deg, #6ee7b7 0%, #ffffff 45%, #67e8f9 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 9s linear infinite;
+  }
+  .gradient-text-static {
+    background: linear-gradient(120deg, #6ee7b7, #ffffff 70%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  @keyframes shimmer {
+    to { background-position: 200% center; }
+  }
+
+  /* ── background ── */
+  .blob {
+    position: absolute;
+    z-index: -1;
+    border-radius: 9999px;
+    filter: blur(96px);
+    opacity: 0.42;
+    pointer-events: none;
+    will-change: transform;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(48px, -36px, 0) scale(1.14); }
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--mint);
+    box-shadow: 0 0 10px var(--mint);
+  }
+
+  /* ── buttons ── */
+  .btn-glow {
+    background: linear-gradient(100deg, #6ee7b7, #22d3ee);
+    box-shadow: 0 10px 40px -10px rgba(52, 211, 153, 0.7);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  }
+  .btn-glow:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow: 0 16px 50px -10px rgba(52, 211, 153, 0.85);
+  }
+
+  /* ── cards ── */
+  .card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.03);
+    transition: border-color 0.3s ease, transform 0.3s ease, background 0.3s ease;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(420px circle at var(--mx, 85%) var(--my, 0%), color-mix(in srgb, var(--c) 20%, transparent), transparent 62%);
+    opacity: 0.75;
+    transition: opacity 0.3s ease;
+  }
+  .card:hover {
+    border-color: color-mix(in srgb, var(--c) 45%, transparent);
+    background: rgba(255, 255, 255, 0.045);
+  }
+  .card > * { position: relative; }
+  .icon-chip {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 16%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 28%, transparent);
+  }
+  .feature-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    padding: 16px 18px;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .feature-visual > * { width: 100%; }
+  @media (max-width: 767px) {
+    .feature-visual { height: 208px; }
+  }
+  .skeleton {
+    height: 9px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.07));
+    background-size: 200% 100%;
+    animation: skel 2.8s ease-in-out infinite;
+  }
+  @keyframes skel {
+    from { background-position: 100% 0; }
+    to { background-position: -100% 0; }
+  }
+  .wave-bar {
+    flex: 1;
+    min-width: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, #6ee7b7, #0891b2);
+    transform-origin: bottom;
+    animation: wave 1.7s ease-in-out infinite;
+    opacity: 0.9;
+  }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.45); }
+    50% { transform: scaleY(1); }
+  }
+
+  /* ── pricing ── */
+  .gborder {
+    padding: 1px;
+    border-radius: 1.75rem;
+    background: linear-gradient(140deg, rgba(52, 211, 153, 0.75), rgba(255, 255, 255, 0.08) 42%, rgba(8, 145, 178, 0.75));
+    box-shadow: 0 30px 90px -30px rgba(16, 185, 129, 0.45);
+  }
+  .gborder-inner {
+    border-radius: calc(1.75rem - 1px);
+    background: #040807;
+  }
+
+  /* ── faq ── */
+  .faq {
+    border-radius: 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.03);
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  .faq[open] {
+    border-color: rgba(52, 211, 153, 0.3);
+    background: rgba(255, 255, 255, 0.045);
+  }
+  .faq summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    list-style: none;
+    padding: 20px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq .plus {
+    flex-shrink: 0;
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.07);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .faq[open] .plus {
+    transform: rotate(45deg);
+    background: rgba(52, 211, 153, 0.2);
+  }
+  .faq .answer {
+    padding: 0 22px 22px;
+    font-size: 13px;
+    line-height: 1.95;
+    color: #a1a1aa;
+  }
+
+  /* ── phone mockup ── */
+  .phone {
+    position: relative;
+    width: 280px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .phone-glow {
+    position: absolute;
+    inset: 8% -10% 0;
+    z-index: -1;
+    background: radial-gradient(closest-side, rgba(16, 185, 129, 0.4), transparent 70%);
+    filter: blur(30px);
+  }
+  .phone-bezel {
+    border-radius: 46px;
+    padding: 9px;
+    background: linear-gradient(160deg, #3f4a46, #111615 45%, #2a3330);
+    box-shadow:
+      0 50px 120px -30px rgba(16, 185, 129, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .phone-screen {
+    position: relative;
+    overflow: hidden;
+    border-radius: 38px;
+    aspect-ratio: 9 / 19;
+    background: #000;
+  }
+  .island {
+    position: absolute;
+    z-index: 5;
+    top: 10px;
+    left: 50%;
+    width: 84px;
+    height: 24px;
+    margin-left: -42px;
+    border-radius: 9999px;
+    background: #000;
+  }
+  .screen-aurora {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(36px);
+  }
+  .screen-aurora.a { width: 200px; height: 200px; left: -60px; top: -40px; background: rgba(52, 211, 153, 0.4); }
+  .screen-aurora.b { width: 190px; height: 190px; right: -70px; top: 210px; background: rgba(8, 145, 178, 0.32); }
+
+  .float { animation: float 7s ease-in-out infinite; }
+  .float-slow { animation: float 9s ease-in-out infinite; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* home replica */
+  .home {
+    position: relative;
+    z-index: 2;
+    padding: 58px 22px 20px;
+  }
+  .home-head { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 22px; }
+  .home-head p { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+  .home-sec { margin-bottom: 16px; }
+  .home-sec-label { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
+  .home-sec-label span { font-size: 7.5px; font-weight: 800; letter-spacing: 0.18em; color: rgba(255, 255, 255, 0.55); }
+  .home-sec-label i { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.14); }
+  .home-row { margin-bottom: 10px; }
+  .home-row .t { font-size: 13.5px; font-weight: 700; color: rgba(52, 211, 153, 0.85); line-height: 1.25; }
+  .home-row .d { margin-top: 2px; font-size: 7.5px; color: rgba(255, 255, 255, 0.45); line-height: 1.4; }
+  .home-row.settings { margin-top: 18px; }
+
+  /* personal replica */
+  .pers { position: relative; z-index: 2; padding: 50px 14px 16px; }
+  .pers-title { text-align: center; font-size: 10px; font-weight: 700; margin-bottom: 14px; color: rgba(255, 255, 255, 0.9); }
+  .pers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pers-card {
+    min-height: 92px;
+    border-radius: 14px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.075);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .pers-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+  .pers-ico {
+    display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center;
+    border-radius: 9999px; color: var(--c); background: color-mix(in srgb, var(--c) 22%, transparent);
+  }
+  .pers-ico svg { width: 10px; height: 10px; }
+  .pers-chev {
+    display: inline-flex; width: 14px; height: 14px; align-items: center; justify-content: center;
+    border-radius: 9999px; background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.4);
+  }
+  .pers-chev svg { width: 7px; height: 7px; }
+  .pers-name { font-size: 8.5px; font-weight: 700; }
+  .pers-cap { margin-top: auto; font-size: 6.5px; color: rgba(255, 255, 255, 0.5); }
+  .pers-val { font-size: 14px; font-weight: 800; color: var(--c); letter-spacing: -0.01em; line-height: 1.15; white-space: nowrap; }
+  .pers-val small { margin-left: 2px; font-size: 7px; font-weight: 700; opacity: 0.85; }
+
+  /* ── reveal on scroll (only hides content once JS has flagged the page) ── */
+  :global(html.js-reveal) .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--d, 0ms);
+  }
+  :global(html.js-reveal) .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .card.reveal.is-visible:hover { transform: translateY(-3px); transition-delay: 0ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob, .float, .float-slow, .gradient-text, .wave-bar, .skeleton { animation: none !important; }
+    :global(html.js-reveal) .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+
+<script>
+  const revealTargets = document.querySelectorAll<HTMLElement>('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+    revealTargets.forEach((el) => io.observe(el));
+  } else {
+    revealTargets.forEach((el) => el.classList.add('is-visible'));
+  }
+
+  document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
+  });
+</script>

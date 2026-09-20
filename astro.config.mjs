@@ -11,6 +11,10 @@ export default defineConfig({
   adapter: vercel(),
   integrations: [icon(), react()],
   prefetch: false,
+  // /membership は廃止し、Essenceの紹介ページに集約した(ログイン後のリダイレクト等の旧導線用)。
+  redirects: {
+    '/membership': { status: 301, destination: '/essence' },
+  },
   vite: {
     plugins: [tailwindcss()],
   },
