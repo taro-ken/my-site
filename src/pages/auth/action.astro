@@ -2,8 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 
 // Firebase Authのメールテンプレート(パスワード再設定・メール確認・メール変更/復元など)の
-// アクションURL。どのモードのリンクも、クエリの mode / oobCode をここで受けて処理する。
-// /__/auth/action でも同じ内容を返す(middleware.ts のrewrite)。
+// アクションURL(https://kentaro.life/auth/action)。どのモードのリンクも、クエリの mode / oobCode をここで受けて処理する。
 const firebasePublicConfig = {
   apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
   authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,

@@ -2,12 +2,6 @@ import { defineMiddleware } from "astro:middleware";
 import { adminAuth, adminDb } from "./lib/firebase/server";
 
 export const onRequest = defineMiddleware(async (context, next) => {
-    // Firebase Authの標準的なアクションURL(/__/auth/action)でも、自前のハンドラを返す。
-    // Astroは先頭が_のパスをページとして扱えないため、ここでrewriteする(ブラウザのURLとクエリはそのまま)。
-    if (context.url.pathname === "/__/auth/action") {
-        return context.rewrite("/auth/action");
-    }
-
     const sessionCookie = context.cookies.get("session")?.value;
 
     // Initialize locals
