@@ -1,0 +1,224 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Firebase Authのメールテンプレート(パスワード再設定・メール確認・メール変更/復元など)の
+// アクションURL。どのモードのリンクも、クエリの mode / oobCode をここで受けて処理する。
+// /__/auth/action でも同じ内容を返す(middleware.ts のrewrite)。
+const firebasePublicConfig = {
+  apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+  authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+};
+---
+
+<Layout title="アカウントの確認 - Essence" hideNav={true}>
+  <main class="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden font-sans selection:bg-white selection:text-black">
+    <div class="max-w-md w-full rounded-2xl p-8 sm:p-10 shadow-2xl bg-zinc-950 border border-white/10">
+
+      <!-- 検証中 -->
+      <div id="state-verifying" class="text-center py-6">
+        <div class="mx-auto mb-4 h-8 w-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+        <p class="text-zinc-400 text-sm">リンクを確認しています…</p>
+      </div>
+
+      <!-- リンクが無効/期限切れ -->
+      <div id="state-invalid" class="text-center py-6 hidden">
+        <h1 class="text-2xl font-black mb-3 tracking-tight">リンクが無効です</h1>
+        <p class="text-zinc-400 text-sm font-medium mb-6">
+          このリンクは期限切れか、既に使用されています。お手数ですが、もう一度メールをリクエストしてください。
+        </p>
+        <a href="/login" class="inline-block w-full py-4 px-4 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.1em] uppercase rounded-sm shadow-lg transition-colors">
+          ログイン画面に戻る
+        </a>
+      </div>
+
+      <!-- 新しいパスワード入力(mode=resetPassword) -->
+      <div id="state-form" class="hidden">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-black mb-3 tracking-tight">パスワードの再設定</h1>
+          <p id="target-email" class="text-zinc-400 text-sm font-medium"></p>
+        </div>
+
+        <div id="error-msg" class="mb-4 p-3 rounded-md text-sm bg-red-950/50 text-red-500 border border-red-900/50 text-center font-medium hidden"></div>
+
+        <div class="space-y-5">
+          <div>
+            <label for="new-password" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">新しいパスワード</label>
+            <input
+              type="password"
+              id="new-password"
+              required
+              placeholder="6文字以上"
+              class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors text-sm"
+            />
+          </div>
+
+          <div>
+            <label for="confirm-password" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">新しいパスワード(確認)</label>
+            <input
+              type="password"
+              id="confirm-password"
+              required
+              placeholder="もう一度入力"
+              class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors text-sm"
+            />
+          </div>
+
+          <button
+            id="submit-btn"
+            type="button"
+            class="w-full py-4 px-4 mt-4 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.1em] uppercase rounded-sm shadow-lg transition-colors"
+          >
+            パスワードを再設定する
+          </button>
+        </div>
+      </div>
+
+      <!-- 完了(全モード共通。文言はモードごとに差し替える) -->
+      <div id="state-success" class="text-center py-6 hidden">
+        <h1 id="success-title" class="text-2xl font-black mb-3 tracking-tight"></h1>
+        <p id="success-body" class="text-zinc-400 text-sm font-medium mb-6"></p>
+        <a href="/login" class="inline-block w-full py-4 px-4 bg-white hover:bg-zinc-200 text-black font-black text-xs tracking-[0.1em] uppercase rounded-sm shadow-lg transition-colors">
+          ログイン画面へ
+        </a>
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
+<script is:inline src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
+<script is:inline define:vars={{ firebasePublicConfig }}>
+  function showState(name) {
+    ['verifying', 'invalid', 'form', 'success'].forEach((s) => {
+      document.getElementById('state-' + s).classList.toggle('hidden', s !== name);
+    });
+  }
+
+  function showSuccess(title, body) {
+    document.getElementById('success-title').textContent = title;
+    document.getElementById('success-body').textContent = body;
+    showState('success');
+  }
+
+  function setupResetForm(auth, oobCode) {
+    auth.verifyPasswordResetCode(oobCode)
+      .then((email) => {
+        document.getElementById('target-email').textContent = email + ' の新しいパスワードを設定してください。';
+        showState('form');
+      })
+      .catch(() => showState('invalid'));
+
+    const submitBtn = document.getElementById('submit-btn');
+    const newPasswordInput = document.getElementById('new-password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const errorMsg = document.getElementById('error-msg');
+
+    function fail(message) {
+      errorMsg.textContent = message;
+      errorMsg.classList.remove('hidden');
+      submitBtn.textContent = 'パスワードを再設定する';
+      submitBtn.disabled = false;
+    }
+
+    submitBtn.addEventListener('click', async function () {
+      const newPassword = newPasswordInput.value;
+      errorMsg.classList.add('hidden');
+
+      if (newPassword.length < 6) {
+        errorMsg.textContent = 'パスワードは6文字以上で設定してください。';
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+      if (newPassword !== confirmPasswordInput.value) {
+        errorMsg.textContent = 'パスワードが一致しません。';
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+
+      submitBtn.textContent = '設定中...';
+      submitBtn.disabled = true;
+
+      try {
+        await auth.confirmPasswordReset(oobCode, newPassword);
+        showSuccess('再設定が完了しました', '新しいパスワードでログインできます。アプリまたはブラウザからログインし直してください。');
+      } catch (error) {
+        const code = (error && error.code) || '';
+        if (code === 'auth/expired-action-code' || code === 'auth/invalid-action-code') {
+          showState('invalid');
+        } else if (code === 'auth/weak-password') {
+          fail('パスワードは6文字以上で設定してください。');
+        } else {
+          fail('エラーが発生しました。もう一度お試しください。');
+        }
+      }
+    });
+  }
+
+  function initActionHandler() {
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      firebase.initializeApp(firebasePublicConfig);
+    }
+    const auth = firebase.auth();
+
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get('mode');
+    const oobCode = params.get('oobCode');
+
+    if (!oobCode) {
+      showState('invalid');
+      return;
+    }
+
+    switch (mode) {
+      case 'resetPassword':
+        setupResetForm(auth, oobCode);
+        break;
+
+      case 'verifyEmail':
+        auth.applyActionCode(oobCode)
+          .then(() => showSuccess('メールアドレスを確認しました', 'ご登録ありがとうございます。ログインしてご利用ください。'))
+          .catch(() => showState('invalid'));
+        break;
+
+      case 'verifyAndChangeEmail':
+        auth.applyActionCode(oobCode)
+          .then(() => showSuccess('メールアドレスを変更しました', '新しいメールアドレスでログインしてください。'))
+          .catch(() => showState('invalid'));
+        break;
+
+      case 'recoverEmail':
+        auth.checkActionCode(oobCode)
+          .then((info) => {
+            const restoredEmail = info && info.data && info.data.email;
+            return auth.applyActionCode(oobCode).then(() => {
+              showSuccess(
+                'メールアドレスを元に戻しました',
+                (restoredEmail ? restoredEmail + ' に戻しました。' : '') + '心当たりのない変更だった場合は、念のためパスワードを再設定してください。'
+              );
+            });
+          })
+          .catch(() => showState('invalid'));
+        break;
+
+      case 'revertSecondFactorAddition':
+        auth.applyActionCode(oobCode)
+          .then(() => showSuccess('多要素認証の登録を取り消しました', '心当たりがない場合は、念のためパスワードを再設定してください。'))
+          .catch(() => showState('invalid'));
+        break;
+
+      default:
+        showState('invalid');
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initActionHandler);
+  } else {
+    initActionHandler();
+  }
+</script>
