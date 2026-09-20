@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import EssenceDownloadButton from '../components/EssenceDownloadButton.astro';
 
-// App Store公開後にURLを入れると、ヒーローと最下部にダウンロードボタンが表示される。
+// App Store公開後にURLを入れると、各所のダウンロードボタンが有効になる(未設定の間は「App Storeで近日公開」の表示)。
 const APP_STORE_URL = '';
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://kentaro.life';
@@ -150,51 +151,54 @@ const jsonLd = {
   <script is:inline>document.documentElement.classList.add('js-reveal');</script>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-  <main class="essence-page bg-black text-white font-normal overflow-x-clip selection:bg-emerald-300 selection:text-black">
+  <main class="essence-page relative isolate bg-black text-white font-normal overflow-x-clip selection:bg-emerald-300 selection:text-black">
+
+    {/* ページ全体に敷く1枚のグラデーション。セクションごとに区切らず、全体を一体に見せる */}
+    <div class="page-aurora" aria-hidden="true">
+      <span class="pa" style="--pc:16,185,129;--w:760px;--o:.85;left:-24%;top:0%"></span>
+      <span class="pa" style="--pc:8,145,178;--w:700px;--o:.75;right:-22%;top:2%;animation-delay:-6s"></span>
+      <span class="pa" style="--pc:52,211,153;--w:620px;--o:.32;left:24%;top:9%;animation-delay:-11s"></span>
+      <span class="pa" style="--pc:13,148,136;--w:720px;--o:.5;right:-24%;top:27%"></span>
+      <span class="pa" style="--pc:16,185,129;--w:760px;--o:.5;left:-26%;top:46%;animation-delay:-9s"></span>
+      <span class="pa" style="--pc:8,145,178;--w:720px;--o:.5;right:-24%;top:63%;animation-delay:-4s"></span>
+      <span class="pa" style="--pc:52,211,153;--w:760px;--o:.4;left:14%;top:79%"></span>
+      <span class="pa" style="--pc:8,145,178;--w:760px;--o:.55;right:-14%;top:91%;animation-delay:-13s"></span>
+    </div>
 
     {/* ───────────── Hero ───────────── */}
-    <section class="hero relative isolate overflow-hidden pt-28 md:pt-36 pb-20 md:pb-28">
-      <div class="blob" style="width:520px;height:520px;left:-140px;top:-80px;background:#10B981;" aria-hidden="true"></div>
-      <div class="blob" style="width:480px;height:480px;right:-120px;top:120px;background:#0891B2;animation-delay:-6s;" aria-hidden="true"></div>
-      <div class="blob" style="width:360px;height:360px;left:35%;bottom:-160px;background:#34D399;opacity:.28;animation-delay:-11s;" aria-hidden="true"></div>
+    <section class="hero relative pt-28 md:pt-36 pb-20 md:pb-28">
 
-      <div class="max-w-6xl mx-auto px-5 md:px-8 grid lg:grid-cols-[1.1fr_0.9fr] gap-14 lg:gap-8 items-center">
-        <div>
+      <div class="max-w-6xl mx-auto px-5 md:px-8 grid grid-cols-[1.3fr_0.7fr] sm:grid-cols-[1.1fr_0.9fr] gap-3 sm:gap-8 items-center">
+        <div class="min-w-0">
 
-          <h1 class="reveal text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08]" style="--d:80ms">
+          <h1 class="reveal text-[1.65rem] min-[380px]:text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.15] sm:leading-[1.08]" style="--d:80ms">
             人生を、<br />
             <span class="gradient-text">軽くする。</span>
           </h1>
 
-          <p class="reveal mt-7 text-base md:text-lg leading-relaxed text-zinc-300 max-w-xl" style="--d:160ms">
+          <p class="reveal mt-4 sm:mt-7 text-[11px] leading-[1.7] sm:text-base md:text-lg sm:leading-relaxed text-zinc-300 max-w-xl" style="--d:160ms">
             Essenceは、思考・スキル・暮らしの記録をひとつにまとめた、メンバーのためのiPhoneアプリ。
             耳で整え、学び、語り合い、自分自身を記録する。人生を軽くするための道具を、この1本に。
           </p>
 
-          <div class="reveal mt-9 flex flex-wrap items-center gap-3" style="--d:240ms">
-            {APP_STORE_URL && (
-              <a href={APP_STORE_URL} class="btn-solid inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-200 transition-colors">
-                App Storeで入手
-              </a>
-            )}
-            <a href="#features" class="btn-glow inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold text-black">
+          <div class="reveal mt-5 sm:mt-9 flex flex-wrap items-center gap-2 sm:gap-3" style="--d:240ms">
+            <EssenceDownloadButton href={APP_STORE_URL} />
+            <a href="#features" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[11px] sm:px-7 sm:py-3.5 sm:text-sm font-bold text-white hover:bg-white/10 transition-colors">
               機能を見る
-            </a>
-            <a href="#pricing" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 transition-colors">
-              料金・解約について
             </a>
           </div>
 
-          <ul class="reveal mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-400" style="--d:320ms">
+          <ul class="reveal mt-5 sm:mt-8 flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-1.5 sm:gap-y-2 text-[10px] sm:text-xs text-zinc-400" style="--d:320ms">
             <li class="flex items-center gap-2"><span class="dot"></span>iPhone（iOS 17以降）</li>
             <li class="flex items-center gap-2"><span class="dot"></span>月額 ¥990（税込）</li>
             <li class="flex items-center gap-2"><span class="dot"></span>いつでも解約可能</li>
+            <li><a href="#pricing" class="underline underline-offset-4 text-zinc-300 hover:text-white transition-colors">料金・解約について</a></li>
           </ul>
-          <p class="reveal mt-4 text-[11px] text-zinc-500" style="--d:380ms">Android版も今後リリース予定です。</p>
+          <p class="reveal mt-3 sm:mt-4 text-[10px] sm:text-[11px] text-zinc-500" style="--d:380ms">Android版も今後リリース予定です。</p>
         </div>
 
         {/* Phone: Home screen */}
-        <div class="reveal relative mx-auto lg:ml-auto" style="--d:200ms">
+        <div class="hero-phone reveal relative min-w-0 mx-auto lg:ml-auto" style="--d:200ms">
           <div class="phone-glow" aria-hidden="true"></div>
           <div class="phone float" role="img" aria-label="Essenceのホーム画面のイメージ">
             <div class="phone-bezel">
@@ -226,29 +230,28 @@ const jsonLd = {
               </div>
             </div>
           </div>
-          <p class="mt-5 text-center text-[10px] text-zinc-500">画面はイメージです</p>
         </div>
       </div>
     </section>
 
     {/* ───────────── Features ───────────── */}
-    <section id="features" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32">
-      <div class="text-center mb-14">
+    <section id="features" class="max-w-6xl mx-auto px-5 md:px-8 py-14 md:py-32">
+      <div class="text-center mb-8 md:mb-14">
         <p class="reveal eyebrow">Features</p>
         <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">ひとつのアプリで、整える。</h2>
       </div>
 
-      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-fr">
+      <div class="grid gap-2 md:gap-5 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-fr">
         {features.map((f) => (
-          <article class="card reveal p-7 flex flex-col" style={`--c:${f.color}`}>
-            <div class="flex items-center gap-3 mb-5">
-              <span class="icon-chip" style={`--c:${f.color}`}>
+          <article class="feature-card card reveal p-3 md:p-7 grid grid-cols-[2rem_1fr] gap-x-3 gap-y-0.5 md:flex md:flex-col" style={`--c:${f.color}`}>
+            <div class="contents md:flex md:items-center md:gap-3 md:mb-5">
+              <span class="icon-chip row-span-3 self-start md:row-auto" style={`--c:${f.color}`}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[f.icon]} />
               </span>
-              <span class="text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">{f.en}</span>
+              <span class="col-start-2 text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">{f.en}</span>
             </div>
-            <h3 class="text-xl md:text-2xl font-black tracking-tight leading-snug">{f.jp}</h3>
-            <p class="mt-3 text-sm leading-[1.9] text-zinc-400 flex-1">{f.body}</p>
+            <h3 class="col-start-2 text-sm md:text-2xl font-black tracking-tight leading-snug">{f.jp}</h3>
+            <p class="col-start-2 mt-0.5 md:mt-3 text-[10px] md:text-sm leading-[1.6] md:leading-[1.9] text-zinc-400 md:flex-1">{f.body}</p>
 
             {/* 各カードの高さを揃えるため、ミニUIは固定高さの枠に収める */}
             <div class="feature-visual mt-6" aria-hidden="true">
@@ -345,45 +348,18 @@ const jsonLd = {
           </article>
         ))}
       </div>
-      <p class="mt-6 text-center text-[10px] text-zinc-600">画面や投稿はイメージです</p>
+      <div class="reveal mt-8 md:mt-14 text-center">
+        <p class="text-xs md:text-sm font-bold text-zinc-300">6つの機能、月額990円ですべて使えます。</p>
+        <div class="mt-4 flex justify-center"><EssenceDownloadButton href={APP_STORE_URL} /></div>
+      </div>
     </section>
 
     {/* ───────────── Personal deep-dive ───────────── */}
-    <section id="personal" class="relative isolate overflow-hidden border-y border-white/10 bg-[#030605]">
-      <div class="blob" style="width:420px;height:420px;right:-120px;top:20%;background:#0D9488;opacity:.28;" aria-hidden="true"></div>
-      <div class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 grid lg:grid-cols-2 gap-16 items-center">
-
-        <div class="order-2 lg:order-1">
-          <p class="reveal eyebrow">Personal</p>
-          <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight leading-[1.2]" style="--d:80ms">
-            自分を記録し、<br /><span class="gradient-text inline-block">整えるための</span><span class="gradient-text inline-block">5つの道具。</span>
-          </h2>
-          <p class="reveal mt-6 text-sm leading-[1.9] text-zinc-400" style="--d:120ms">
-            心・仕事・お金・体。バラバラになりがちな自分の状態を、ひとつの画面で確認できます。
-          </p>
-
-          <ul class="mt-10 space-y-6">
-            {personalTools.map((p, i) => (
-              <li class="reveal flex gap-4" style={`--d:${i * 70}ms`}>
-                <span class="icon-chip shrink-0" style={`--c:${p.c}`}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[p.icon]} />
-                </span>
-                <div>
-                  <h3 class="font-bold text-base">{p.t}</h3>
-                  <p class="mt-1 text-sm leading-[1.85] text-zinc-400">{p.d}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <div class="reveal mt-10 flex gap-3 rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.05] p-5 text-xs leading-[1.9] text-zinc-300">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0 mt-0.5" set:html={icons.lock} />
-            <p>Personalの記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。ヘルスケアのデータは歩数・睡眠・ワークアウトの読み取りのみで、書き込みは行いません。</p>
-          </div>
-        </div>
+    <section id="personal" class="relative">
+      <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 sm:py-24 md:py-32 grid grid-cols-[0.8fr_1.2fr] lg:grid-cols-2 gap-3 sm:gap-10 lg:gap-16 items-center">
 
         {/* Phone: Personal */}
-        <div class="reveal order-1 lg:order-2 relative mx-auto" style="--d:120ms">
+        <div class="personal-phone reveal relative min-w-0 mx-auto" style="--d:120ms">
           <div class="phone-glow" aria-hidden="true"></div>
           <div class="phone float-slow" role="img" aria-label="Personal画面のイメージ">
             <div class="phone-bezel">
@@ -414,7 +390,37 @@ const jsonLd = {
               </div>
             </div>
           </div>
-          <p class="mt-5 text-center text-[10px] text-zinc-500">画面・数値はイメージです</p>
+        </div>
+
+        <div class="contents sm:block min-w-0 personal-list">
+          <div class="personal-head min-w-0">
+          <p class="reveal eyebrow">Personal</p>
+          <h2 class="reveal mt-3 sm:mt-5 text-lg sm:text-3xl md:text-5xl font-black tracking-tight leading-[1.25] sm:leading-[1.2]" style="--d:80ms">
+            自分を記録し、<br /><span class="gradient-text inline-block">整えるための</span><span class="gradient-text inline-block">5つの道具。</span>
+          </h2>
+          <p class="reveal mt-3 sm:mt-6 text-[10px] sm:text-sm leading-[1.7] sm:leading-[1.9] text-zinc-400" style="--d:120ms">
+            心・仕事・お金・体。バラバラになりがちな自分の状態を、ひとつの画面で確認できます。
+          </p>
+          </div>
+
+          <ul class="max-sm:col-span-2 mt-0 sm:mt-10 space-y-2.5 sm:space-y-6">
+            {personalTools.map((p, i) => (
+              <li class="reveal flex gap-2 sm:gap-4" style={`--d:${i * 70}ms`}>
+                <span class="icon-chip shrink-0" style={`--c:${p.c}`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[p.icon]} />
+                </span>
+                <div>
+                  <h3 class="font-bold text-xs sm:text-base">{p.t}</h3>
+                  <p class="mt-0.5 sm:mt-1 text-[10px] sm:text-sm leading-[1.6] sm:leading-[1.85] text-zinc-400">{p.d}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div class="reveal max-sm:col-span-2 mt-1 sm:mt-10 flex gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.05] p-3 sm:p-5 text-[10px] sm:text-xs leading-[1.7] sm:leading-[1.9] text-zinc-300">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5" set:html={icons.lock} />
+            <p>Personalの記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。ヘルスケアのデータは歩数・睡眠・ワークアウトの読み取りのみで、書き込みは行いません。</p>
+          </div>
         </div>
       </div>
     </section>
@@ -439,11 +445,11 @@ const jsonLd = {
           </div>
         ))}
       </div>
+      <div class="reveal mt-8 md:mt-12 flex justify-center"><EssenceDownloadButton href={APP_STORE_URL} /></div>
     </section>
 
     {/* ───────────── Pricing ───────────── */}
-    <section id="pricing" class="relative isolate overflow-hidden border-t border-white/10 py-24 md:py-32">
-      <div class="blob" style="width:520px;height:520px;left:50%;top:-120px;margin-left:-260px;background:#10B981;opacity:.22;" aria-hidden="true"></div>
+    <section id="pricing" class="relative py-24 md:py-32">
       <div class="max-w-5xl mx-auto px-5 md:px-8">
         <div class="text-center mb-14">
           <p class="reveal eyebrow">Pricing</p>
@@ -466,9 +472,12 @@ const jsonLd = {
                   </li>
                 ))}
               </ul>
-              <p class="mt-auto pt-8 text-xs leading-relaxed text-zinc-500">
-                登録・お支払いはEssenceアプリ内から行います。Webからのお申し込みは受け付けておりません。
-              </p>
+              <div class="mt-auto pt-8">
+                <EssenceDownloadButton href={APP_STORE_URL} full />
+                <p class="mt-4 text-xs leading-relaxed text-zinc-500">
+                  登録・お支払いはEssenceアプリ内から行います。Webからのお申し込みは受け付けておりません。
+                </p>
+              </div>
             </div>
           </div>
 
@@ -513,21 +522,16 @@ const jsonLd = {
     </section>
 
     {/* ───────────── Operator + closing CTA ───────────── */}
-    <section class="relative isolate overflow-hidden border-t border-white/10">
-      <div class="blob" style="width:560px;height:560px;left:50%;bottom:-320px;margin-left:-280px;background:#0891B2;opacity:.25;" aria-hidden="true"></div>
+    <section id="final-cta" class="relative">
       <div class="max-w-4xl mx-auto px-5 md:px-8 pt-24 md:pt-32 pb-16 text-center">
         <img src="/assets/essence/app-icon.png" alt="Essence" width="72" height="72" class="reveal mx-auto w-[72px] h-[72px] rounded-[22%] shadow-[0_18px_60px_-12px_rgba(16,185,129,0.55)]" />
         <h2 class="reveal mt-8 text-4xl md:text-6xl font-black tracking-tight leading-[1.15]" style="--d:80ms">
           人生を、<span class="gradient-text">軽くしよう。</span>
         </h2>
         <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3" style="--d:160ms">
-          {APP_STORE_URL && (
-            <a href={APP_STORE_URL} class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-zinc-200 transition-colors">
-              App Storeで入手
-            </a>
-          )}
-          <a href="#pricing" class="btn-glow inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold text-black">料金を見る</a>
-          <a href="/contact" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 transition-colors">お問い合わせ</a>
+          <EssenceDownloadButton href={APP_STORE_URL} size="lg" />
+          <a href="#pricing" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[11px] sm:px-7 sm:py-3.5 sm:text-sm font-bold text-white hover:bg-white/10 transition-colors">料金を見る</a>
+          <a href="/contact" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[11px] sm:px-7 sm:py-3.5 sm:text-sm font-bold text-white hover:bg-white/10 transition-colors">お問い合わせ</a>
         </div>
       </div>
 
@@ -555,6 +559,11 @@ const jsonLd = {
         <p class="mt-10 text-center text-[11px] text-zinc-600">© taro. All rights reserved.</p>
       </div>
     </section>
+
+    {/* スマホ: ヒーローを過ぎたら画面下に浮かべる。最下部のCTAが見えている間は隠す */}
+    <div id="floating-cta" class="floating-cta md:hidden">
+      <EssenceDownloadButton href={APP_STORE_URL} />
+    </div>
   </main>
 </Layout>
 
@@ -605,15 +614,28 @@ const jsonLd = {
   }
 
   /* ── background ── */
-  .blob {
+  .page-aurora {
     position: absolute;
+    inset: 0;
     z-index: -1;
-    border-radius: 9999px;
-    filter: blur(96px);
-    opacity: 0.42;
+    overflow: hidden;
     pointer-events: none;
+  }
+  .pa {
+    position: absolute;
+    width: var(--w);
+    height: var(--w);
+    border-radius: 9999px;
+    opacity: var(--o, 1);
+    background: radial-gradient(closest-side, rgba(var(--pc), 0.6) 0%, rgba(var(--pc), 0.24) 48%, rgba(var(--pc), 0) 100%);
     will-change: transform;
-    animation: drift 20s ease-in-out infinite alternate;
+    animation: drift 24s ease-in-out infinite alternate;
+  }
+  @media (max-width: 767px) {
+    .pa {
+      width: calc(var(--w) * 0.62);
+      height: calc(var(--w) * 0.62);
+    }
   }
   @keyframes drift {
     from { transform: translate3d(0, 0, 0) scale(1); }
@@ -627,17 +649,6 @@ const jsonLd = {
     box-shadow: 0 0 10px var(--mint);
   }
 
-  /* ── buttons ── */
-  .btn-glow {
-    background: linear-gradient(100deg, #6ee7b7, #22d3ee);
-    box-shadow: 0 10px 40px -10px rgba(52, 211, 153, 0.7);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
-  }
-  .btn-glow:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.06);
-    box-shadow: 0 16px 50px -10px rgba(52, 211, 153, 0.85);
-  }
 
   /* ── cards ── */
   .card {
@@ -686,7 +697,7 @@ const jsonLd = {
   }
   .feature-visual > * { width: 100%; }
   @media (max-width: 767px) {
-    .feature-visual { height: 208px; }
+    .feature-visual { display: none; }
   }
   .skeleton {
     height: 9px;
@@ -820,6 +831,33 @@ const jsonLd = {
   .screen-aurora.a { width: 200px; height: 200px; left: -60px; top: -40px; background: rgba(52, 211, 153, 0.4); }
   .screen-aurora.b { width: 190px; height: 190px; right: -70px; top: 210px; background: rgba(8, 145, 178, 0.32); }
 
+  /* スマホでもPCと同じ「左に文章・右に画面」の並びにするため、ヒーローの端末モックだけ縮小する */
+  .hero-phone .phone, .personal-phone .phone { zoom: 0.4; }
+  @media (min-width: 400px) { .hero-phone .phone, .personal-phone .phone { zoom: 0.45; } }
+  @media (min-width: 640px) { .hero-phone .phone, .personal-phone .phone { zoom: 0.8; } }
+  @media (min-width: 1024px) { .hero-phone .phone, .personal-phone .phone { zoom: 1; } }
+  /* スマホでは、アイコンの丸も小さくしてカード・リストの高さを抑える */
+  @media (max-width: 639px) {
+    .feature-card .icon-chip, .personal-list .icon-chip { width: 28px; height: 28px; border-radius: 9px; }
+    .feature-card .icon-chip svg, .personal-list .icon-chip svg { width: 14px; height: 14px; }
+  }
+  .floating-cta {
+    position: fixed;
+    left: 50%;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    z-index: 90;
+    transform: translate(-50%, 160%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s ease;
+  }
+  .floating-cta :global(.dl-btn) { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .floating-cta :global(.dl-btn.off) { background: rgba(24, 24, 27, 0.92); }
+  .floating-cta.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
+  }
   .float { animation: float 7s ease-in-out infinite; }
   .float-slow { animation: float 9s ease-in-out infinite; }
   @keyframes float {
@@ -887,7 +925,7 @@ const jsonLd = {
   .card.reveal.is-visible:hover { transform: translateY(-3px); transition-delay: 0ms; }
 
   @media (prefers-reduced-motion: reduce) {
-    .blob, .float, .float-slow, .gradient-text, .wave-bar, .skeleton { animation: none !important; }
+    .pa, .float, .float-slow, .gradient-text, .wave-bar, .skeleton { animation: none !important; }
     :global(html.js-reveal) .reveal { opacity: 1; transform: none; transition: none; }
   }
 </style>
@@ -909,6 +947,21 @@ const jsonLd = {
     revealTargets.forEach((el) => io.observe(el));
   } else {
     revealTargets.forEach((el) => el.classList.add('is-visible'));
+  }
+
+  const floatingCta = document.getElementById('floating-cta');
+  const finalCta = document.getElementById('final-cta');
+  if (floatingCta) {
+    let finalCtaVisible = false;
+    const update = () => floatingCta.classList.toggle('show', window.scrollY > 520 && !finalCtaVisible);
+    if (finalCta && 'IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        finalCtaVisible = entries[0].isIntersecting;
+        update();
+      }, { threshold: 0.25 }).observe(finalCta);
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
   }
 
   document.querySelectorAll<HTMLElement>('.card').forEach((card) => {

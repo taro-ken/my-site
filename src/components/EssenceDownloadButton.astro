@@ -1,0 +1,60 @@
+---
+// Essenceのダウンロードボタン。href(App StoreのURL)が空の間は、押せない「近日公開」の表示になる。
+interface Props {
+  href?: string;
+  size?: 'md' | 'lg';
+  full?: boolean;
+  class?: string;
+}
+
+const { href = '', size = 'md', full = false, class: className = '' } = Astro.props;
+const ready = href !== '';
+---
+
+{ready ? (
+  <a href={href} class:list={['dl-btn', size, { full }, className]}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" /></svg>
+    アプリをダウンロード
+  </a>
+) : (
+  <span class:list={['dl-btn', 'off', size, { full }, className]} role="link" aria-disabled="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" /></svg>
+    App Storeで近日公開
+  </span>
+)}
+
+<style>
+  .dl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1rem;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #04130d;
+    background: linear-gradient(100deg, #6ee7b7, #22d3ee);
+    box-shadow: 0 10px 40px -10px rgba(52, 211, 153, 0.7);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    white-space: nowrap;
+  }
+  .dl-btn svg { width: 1.05em; height: 1.05em; }
+  a.dl-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow: 0 16px 50px -10px rgba(52, 211, 153, 0.85);
+  }
+  .dl-btn.full { display: flex; width: 100%; }
+  .dl-btn.off {
+    cursor: default;
+    color: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  }
+  @media (min-width: 640px) {
+    .dl-btn { padding: 0.875rem 1.75rem; font-size: 0.875rem; }
+    .dl-btn.lg { padding: 1.05rem 2.25rem; font-size: 1rem; }
+  }
+</style>
