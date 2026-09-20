@@ -35,12 +35,65 @@ const posts = await Promise.all(
     };
   })
 );
+
+const reportsSnapshot = await adminDb
+  .collection('boardReports')
+  .orderBy('createdAt', 'desc')
+  .get();
+
+const reports = reportsSnapshot.docs.map((doc) => {
+  const data = doc.data();
+  return {
+    id: doc.id,
+    postId: data.postId as string,
+    replyId: (data.replyId as string | null) ?? null,
+    reportedName: (data.reportedName as string) ?? '',
+    bodyExcerpt: (data.bodyExcerpt as string) ?? '',
+    reason: (data.reason as string) ?? '',
+    createdAt: data.createdAt?.toDate?.() ?? null,
+  };
+});
 ---
 
 <Layout title="掲示板管理 - taro." description="掲示板の投稿・返信を削除する(管理者専用)">
   <main class="min-h-screen bg-black text-white p-8 pt-24 max-w-2xl mx-auto">
     <h1 class="text-2xl md:text-4xl font-black tracking-tight mb-10">掲示板管理</h1>
     <p class="text-sm text-zinc-500 mb-8">不適切な投稿・返信を削除できます。取り消しはできません。</p>
+
+    <section class="mb-14">
+      <h2 class="text-sm font-bold uppercase tracking-wider text-zinc-500 mb-2">
+        通報 <span class="text-white">{reports.length}</span>件
+      </h2>
+      <p class="text-xs text-zinc-500 mb-4">メンバーから通報された投稿・返信です。内容を確認し、不適切であれば24時間以内に削除してください。</p>
+      <div class="space-y-3">
+        {reports.length === 0 && <p class="text-sm text-zinc-500">未対応の通報はありません。</p>}
+        {reports.map((report) => (
+          <div class="report-card p-4 rounded-xl bg-red-950/20 border border-red-900/40">
+            <p class="text-xs text-zinc-400 mb-1">
+              {report.replyId ? '返信' : '投稿'} ・ {report.reportedName} ・ 理由: {report.reason || '未選択'}
+              ・ {report.createdAt ? report.createdAt.toLocaleString('ja-JP') : '-'}
+            </p>
+            <p class="text-sm whitespace-pre-wrap">{report.bodyExcerpt}</p>
+            <div class="mt-3 flex gap-2">
+              <button
+                data-report-id={report.id}
+                data-post-id={report.postId}
+                data-reply-id={report.replyId ?? ''}
+                class="resolve-report-btn px-3 py-1.5 rounded-md bg-red-500/15 hover:bg-red-500/25 text-red-300 text-xs font-bold transition-colors"
+              >
+                {report.replyId ? '返信を削除して閉じる' : '投稿を削除して閉じる'}
+              </button>
+              <button
+                data-report-id={report.id}
+                class="dismiss-report-btn px-3 py-1.5 rounded-md bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold transition-colors"
+              >
+                問題なしとして閉じる
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
 
     <div class="space-y-4">
       {posts.length === 0 && <p class="text-sm text-zinc-500">まだ投稿がありません。</p>}
@@ -89,6 +142,43 @@ const posts = await Promise.all(
 </Layout>
 
 <script>
+  document.querySelectorAll<HTMLButtonElement>('.resolve-report-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const { reportId, postId, replyId } = btn.dataset;
+      if (!confirm(replyId ? 'この返信を削除して、通報を閉じます。よろしいですか?' : 'この投稿を返信ごと削除して、通報を閉じます。よろしいですか?')) return;
+
+      btn.disabled = true;
+      try {
+        const target = replyId ? `/api/admin/board/posts/${postId}/replies/${replyId}` : `/api/admin/board/posts/${postId}`;
+        const removed = await fetch(target, { method: 'DELETE' });
+        if (!removed.ok) throw new Error('削除に失敗しました');
+        const closed = await fetch(`/api/admin/board/reports/${reportId}`, { method: 'DELETE' });
+        if (!closed.ok) throw new Error('通報を閉じられませんでした');
+        window.location.reload();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : '処理に失敗しました');
+        btn.disabled = false;
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.dismiss-report-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const reportId = btn.dataset.reportId!;
+      if (!confirm('問題なしとして、この通報を閉じます。よろしいですか?')) return;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/board/reports/${reportId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('通報を閉じられませんでした');
+        window.location.reload();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : '処理に失敗しました');
+        btn.disabled = false;
+      }
+    });
+  });
+
   document.querySelectorAll<HTMLButtonElement>('.delete-post-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const id = btn.dataset.deletePost!;

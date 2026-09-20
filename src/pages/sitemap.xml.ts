@@ -11,7 +11,10 @@ const staticPages = [
   '/services',
   '/contact',
   '/blog',
-  '/membership',
+  '/essence',
+  '/privacy',
+  '/terms',
+  '/tokushoho',
 ];
 
 export const GET: APIRoute = async () => {
