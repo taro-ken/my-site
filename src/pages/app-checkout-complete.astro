@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 
 const status = Astro.url.searchParams.get('status') === 'canceled' ? 'canceled' : 'success';
+// iOSアプリのカスタムURLスキーム(project.yml の CFBundleURLSchemes)。外部ブラウザからアプリへ戻るために使う。
+const APP_URL = 'com.kk.essence://checkout-complete';
 ---
 
 <Layout title="Essence" hideNav={true}>
@@ -17,8 +19,11 @@ const status = Astro.url.searchParams.get('status') === 'canceled' ? 'canceled' 
           <h1 class="text-2xl font-black mb-3 tracking-tight">決済が完了しました</h1>
           <p class="text-zinc-400 text-sm font-medium">
             会員登録ありがとうございます。<br />
-            このタブを閉じて、Essenceアプリに戻ってください。
+            下のボタンからEssenceアプリに戻ってください。
           </p>
+          <a href={APP_URL} class="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-black transition hover:bg-zinc-200">
+            Essenceアプリに戻る
+          </a>
         </>
       ) : (
         <>
@@ -29,9 +34,12 @@ const status = Astro.url.searchParams.get('status') === 'canceled' ? 'canceled' 
           </div>
           <h1 class="text-2xl font-black mb-3 tracking-tight">決済はキャンセルされました</h1>
           <p class="text-zinc-400 text-sm font-medium">
-            このタブを閉じて、Essenceアプリに戻ってください。<br />
+            Essenceアプリに戻ってください。<br />
             もう一度お試しになりたい場合は、アプリの「Webで決済する」からやり直せます。
           </p>
+          <a href={APP_URL} class="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-black transition hover:bg-zinc-200">
+            Essenceアプリに戻る
+          </a>
         </>
       )}
     </div>
