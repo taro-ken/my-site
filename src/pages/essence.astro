@@ -30,64 +30,75 @@ const icons: Record<string, string> = {
 
 const homeSections = [
   {
-    label: 'コンテンツ',
+    label: '学ぶ',
     rows: [
-      { t: 'Podcast', d: '心を整えるための音声コンテンツ。' },
-      { t: 'Blog', d: 'ミニマリズムと暮らしについて綴る。' },
-      { t: 'Skills', d: '人生を軽くするためのスキルを学ぶ。' },
-      { t: 'Community', d: 'メンバー同士の唯一の交流の場。' },
+      { t: 'Podcast', d: '考え方を耳から学ぶ。' },
+      { t: 'Skills', d: '章立ての動画講座で学ぶ。' },
+      { t: 'Article', d: '暮らしと働き方を綴る記事。' },
     ],
   },
   {
-    label: 'ツール',
+    label: '使う',
     rows: [
-      { t: 'Item List', d: '持っているものを記録し、本当に必要なものだけを残す。' },
-      { t: 'Personal', d: '自分を記録し、整えるための場所。' },
+      { t: 'Item List', d: '持ち物を見える化する。' },
+      { t: 'Personal', d: 'お金と時間を自分で把握する。' },
     ],
   },
+  {
+    label: '話す',
+    rows: [
+      { t: 'Community', d: '同じ方向を向く人と話す。' },
+    ],
+  },
+];
+
+const forYou = [
+  '今の働き方に、やりたくないことが多すぎると感じている',
+  'モノを減らすだけでなく、お金や時間の使い方まで見直したい',
+  'いきなり独立はしないけれど、選べる状態を少しずつつくりたい',
 ];
 
 const wave = Array.from({ length: 34 }, (_, i) => Math.round(22 + Math.abs(Math.sin(i * 1.7) * 55 + Math.cos(i * 0.9) * 20)));
 
 const features = [
   {
-    id: 'podcast', en: 'Podcast', jp: '耳から、思考を整える。', icon: 'mic', color: '#34D399',
-    body: '心を整えるための音声コンテンツ。画面を移動しても再生を続けられるミニプレイヤーと、ロック画面からの操作に対応しています。',
+    id: 'podcast', en: 'Podcast', jp: '考え方を、耳から。', icon: 'mic', color: '#34D399',
+    body: '選べる人生を創るための考え方を、音声で。家事や移動の時間が、そのまま次の一歩を考える時間になります。',
   },
   {
-    id: 'blog', en: 'Blog', jp: '暮らしを綴る記事。', icon: 'file', color: '#0891B2',
-    body: 'ミニマリズムと暮らしについての記事を、アプリの中でそのまま。カテゴリで絞り込み、前後の記事へ移動できます。',
+    id: 'skills', en: 'Skills', jp: '方法を、順番に学ぶ。', icon: 'play', color: '#10B981',
+    body: '削る・創る・選ぶという方法を、動画講座で身につける。知って終わりにせず、実際に手を動かせるところまで連れていきます。',
   },
   {
-    id: 'skills', en: 'Skills', jp: '人生を軽くするスキル。', icon: 'play', color: '#10B981',
-    body: 'スキルを身につけるための動画講座。章ごとに整理され、視聴済みのレッスンを記録して進捗が分かります。',
-  },
-  {
-    id: 'community', en: 'Community', jp: '本音を話せる、小さな場所。', icon: 'chat', color: '#0D9488',
-    body: 'メンバー同士の唯一の交流の場。ニックネームで参加し、投稿と返信ができます。フォロー数やいいね数を競う仕組みはなく、不適切な投稿は運営が削除します。',
+    id: 'article', en: 'Article', jp: '暮らしと働き方を綴る。', icon: 'file', color: '#0891B2',
+    body: 'ミニマリズム、お金、仕事の選び方について。今の働き方を見直すきっかけになる考えを、文章でじっくり届けます。',
   },
   {
     id: 'items', en: 'Item List', jp: '持ち物を、見える化する。', icon: 'box', color: '#34D399',
-    body: '持っているものを記録し、本当に必要なものだけを残す。カテゴリ管理、購入からの経過日数、ウィッシュリストに対応。Web版「Minima」とデータを共有します。',
+    body: '持っているものを記録し、本当に必要なものだけを残す。持ち物が減るほど、管理する時間もお金も浮き、選べる余白が増えていきます。',
   },
   {
-    id: 'personal', en: 'Personal', jp: '自分だけの、記録の場所。', icon: 'user', color: '#0891B2',
-    body: 'ジャーナル・ディープワーク・バランスシート・瞑想・ヘルスケア連携。ここでの記録は自分だけのもので、他のメンバーには表示されません。',
+    id: 'personal', en: 'Personal', jp: 'お金と時間を、自分で把握する。', icon: 'user', color: '#0891B2',
+    body: 'お金と時間の使い方を、感覚ではなく記録で確認する。何を減らし、何に使うかを、自分の意思で選べるようになります。',
+  },
+  {
+    id: 'community', en: 'Community', jp: '同じ方向を向く人と、比べずに話す。', icon: 'chat', color: '#0D9488',
+    body: 'メンバーだけが話せる、小さな場所です。同じ方向を目指す人の存在が、迷ったときに一歩を踏み出す力になります。',
   },
 ];
 
 const personalTools = [
-  { icon: 'book', c: '#0D9488', t: 'ジャーナル', d: '日々の思考や出来事を書き留める。振り返りのための記録として、いつでも見返せます。' },
-  { icon: 'timer', c: '#10B981', t: 'ディープワーク', d: '集中して取り組んだ時間を計測。アプリを閉じても計測は続き、今日の合計時間を確認できます。' },
-  { icon: 'yen', c: '#0891B2', t: 'バランスシート', d: '資産と負債を書き出して、純資産をひと目で把握。お金の状態を客観的に見つめ直せます。' },
-  { icon: 'leaf', c: '#34D399', t: '瞑想', d: '5・10・15・20分、または1〜180分の自由設定のタイマー。BGMを選べて、セッションは履歴に残ります。' },
-  { icon: 'heart', c: '#0D9488', t: 'ヘルスケア連携', d: 'iPhoneの「ヘルスケア」と連携し、今日の歩数・日別の歩数・睡眠・ワークアウトを週単位で確認できます（読み取り専用）。' },
+  { icon: 'yen', c: '#0891B2', t: 'バランスシート', d: '資産と負債を書き出し、純資産をひと目で把握。お金の不安が減るほど、働き方も選びやすくなります。' },
+  { icon: 'timer', c: '#10B981', t: 'ディープワーク', d: '集中した時間を計測し、記録に残す。積み上げた時間が、次に何を学び何を手放すかの土台になります。' },
+  { icon: 'book', c: '#0D9488', t: 'ジャーナル', d: '日々の思考や出来事を書き留める。書き出すほど、本当にやりたいこと・やりたくないことがはっきりします。' },
+  { icon: 'leaf', c: '#34D399', t: '瞑想', d: '5分からのタイマーで、頭の中を一度整理する。判断に迷ったときほど、静かな時間が次の選択を助けます。' },
+  { icon: 'heart', c: '#0D9488', t: 'ヘルスケア連携', d: '歩数・睡眠・ワークアウトを週単位で確認（読み取り専用）。心と体の状態を把握することも、選べる状態の土台になります。' },
 ];
 
 const personalCards = [
-  { t: 'ジャーナル', icon: 'book', c: '#0D9488', cap: '記録した数', v: '12', u: '件' },
-  { t: 'ディープワーク', icon: 'timer', c: '#10B981', cap: '今日の合計', v: '1h25m', u: '' },
   { t: 'バランスシート', icon: 'yen', c: '#0891B2', cap: '純資産', v: '¥1,250,000', u: '' },
+  { t: 'ディープワーク', icon: 'timer', c: '#10B981', cap: '今日の合計', v: '1h25m', u: '' },
+  { t: 'ジャーナル', icon: 'book', c: '#0D9488', cap: '記録した数', v: '12', u: '件' },
   { t: '瞑想', icon: 'leaf', c: '#34D399', cap: '今週', v: '3', u: '回' },
   { t: 'ヘルスケア', icon: 'heart', c: '#0D9488', cap: '今週の歩数', v: '42,180', u: '歩' },
 ];
@@ -95,7 +106,7 @@ const personalCards = [
 const steps = [
   { n: '01', icon: 'user', t: 'アカウントを作成', d: 'Essenceアプリを開き、アカウントを作成（またはログイン）します。' },
   { n: '02', icon: 'card', t: 'メンバーシップに登録', d: 'アプリ内の案内から、月額990円のメンバーシップに登録します。決済はStripeで安全に処理されます。' },
-  { n: '03', icon: 'leaf', t: 'すべての機能を使う', d: 'ホーム画面から、Podcast・Blog・Skills・Community・Item List・Personalへ。' },
+  { n: '03', icon: 'leaf', t: 'すべての機能を使う', d: 'ホーム画面から、Podcast・Article・Skills・Community・Item List・Personalへ。' },
 ];
 
 const pricingPoints = [
@@ -113,7 +124,7 @@ const billingTerms = [
 ];
 
 const faq = [
-  { q: 'Essenceとは、どんなアプリですか？', a: '「人生を軽くする思考・哲学」をテーマにした、メンバー向けのiPhoneアプリです。音声（Podcast）、記事（Blog）、スキル講座（Skills）、メンバー同士の交流（Community）、持ち物の記録（Item List）、自分自身を整えるツール（Personal）を1つにまとめています。' },
+  { q: 'Essenceとは、どんなアプリですか？', a: 'やりたくないことを減らし、自由な時間とお金を増やしていくための、メンバー向けアプリケーションです。音声（Podcast）、スキル講座（Skills）、記事（Article）でまず学び、持ち物の記録（Item List）やお金・時間を把握するツール（Personal）を使い、同じ方向を向くメンバーと話せる場（Community）まで、1つにまとめています。' },
   { q: '料金と支払い方法を教えてください。', a: '月額990円（税込）のメンバーシップです。お支払いはクレジットカード（Stripe）またはApple Payで、初回お申し込み時とその後1か月ごとに自動で決済されます。登録はアプリ内から行います。' },
   { q: '解約するには？ 返金はできますか？', a: 'アプリの「設定」→「サブスクリプションを解約する」からいつでも解約できます。次回更新日の前日までに手続きすると、次回以降の請求は発生しません。デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。詳細は<a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>をご確認ください。' },
   { q: 'Personalに記録した内容は、他の人に見えますか？', a: 'いいえ。ジャーナル、ディープワーク、バランスシート、瞑想の記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。' },
@@ -130,7 +141,7 @@ const jsonLd = {
   url: pageUrl,
   operatingSystem: 'iOS 17+',
   applicationCategory: 'LifestyleApplication',
-  description: '人生を軽くする思考・哲学をテーマにした、メンバー向けiPhoneアプリ。Podcast、記事、スキル講座、コミュニティ、持ち物リスト、セルフマネジメントツールを1つに。',
+  description: 'Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額990円（税込）。',
   image: `${siteUrl}/assets/essence/app-icon.png`,
   offers: {
     '@type': 'Offer',
@@ -143,9 +154,9 @@ const jsonLd = {
 ---
 
 <Layout
-  title="Essence｜人生を軽くする、思考と哲学のiPhoneアプリ - taro."
-  description="Essenceは、ミニマリズム・思考・スキルを1つにまとめたメンバー向けiPhoneアプリ。Podcast、記事、スキル講座、コミュニティ、持ち物リスト、セルフマネジメントツールまで。月額990円（税込）。"
-  keywords="Essence, Taro Essence, ミニマリズム, 習慣, セルフマネジメント, Podcast, スキル, iPhoneアプリ"
+  title="Essence｜選べる人生を、創る。考え方と道具のアプリケーション - taro."
+  description="Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額990円（税込）。"
+  keywords="Essence, Taro Essence, ミニマリズム, 習慣, セルフマネジメント, Podcast, スキル, アプリケーション, 働き方, サイドFIRE"
   ogImage="/assets/essence/app-icon.png"
 >
   <script is:inline>document.documentElement.classList.add('js-reveal');</script>
@@ -172,13 +183,13 @@ const jsonLd = {
         <div class="min-w-0">
 
           <h1 class="reveal text-[1.65rem] min-[380px]:text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.15] sm:leading-[1.08]" style="--d:80ms">
-            人生を、<br />
-            <span class="gradient-text">軽くする。</span>
+            選べる人生を、<br />
+            <span class="gradient-text">創る。</span>
           </h1>
 
           <p class="reveal mt-4 sm:mt-7 text-[11px] leading-[1.7] sm:text-base md:text-lg sm:leading-relaxed text-zinc-300 max-w-xl" style="--d:160ms">
-            Essenceは、思考・スキル・暮らしの記録をひとつにまとめた、メンバーのためのiPhoneアプリ。
-            耳で整え、学び、語り合い、自分自身を記録する。人生を軽くするための道具を、この1本に。
+            やりたくないことを減らし、自由な時間とお金を増やしていく。
+            Essenceは、そのための考え方と道具をまとめた、メンバーのためのアプリケーションです。
           </p>
 
           <div class="reveal mt-5 sm:mt-9 flex flex-wrap items-center gap-2 sm:gap-3" style="--d:240ms">
@@ -234,6 +245,22 @@ const jsonLd = {
       </div>
     </section>
 
+    {/* ───────────── For You ───────────── */}
+    <section id="for-you" class="max-w-4xl mx-auto px-5 md:px-8 pb-14 md:pb-20">
+      <div class="reveal rounded-3xl border border-white/10 bg-white/[0.03] p-7 md:p-10">
+        <p class="eyebrow text-center">For You</p>
+        <h2 class="mt-3 text-center text-xl sm:text-2xl md:text-3xl font-black tracking-tight">こんな人のために</h2>
+        <ul class="mt-7 md:mt-8 space-y-3.5 md:space-y-4 max-w-xl mx-auto">
+          {forYou.map((item) => (
+            <li class="flex items-start gap-3 text-sm md:text-base text-zinc-200 leading-relaxed">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0 mt-0.5" set:html={icons.check} />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
     {/* ───────────── Features ───────────── */}
     <section id="features" class="max-w-6xl mx-auto px-5 md:px-8 py-14 md:py-32">
       <div class="text-center mb-8 md:mb-14">
@@ -272,7 +299,7 @@ const jsonLd = {
                 </div>
               )}
 
-              {f.id === 'blog' && (
+              {f.id === 'article' && (
                 <div class="space-y-3">
                   <div class="skeleton" style="width:92%"></div>
                   <div class="skeleton" style="width:78%"></div>
@@ -396,10 +423,10 @@ const jsonLd = {
           <div class="personal-head min-w-0">
           <p class="reveal eyebrow">Personal</p>
           <h2 class="reveal mt-3 sm:mt-5 text-lg sm:text-3xl md:text-5xl font-black tracking-tight leading-[1.25] sm:leading-[1.2]" style="--d:80ms">
-            自分を記録し、<br /><span class="gradient-text inline-block">整えるための</span><span class="gradient-text inline-block">5つの道具。</span>
+            お金と時間を中心に、<br /><span class="gradient-text inline-block">自分の状態を</span><span class="gradient-text inline-block">把握する。</span>
           </h2>
           <p class="reveal mt-3 sm:mt-6 text-[10px] sm:text-sm leading-[1.7] sm:leading-[1.9] text-zinc-400" style="--d:120ms">
-            心・仕事・お金・体。バラバラになりがちな自分の状態を、ひとつの画面で確認できます。
+            お金と時間の使い方を軸に、心と体の状態まで。バラバラになりがちな自分を、ひとつの画面で確認できます。
           </p>
           </div>
 
@@ -526,7 +553,7 @@ const jsonLd = {
       <div class="max-w-4xl mx-auto px-5 md:px-8 pt-24 md:pt-32 pb-16 text-center">
         <img src="/assets/essence/app-icon.png" alt="Essence" width="72" height="72" class="reveal mx-auto w-[72px] h-[72px] rounded-[22%] shadow-[0_18px_60px_-12px_rgba(16,185,129,0.55)]" />
         <h2 class="reveal mt-8 text-4xl md:text-6xl font-black tracking-tight leading-[1.15]" style="--d:80ms">
-          人生を、<span class="gradient-text">軽くしよう。</span>
+          選べる人生を、<span class="gradient-text">創ろう。</span>
         </h2>
         <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3" style="--d:160ms">
           <EssenceDownloadButton href={APP_STORE_URL} size="lg" />
@@ -539,7 +566,7 @@ const jsonLd = {
         <div class="reveal rounded-3xl border border-white/10 bg-white/[0.03] p-7 md:p-9">
           <h3 class="text-xs font-bold tracking-[0.22em] uppercase text-zinc-400 mb-6">サービス運営者情報</h3>
           <dl class="grid sm:grid-cols-[9rem_1fr] gap-x-6 gap-y-4 text-sm">
-            <dt class="text-zinc-500">サービス名</dt><dd class="text-zinc-200">Essence（iPhoneアプリ）</dd>
+            <dt class="text-zinc-500">サービス名</dt><dd class="text-zinc-200">Essence（アプリケーション）</dd>
             <dt class="text-zinc-500">運営者</dt><dd class="text-zinc-200">taro.（Taro Essence）</dd>
             <dt class="text-zinc-500">料金</dt><dd class="text-zinc-200">月額990円（税込）／ 1か月ごとの自動更新</dd>
             <dt class="text-zinc-500">お支払い方法</dt><dd class="text-zinc-200">クレジットカード（Stripe）／ Apple Pay</dd>
@@ -878,7 +905,7 @@ const jsonLd = {
   .home-sec-label span { font-size: 7.5px; font-weight: 800; letter-spacing: 0.18em; color: rgba(255, 255, 255, 0.55); }
   .home-sec-label i { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.14); }
   .home-row { margin-bottom: 10px; }
-  .home-row .t { font-size: 13.5px; font-weight: 700; color: rgba(52, 211, 153, 0.85); line-height: 1.25; }
+  .home-row .t { font-size: 13.5px; font-weight: 700; color: rgba(255, 255, 255, 0.92); line-height: 1.25; }
   .home-row .d { margin-top: 2px; font-size: 7.5px; color: rgba(255, 255, 255, 0.45); line-height: 1.4; }
   .home-row.settings { margin-top: 18px; }
 

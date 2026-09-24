@@ -52,10 +52,15 @@ export const POST: APIRoute = async ({ request }) => {
 
                 if (userId) {
                     console.log(`[webhook.ts] Updating Firestore for userId: ${userId}`);
+                    // current_period_endはSubscription本体ではなくSubscription Item側にあるため取得し直す。
+                    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+                    const currentPeriodEndUnix = subscription.items.data[0]?.current_period_end ?? null;
                     await adminDb.collection('users').doc(userId).set({
                         stripe_customer_id: customerId,
                         stripe_subscription_id: subscriptionId,
                         stripe_status: 'active',
+                        stripe_cancel_at_period_end: false,
+                        stripe_current_period_end: currentPeriodEndUnix ? new Date(currentPeriodEndUnix * 1000) : null,
                         updatedAt: new Date()
                     }, { merge: true });
                     console.log(`[webhook.ts] Successfully updated Firestore for ${userId}`);
@@ -68,8 +73,11 @@ export const POST: APIRoute = async ({ request }) => {
             case 'customer.subscription.updated': {
                 const subscription = event.data.object;
                 const customerId = subscription.customer as string;
+                // current_period_endはSubscription Item側に移動している(このAPIバージョンでは)。
+                const currentPeriodEndUnix = subscription.items.data[0]?.current_period_end ?? null;
+                const currentPeriodEnd = currentPeriodEndUnix ? new Date(currentPeriodEndUnix * 1000) : null;
 
-                console.log(`[webhook.ts] Sub Updated - ID: ${subscription.id}, Customer: ${customerId}, Status: ${subscription.status}, CancelAtEnd: ${subscription.cancel_at_period_end}`);
+                console.log(`[webhook.ts] Sub Updated - ID: ${subscription.id}, Customer: ${customerId}, Status: ${subscription.status}, CancelAtEnd: ${subscription.cancel_at_period_end}, PeriodEnd: ${currentPeriodEnd?.toISOString()}`);
 
                 const usersRef = adminDb.collection('users');
                 const snapshot = await usersRef.where('stripe_customer_id', '==', customerId).get();
@@ -79,21 +87,30 @@ export const POST: APIRoute = async ({ request }) => {
                     break;
                 }
 
-                if (subscription.cancel_at_period_end || subscription.status === 'canceled' || subscription.status === 'unpaid') {
-                    console.log(`[webhook.ts] Revoking access for customer: ${customerId} (Reason: ${subscription.status}, CancelAtEnd: ${subscription.cancel_at_period_end})`);
+                // 解約予約(cancel_at_period_end)は、それ自体では利用を止めない。
+                // 支払い済み期間が終わってStripe側のstatusが実際にcanceled/unpaidになった時だけ利用を止める。
+                // ここではcancel_at_period_endと期間終了日を常に同期しておき、
+                // ステータスに応じた利用可否(stripe_status)だけ別に判定する。
+                const bookkeeping = {
+                    stripe_cancel_at_period_end: subscription.cancel_at_period_end,
+                    stripe_current_period_end: currentPeriodEnd,
+                    updatedAt: new Date(),
+                };
+
+                if (subscription.status === 'canceled' || subscription.status === 'unpaid') {
+                    console.log(`[webhook.ts] Revoking access for customer: ${customerId} (Reason: ${subscription.status})`);
                     for (const doc of snapshot.docs) {
-                        await usersRef.doc(doc.id).update({
-                            stripe_status: 'canceled',
-                            updatedAt: new Date()
-                        });
+                        await usersRef.doc(doc.id).update({ stripe_status: 'canceled', ...bookkeeping });
                     }
                 } else if (subscription.status === 'active') {
-                    console.log(`[webhook.ts] Ensuring active status for customer: ${customerId}`);
+                    console.log(`[webhook.ts] Ensuring active status for customer: ${customerId} (CancelAtEnd: ${subscription.cancel_at_period_end})`);
                     for (const doc of snapshot.docs) {
-                        await usersRef.doc(doc.id).update({
-                            stripe_status: 'active',
-                            updatedAt: new Date()
-                        });
+                        await usersRef.doc(doc.id).update({ stripe_status: 'active', ...bookkeeping });
+                    }
+                } else {
+                    // trialing/past_due/incomplete等: 利用可否はそのままに、解約予約と期間終了日だけ更新する。
+                    for (const doc of snapshot.docs) {
+                        await usersRef.doc(doc.id).update(bookkeeping);
                     }
                 }
                 break;
@@ -111,6 +128,7 @@ export const POST: APIRoute = async ({ request }) => {
                     for (const doc of snapshot.docs) {
                         await usersRef.doc(doc.id).update({
                             stripe_status: 'canceled',
+                            stripe_cancel_at_period_end: false,
                             updatedAt: new Date()
                         });
                     }
