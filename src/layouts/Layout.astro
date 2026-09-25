@@ -1,7 +1,6 @@
 ---
 import vercelAnalytics from '@vercel/analytics/astro';
 import vercelSpeedInsights from '@vercel/speed-insights/astro';
-import Navigation from '../components/Navigation.astro';
 import '../styles/global.css';
 
 const Analytics = vercelAnalytics;
@@ -32,12 +31,11 @@ const currentUrl = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
 const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? ogImage : '/' + ogImage}`;
 
 // Global session and premium status check from middleware
-const { isLoggedIn, isPremium, isAppEmbed } = Astro.locals;
-const showNavigation = !hideNav && !isAppEmbed;
+const { isAppEmbed } = Astro.locals;
 ---
 
 <!doctype html>
-<html lang="ja" class:list={['bg-black text-white', isAppEmbed && 'app-embed']}>
+<html lang="ja" class:list={['bg-black text-white scroll-smooth', isAppEmbed && 'app-embed']}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
@@ -92,7 +90,6 @@ const showNavigation = !hideNav && !isAppEmbed;
 		<div id="loading-bar-container">
 			<div id="loading-bar"></div>
 		</div>
-		{showNavigation && <Navigation isLoggedIn={isLoggedIn} isPremium={isPremium} />}
 		<slot />
 		<Analytics />
 		<SpeedInsights />

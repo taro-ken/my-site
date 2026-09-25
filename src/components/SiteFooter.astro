@@ -1,0 +1,16 @@
+---
+// ヘッダー(固定ナビ)を廃止したため、ログイン導線をここに集約する。
+const { isLoggedIn, isPremium } = Astro.locals;
+const authUrl = isLoggedIn && isPremium ? '/dashboard' : '/login';
+const authText = isLoggedIn && isPremium ? 'Account' : 'Login';
+---
+<footer class="bg-black text-white py-6 px-6 border-t border-zinc-900">
+  <div class="max-w-6xl mx-auto text-center text-xs text-zinc-500 font-medium flex flex-col items-center gap-2">
+    <p>© All Rights Reserved.</p>
+    <div class="flex items-center gap-4">
+      <a href={authUrl} class="hover:text-zinc-300 transition-colors underline underline-offset-4">{authText}</a>
+      <a href="/contact" class="hover:text-zinc-300 transition-colors underline underline-offset-4">Contact</a>
+      <a href="/tokushoho" class="hover:text-zinc-300 transition-colors underline underline-offset-4">特定商取引法に基づく表記</a>
+    </div>
+  </div>
+</footer>

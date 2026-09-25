@@ -10,7 +10,9 @@ const staticPages = [
   '/personal-projects',
   '/services',
   '/contact',
-  '/blog',
+  '/article',
+  '/product',
+  '/profile',
   '/essence',
   '/privacy',
   '/terms',
@@ -42,7 +44,7 @@ ${staticPages
 ${blogs
       .map(
         (blog) => `  <url>
-    <loc>${siteUrl}/blog/${blog.id}</loc>
+    <loc>${siteUrl}/article/${blog.id}</loc>
     <lastmod>${new Date(blog.updatedAt || blog.publishedAt).toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

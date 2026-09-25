@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BackToHome from '../components/BackToHome.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+
+<Layout
+  title="Profile - taro."
+  description="エンジニア、クリエイター、ミニマリズム実践者。大規模なiOSアプリの開発やWebシステム開発に従事。ライフスタイルデザイン・ミニマリズムについて発信しています。"
+>
+  <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pt-10 pb-32 px-5">
+    <div class="max-w-2xl mx-auto">
+      <BackToHome />
+      <h1 class="mt-8 text-2xl font-black mb-4">Hey, I'm taro.</h1>
+      <p class="text-zinc-400 leading-relaxed">
+        エンジニア、クリエイター、ミニマリズム実践者。大規模なiOSアプリの開発やWebシステム開発に従事。ライフスタイルデザイン・ミニマリズムについて発信しています。
+      </p>
+    </div>
+  </main>
+  <SiteFooter />
+</Layout>

@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import BackToHome from '../../components/BackToHome.astro';
 import { adminAuth } from '../../lib/firebase/server';
 import { verifyLearningMaterialsCheckoutSessionForUser } from '../../lib/stripe-materials';
 import { hasLearningMaterialsPurchase } from '../../lib/learning-materials-access';
@@ -50,7 +51,10 @@ if (sessionId) {
   canonicalUrl="https://kentaro.life/purchase/materials"
 >
   <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pb-16 md:pb-20">
-    <div class="max-w-lg mx-auto px-4 sm:px-5 pt-24 md:pt-28 text-center">
+    <div class="max-w-lg mx-auto px-4 sm:px-5 pt-10 text-left">
+      <BackToHome />
+    </div>
+    <div class="max-w-lg mx-auto px-4 sm:px-5 pt-8 text-center">
       {state === 'need_purchase' && (
         <>
           <h1 class="text-xl md:text-2xl font-black tracking-tight mb-3">教材を購入していません</h1>

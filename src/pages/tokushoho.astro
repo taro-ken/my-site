@@ -1,14 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import BackToHome from '../components/BackToHome.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 ---
 
 <Layout 
   title="商取引に関する開示 (特定商取引法に基づく表記) - taro." 
   description="商取引に関する開示情報 (特定商取引法に基づく表記) を掲載しています。"
 >
-  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-white selection:text-black">
+  <main class="min-h-screen bg-black text-white pt-10 pb-32 px-5 font-sans selection:bg-white selection:text-black">
     <div class="max-w-2xl mx-auto w-full">
-      <div class="text-center mb-16">
+      <BackToHome />
+      <div class="mt-8 text-center mb-16">
         <h1 class="text-3xl md:text-4xl font-black tracking-tight mb-4">
           商取引に関する開示<br/>
           <span class="text-xl md:text-2xl text-zinc-500">(特定商取引法に基づく表記)</span>
@@ -146,4 +149,5 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </div>
   </main>
+  <SiteFooter />
 </Layout>

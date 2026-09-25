@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import BackToHome from '../components/BackToHome.astro';
 
 const { isLoggedIn, isPremium, user } = Astro.locals;
 
@@ -24,8 +25,9 @@ const firebasePublicConfig = {
 ---
 
 <Layout title="Dashboard - taro.">
-  <main class="min-h-screen bg-black text-white p-8 pt-24 max-w-4xl mx-auto">
-    <div class="flex flex-row justify-between items-center gap-4 mb-10">
+  <main class="min-h-screen bg-black text-white p-8 pt-10 max-w-4xl mx-auto">
+    <BackToHome />
+    <div class="mt-8 flex flex-row justify-between items-center gap-4 mb-10">
       <h1 class="text-2xl md:text-4xl font-black tracking-tight">
         ダッシュボード
       </h1>

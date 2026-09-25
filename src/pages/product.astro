@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import BackToHome from '../components/BackToHome.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
 export const prerender = false;
 
@@ -103,9 +105,10 @@ const categories: {
   description="ブック・ガイド、アプリ、教材。Freedom & Focus のリソース一覧。"
   canonicalUrl="https://kentaro.life/product"
 >
-  <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pt-32 pb-32 px-5">
+  <main class="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pt-10 pb-32 px-5">
     <div class="max-w-5xl mx-auto w-full">
-      <div class="text-center mb-12 flex flex-col items-center">
+      <BackToHome />
+      <div class="mt-8 text-center mb-12 flex flex-col items-center">
         <p class="text-zinc-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">Resources</p>
         <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-4">Freedom &amp; Focus</h1>
         <p class="text-zinc-400 font-medium max-w-2xl text-sm md:text-base">
@@ -197,6 +200,7 @@ const categories: {
     </div>
     </div>
   </main>
+  <SiteFooter />
 </Layout>
 
 <style>

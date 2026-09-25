@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import BackToHome from '../components/BackToHome.astro';
 
 const errorParam = Astro.url.searchParams.get("error");
 const registeredParam = Astro.url.searchParams.get("registered");
@@ -27,6 +28,7 @@ const firebasePublicConfig = {
 
 <Layout title="Login - taro.">
   <main class="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden font-sans selection:bg-white selection:text-black">
+    <div class="absolute top-6 left-6"><BackToHome /></div>
     <div class="max-w-md w-full rounded-2xl p-8 sm:p-10 shadow-2xl bg-zinc-950 border border-white/10">
       <div class="text-center mb-8">
         <h1 class="text-3xl font-black mb-3 tracking-tight">おかえりなさい</h1>

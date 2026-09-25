@@ -1,5 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import BackToHome from '../../components/BackToHome.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
 import { getAllBlogs, FILTER_INCLUDE_GEARLIST, type BlogItem } from '../../lib/cms';
 
 /** ミドルウェアと同じ判定（セッション検証は middleware で一元化） */
@@ -35,9 +37,10 @@ const proseClasses =
   title="Full Gear Review - taro."
   description="メンバー限定のギアレビュー。"
 >
-  <main class="min-h-screen bg-black text-white pt-32 pb-32 px-5 font-sans selection:bg-[#BF953F] selection:text-black">
+  <main class="min-h-screen bg-black text-white pt-10 pb-32 px-5 font-sans selection:bg-[#BF953F] selection:text-black">
     <div class="max-w-3xl mx-auto w-full">
-      <div class="text-center mb-16 flex flex-col items-center">
+      <BackToHome />
+      <div class="mt-8 text-center mb-16 flex flex-col items-center">
         <p class="text-zinc-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 font-bold">The Gear</p>
         <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-10">
           Full Gear Review
@@ -74,6 +77,7 @@ const proseClasses =
       )}
     </div>
   </main>
+  <SiteFooter />
 </Layout>
 
 <style is:global>

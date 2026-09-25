@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import EssenceDownloadButton from '../components/EssenceDownloadButton.astro';
+import BackToHome from '../components/BackToHome.astro';
 
 // App Store公開後にURLを入れると、各所のダウンロードボタンが有効になる(未設定の間は「App Storeで近日公開」の表示)。
 const APP_STORE_URL = '';
@@ -163,6 +164,10 @@ const jsonLd = {
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
   <main class="essence-page relative isolate bg-black text-white font-normal overflow-x-clip selection:bg-emerald-300 selection:text-black">
+
+    <div class="relative z-10 px-5 md:px-8 pt-6">
+      <BackToHome />
+    </div>
 
     {/* ページ全体に敷く1枚のグラデーション。セクションごとに区切らず、全体を一体に見せる */}
     <div class="page-aurora" aria-hidden="true">
