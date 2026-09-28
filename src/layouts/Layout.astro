@@ -2,6 +2,7 @@
 import vercelAnalytics from '@vercel/analytics/astro';
 import vercelSpeedInsights from '@vercel/speed-insights/astro';
 import { ClientRouter } from 'astro:transitions';
+import HistoryCache from '../components/HistoryCache.astro';
 import '../styles/global.css';
 
 const Analytics = vercelAnalytics;
@@ -56,6 +57,7 @@ const { isAppEmbed } = Astro.locals;
 		<link rel="icon" type="image/png" href="/assets/webicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		{clientRouter && <ClientRouter fallback="none" />}
+		{clientRouter && <HistoryCache />}
     
     <!-- Primary Meta Tags -->
     <title>{title}</title>
