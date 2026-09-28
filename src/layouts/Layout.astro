@@ -35,7 +35,7 @@ const { isAppEmbed } = Astro.locals;
 ---
 
 <!doctype html>
-<html lang="ja" class:list={['bg-black text-white scroll-smooth', isAppEmbed && 'app-embed']}>
+<html lang="ja" class:list={['bg-black text-white', isAppEmbed && 'app-embed']}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
@@ -92,7 +92,7 @@ const { isAppEmbed } = Astro.locals;
       }
     })} />
 	</head>
-	<body class="bg-black min-h-screen">
+	<body class="bg-black">
 		<div id="loading-bar-container">
 			<div id="loading-bar"></div>
 		</div>
@@ -127,6 +127,27 @@ const { isAppEmbed } = Astro.locals;
 	}
 	html {
 		font-family: system-ui, sans-serif;
+	}
+	/*
+	 * スマホの 100vh(min-h-screen) はアドレスバーを縮めた時の高さになるため、短いページでも
+	 * 本文+フッターが画面をはみ出してスクロール可能になり、遷移時にアドレスバーの伸縮で画面が揺れる。
+	 * 表示領域が最小の時の高さ(svh)に本文+フッターが収まるよう、main を残りの高さに伸ばす。
+	 */
+	body {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+		min-height: 100svh;
+	}
+	body > main {
+		flex: 1 0 auto;
+		width: 100%;
+	}
+	body > main.min-h-screen {
+		min-height: 0;
+	}
+	body > footer {
+		flex-shrink: 0;
 	}
 	code {
 		font-family:

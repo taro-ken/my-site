@@ -600,6 +600,11 @@ const jsonLd = {
 </Layout>
 
 <style>
+  /* ページ内リンク(#features / #pricing)用。サイト全体に効かせるとスマホの遷移時に揺れるため、このページだけ */
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+
   .essence-page {
     --emerald: #10b981;
     --teal: #0d9488;
