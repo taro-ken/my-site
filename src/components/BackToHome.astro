@@ -1,9 +1,66 @@
 ---
 // ヘッダー(固定ナビ)を廃止したため、各ページの先頭に置く「戻る」導線。
 ---
-<a href="/" class="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+<a href="/" data-back-to-home class="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
   <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
   </svg>
   Back to Home
 </a>
+
+<script>
+  /*
+   * スマホChromeでは Home へ新規遷移すると画面が揺れるが、履歴を戻る(スワイプバック)場合は
+   * 前回の Home がそのまま復元されて揺れない。直前が Home なら、リンク遷移ではなく履歴を戻る。
+   */
+  type NavEntry = { url: string | null; index: number; key: string; sameDocument?: boolean };
+  type NavigationLike = {
+    currentEntry: NavEntry | null;
+    entries: () => NavEntry[];
+    traverseTo: (key: string) => unknown;
+  };
+
+  const isHome = (url: string | null) => {
+    if (!url) return false;
+    const u = new URL(url);
+    return u.origin === location.origin && u.pathname === '/';
+  };
+  const samePage = (url: string | null) => {
+    if (!url) return false;
+    const u = new URL(url);
+    return u.pathname === location.pathname && u.search === location.search;
+  };
+
+  /** ページ内リンク(#)で増えた履歴を飛ばして、直前の Home の履歴を探す */
+  const findHomeEntry = (navigation: NavigationLike) => {
+    const current = navigation.currentEntry;
+    if (!current) return null;
+    const entries = navigation.entries();
+    for (let i = current.index - 1; i >= 0; i--) {
+      const entry = entries[i];
+      if (isHome(entry.url)) return entry;
+      if (!samePage(entry.url)) return null;
+    }
+    return null;
+  };
+
+  document.querySelectorAll<HTMLAnchorElement>('a[data-back-to-home]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      const navigation = (window as unknown as { navigation?: NavigationLike }).navigation;
+      if (navigation?.entries) {
+        const home = findHomeEntry(navigation);
+        if (!home) return;
+        event.preventDefault();
+        navigation.traverseTo(home.key);
+        return;
+      }
+
+      if (history.length > 1 && !location.hash && isHome(document.referrer)) {
+        event.preventDefault();
+        history.back();
+      }
+    });
+  });
+</script>
