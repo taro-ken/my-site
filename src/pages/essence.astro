@@ -155,13 +155,12 @@ const jsonLd = {
 ---
 
 <Layout
-  clientRouter
   title="Essence｜選べる人生を、創る。考え方と道具のアプリケーション - taro."
   description="Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額990円（税込）。"
   keywords="Essence, Taro Essence, ミニマリズム, 習慣, セルフマネジメント, Podcast, スキル, アプリケーション, 働き方, サイドFIRE"
   ogImage="/assets/essence/app-icon.png"
 >
-  <script is:inline data-astro-rerun>document.documentElement.classList.add('js-reveal');</script>
+  <script is:inline>document.documentElement.classList.add('js-reveal');</script>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
   <main class="essence-page relative isolate bg-black text-white font-normal overflow-x-clip selection:bg-emerald-300 selection:text-black">
@@ -969,64 +968,44 @@ const jsonLd = {
 </style>
 
 <script>
-  // ClientRouter で他ページと行き来するため、表示のたびに初期化し、離れる時に window へのリスナーと監視を解除する
-  document.addEventListener('astro:page-load', () => {
-    if (!document.querySelector('.essence-page')) return;
-
-    const observers: IntersectionObserver[] = [];
-    const controller = new AbortController();
-
-    const revealTargets = document.querySelectorAll<HTMLElement>('.reveal');
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('is-visible');
-              io.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-      );
-      revealTargets.forEach((el) => io.observe(el));
-      observers.push(io);
-    } else {
-      revealTargets.forEach((el) => el.classList.add('is-visible'));
-    }
-
-    const floatingCta = document.getElementById('floating-cta');
-    const finalCta = document.getElementById('final-cta');
-    if (floatingCta) {
-      let finalCtaVisible = false;
-      const update = () => floatingCta.classList.toggle('show', window.scrollY > 520 && !finalCtaVisible);
-      if (finalCta && 'IntersectionObserver' in window) {
-        const ctaObserver = new IntersectionObserver((entries) => {
-          finalCtaVisible = entries[0].isIntersecting;
-          update();
-        }, { threshold: 0.25 });
-        ctaObserver.observe(finalCta);
-        observers.push(ctaObserver);
-      }
-      window.addEventListener('scroll', update, { passive: true, signal: controller.signal });
-      update();
-    }
-
-    document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
-      card.addEventListener('pointermove', (e) => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--my', `${e.clientY - rect.top}px`);
-      });
-    });
-
-    document.addEventListener(
-      'astro:before-swap',
-      () => {
-        controller.abort();
-        observers.forEach((o) => o.disconnect());
+  const revealTargets = document.querySelectorAll<HTMLElement>('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
       },
-      { once: true }
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
     );
+    revealTargets.forEach((el) => io.observe(el));
+  } else {
+    revealTargets.forEach((el) => el.classList.add('is-visible'));
+  }
+
+  const floatingCta = document.getElementById('floating-cta');
+  const finalCta = document.getElementById('final-cta');
+  if (floatingCta) {
+    let finalCtaVisible = false;
+    const update = () => floatingCta.classList.toggle('show', window.scrollY > 520 && !finalCtaVisible);
+    if (finalCta && 'IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        finalCtaVisible = entries[0].isIntersecting;
+        update();
+      }, { threshold: 0.25 }).observe(finalCta);
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
+  document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
   });
 </script>

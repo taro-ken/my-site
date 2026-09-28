@@ -1,8 +1,6 @@
 ---
 import vercelAnalytics from '@vercel/analytics/astro';
 import vercelSpeedInsights from '@vercel/speed-insights/astro';
-import { ClientRouter } from 'astro:transitions';
-import HistoryCache from '../components/HistoryCache.astro';
 import '../styles/global.css';
 
 const Analytics = vercelAnalytics;
@@ -16,12 +14,6 @@ interface Props {
   canonicalUrl?: string;
   ogType?: 'website' | 'article';
   hideNav?: boolean;
-  /**
-   * ページを再読み込みせずに中身だけ差し替えて遷移する(Astro ClientRouter)。
-   * スマホChromeでは通常の遷移時にアドレスバーの伸縮などで画面が揺れるため、Homeと行き来するページで使う。
-   * 遷移先も true のページ同士でのみ有効。Firebase等の初期化スクリプトを持つページでは使わない。
-   */
-  clientRouter?: boolean;
 }
 
 const { 
@@ -31,8 +23,7 @@ const {
   ogImage = "/assets/webicon.png",
   canonicalUrl,
   ogType = "website",
-  hideNav = false,
-  clientRouter = false
+  hideNav = false
 } = Astro.props;
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://kentaro.life";
@@ -44,7 +35,7 @@ const { isAppEmbed } = Astro.locals;
 ---
 
 <!doctype html>
-<html lang="ja" class:list={['bg-black text-white', isAppEmbed && 'app-embed']} transition:animate="none">
+<html lang="ja" class:list={['bg-black text-white', isAppEmbed && 'app-embed']}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
@@ -56,8 +47,6 @@ const { isAppEmbed } = Astro.locals;
 		</style>
 		<link rel="icon" type="image/png" href="/assets/webicon.png" />
 		<meta name="generator" content={Astro.generator} />
-		{clientRouter && <ClientRouter fallback="none" />}
-		{clientRouter && <HistoryCache />}
     
     <!-- Primary Meta Tags -->
     <title>{title}</title>

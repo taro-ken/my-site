@@ -14,7 +14,7 @@ interface Props {
 const { title, subtitle, description, established, revised } = Astro.props;
 ---
 
-<Layout clientRouter title={`${title} - taro.`} description={description}>
+<Layout title={`${title} - taro.`} description={description}>
   <main class="min-h-screen bg-black text-white pt-10 pb-32 px-5 font-sans font-normal selection:bg-white selection:text-black">
     <div class="max-w-2xl mx-auto w-full">
       <BackToHome />
