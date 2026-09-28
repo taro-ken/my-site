@@ -44,8 +44,6 @@ const { isAppEmbed } = Astro.locals;
 		<!-- 外部CSSの読込前・ページ遷移中に白背景が一瞬出ないよう、背景色だけはインラインで先に確定させる -->
 		<style is:inline>
 			html, body { background-color: #000; color-scheme: dark; }
-			@view-transition { navigation: auto; }
-			::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.15s; }
 		</style>
 		<link rel="icon" type="image/png" href="/assets/webicon.png" />
 		<meta name="generator" content={Astro.generator} />
