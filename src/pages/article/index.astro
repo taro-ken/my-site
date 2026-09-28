@@ -39,7 +39,8 @@ try {
 const stripHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
 ---
 
-<Layout 
+<Layout
+  clientRouter
   title="Article - taro."
   description="習慣、思考法、ライフスタイルデザイン"
   canonicalUrl="https://kentaro.life/article"
@@ -153,12 +154,14 @@ const stripHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
 </Layout>
 
 <script>
-  // Script to handle modal trigger
-  const trigger = document.getElementById('newsletter-trigger');
-  if (trigger) {
-    trigger.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.dispatchEvent(new CustomEvent('open-newsletter-modal'));
-    });
-  }
+  // ClientRouter では再訪時にスクリプトが再実行されないため、表示のたびに astro:page-load で紐付ける
+  document.addEventListener('astro:page-load', () => {
+    const trigger = document.getElementById('newsletter-trigger');
+    if (trigger) {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent('open-newsletter-modal'));
+      });
+    }
+  });
 </script>

@@ -85,7 +85,8 @@ const returnAfterAuthPath = `/article/${blog.id}`;
 const returnAfterAuthQs = encodeURIComponent(returnAfterAuthPath);
 ---
 
-<Layout 
+<Layout
+  clientRouter
   title={`${blog.title} | taro.`}
   description={blogDescription}
   ogImage={blog.eyecatch?.url}
