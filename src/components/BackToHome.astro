@@ -44,6 +44,38 @@
     return null;
   };
 
+  /*
+   * リロード後などに履歴移動が拒否されたり無反応になることがあるため、
+   * 一定時間内にページを離れなければ通常の遷移で Home へ移動する。
+   */
+  const FALLBACK_MS = 1200;
+  let leaving = false;
+  let fallbackTimer: number | undefined;
+  window.addEventListener('pagehide', () => {
+    leaving = true;
+    window.clearTimeout(fallbackTimer);
+  });
+  window.addEventListener('pageshow', () => {
+    leaving = false;
+  });
+  const goHome = () => {
+    if (!leaving) location.assign('/');
+  };
+  const traverseWithFallback = (traverse: () => unknown) => {
+    window.clearTimeout(fallbackTimer);
+    fallbackTimer = window.setTimeout(goHome, FALLBACK_MS);
+    const fail = () => {
+      window.clearTimeout(fallbackTimer);
+      goHome();
+    };
+    try {
+      const result = traverse() as { committed?: Promise<unknown> } | undefined;
+      result?.committed?.catch(fail);
+    } catch {
+      fail();
+    }
+  };
+
   document.querySelectorAll<HTMLAnchorElement>('a[data-back-to-home]').forEach((link) => {
     link.addEventListener('click', (event) => {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -53,13 +85,13 @@
         const home = findHomeEntry(navigation);
         if (!home) return;
         event.preventDefault();
-        navigation.traverseTo(home.key);
+        traverseWithFallback(() => navigation.traverseTo(home.key));
         return;
       }
 
       if (history.length > 1 && !location.hash && isHome(document.referrer)) {
         event.preventDefault();
-        history.back();
+        traverseWithFallback(() => history.back());
       }
     });
   });
