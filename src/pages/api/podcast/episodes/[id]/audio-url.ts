@@ -43,6 +43,11 @@ export const GET: APIRoute = async ({ request, params }) => {
     if (!episodeDoc.exists) {
         return new Response(JSON.stringify({ error: "Episode not found" }), { status: 404 });
     }
+    // 予約投稿(publishedAtが未来)のエピソードは、IDを知っていても音声URLを発行しない。
+    const publishedAt = episodeDoc.data()?.publishedAt?.toDate?.();
+    if (publishedAt && publishedAt > new Date()) {
+        return new Response(JSON.stringify({ error: "Episode not found" }), { status: 404 });
+    }
 
     try {
         const command = new GetObjectCommand({

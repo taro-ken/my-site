@@ -50,22 +50,30 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
         return new Response(JSON.stringify({ error: "Missing episode id" }), { status: 400 });
     }
 
-    let body: { title?: string; subtitle?: string };
+    let body: { title?: string; subtitle?: string; publishedAt?: string };
     try {
         body = await request.json();
     } catch {
         return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
     }
 
-    const { title, subtitle } = body;
+    const { title, subtitle, publishedAt } = body;
     if (!title) {
         return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
     }
 
-    await adminDb.collection("podcastEpisodes").doc(episodeId).update({
+    const update: Record<string, unknown> = {
         title,
         subtitle: subtitle ?? "",
-    });
+    };
+    if (publishedAt) {
+        const parsedPublishedAt = new Date(publishedAt);
+        if (!Number.isNaN(parsedPublishedAt.getTime())) {
+            update.publishedAt = parsedPublishedAt;
+        }
+    }
+
+    await adminDb.collection("podcastEpisodes").doc(episodeId).update(update);
 
     return new Response(JSON.stringify({ ok: true }), {
         status: 200,

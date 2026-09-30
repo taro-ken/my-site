@@ -17,23 +17,28 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
     }
 
-    let body: { title?: string; subtitle?: string; durationSeconds?: number };
+    let body: { title?: string; subtitle?: string; durationSeconds?: number; publishedAt?: string };
     try {
         body = await request.json();
     } catch {
         return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
     }
 
-    const { title, subtitle, durationSeconds } = body;
+    const { title, subtitle, durationSeconds, publishedAt } = body;
     if (!title || !durationSeconds) {
         return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
     }
+
+    // 未来の日時を指定すると予約投稿になる(アプリ側はpublishedAt<=nowでのみ表示するため)。
+    // 不正な日付が来た場合は現在時刻にフォールバックする。
+    const parsedPublishedAt = publishedAt ? new Date(publishedAt) : new Date();
+    const resolvedPublishedAt = Number.isNaN(parsedPublishedAt.getTime()) ? new Date() : parsedPublishedAt;
 
     const docRef = adminDb.collection("podcastEpisodes").doc();
     await docRef.set({
         title,
         subtitle: subtitle ?? "",
-        publishedAt: new Date(),
+        publishedAt: resolvedPublishedAt,
         durationSeconds: Math.round(durationSeconds),
     });
 

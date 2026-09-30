@@ -13,14 +13,25 @@ const snapshot = await adminDb
   .orderBy('publishedAt', 'desc')
   .get();
 
+const now = new Date();
+
+// <input type="datetime-local"> にそのまま渡せる "YYYY-MM-DDTHH:mm" 形式(ローカル時刻)にする。
+const toDatetimeLocal = (date: Date) => {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
+
 const episodes = snapshot.docs.map((doc) => {
   const data = doc.data();
+  const publishedAt = data.publishedAt?.toDate?.() ?? null;
   return {
     id: doc.id,
     title: data.title as string,
     subtitle: (data.subtitle as string) ?? '',
     durationSeconds: data.durationSeconds as number,
-    publishedAt: data.publishedAt?.toDate?.() ?? null,
+    publishedAt,
+    isScheduled: publishedAt ? publishedAt > now : false,
+    publishedAtLocal: publishedAt ? toDatetimeLocal(publishedAt) : toDatetimeLocal(now),
   };
 });
 ---
@@ -50,6 +61,13 @@ const episodes = snapshot.docs.map((doc) => {
         <p class="text-xs text-zinc-500 mt-2">再生時間はファイルから自動で読み取ります。</p>
       </div>
 
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">公開日時</label>
+        <input name="publishedAt" type="datetime-local" required
+          class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30" />
+        <p class="text-xs text-zinc-500 mt-2">未来の日時を指定すると予約投稿になります。その日時までアプリ・一覧には表示されません。</p>
+      </div>
+
       <button type="submit" id="submit-btn"
         class="w-full py-3 px-4 bg-white text-black font-bold text-sm tracking-wide rounded-md hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         アップロード
@@ -68,7 +86,10 @@ const episodes = snapshot.docs.map((doc) => {
           <div class="view-mode flex items-start justify-between gap-4">
             <div class="min-w-0">
               <p class="text-xs text-zinc-500 mb-1">
-                {ep.publishedAt ? ep.publishedAt.toLocaleDateString('ja-JP') : '-'} ・ {Math.round(ep.durationSeconds / 60)}分
+                {ep.isScheduled && (
+                  <span class="inline-block mr-1.5 px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 font-bold">予約中</span>
+                )}
+                {ep.publishedAt ? ep.publishedAt.toLocaleString('ja-JP') : '-'} ・ {Math.round(ep.durationSeconds / 60)}分
               </p>
               <p class="episode-title-display font-bold text-sm">{ep.title}</p>
               {ep.subtitle && <p class="episode-subtitle-display text-xs text-zinc-400 mt-1 line-clamp-3 whitespace-pre-wrap">{ep.subtitle}</p>}
@@ -104,6 +125,14 @@ const episodes = snapshot.docs.map((doc) => {
                 rows="6"
                 class="edit-subtitle w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30 resize-y"
               >{ep.subtitle}</textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">公開日時</label>
+              <input
+                type="datetime-local"
+                class="edit-published-at w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                value={ep.publishedAtLocal}
+              />
             </div>
             <div class="flex gap-2">
               <button class="save-btn px-4 py-2 rounded-md bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors">
@@ -150,10 +179,15 @@ const episodes = snapshot.docs.map((doc) => {
       const title = formData.get('title') as string;
       const subtitle = formData.get('subtitle') as string;
       const file = formData.get('audio') as File;
+      const publishedAtLocal = formData.get('publishedAt') as string;
 
       if (!file || file.size === 0) {
         throw new Error('音声ファイルを選択してください');
       }
+      if (!publishedAtLocal) {
+        throw new Error('公開日時を指定してください');
+      }
+      const publishedAt = new Date(publishedAtLocal).toISOString();
 
       statusEl.textContent = '音声の長さを確認中...';
       const durationSeconds = await readAudioDuration(file);
@@ -162,7 +196,7 @@ const episodes = snapshot.docs.map((doc) => {
       const createRes = await fetch('/api/admin/podcast/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, subtitle, durationSeconds }),
+        body: JSON.stringify({ title, subtitle, durationSeconds, publishedAt }),
       });
       if (!createRes.ok) {
         const err = await createRes.json().catch(() => ({}));
@@ -180,7 +214,7 @@ const episodes = snapshot.docs.map((doc) => {
         throw new Error('音声のアップロードに失敗しました');
       }
 
-      statusEl.textContent = '公開しました。';
+      statusEl.textContent = new Date(publishedAtLocal) > new Date() ? '予約しました。' : '公開しました。';
       statusEl.classList.add('text-emerald-400');
       setTimeout(() => window.location.reload(), 800);
     } catch (error) {
@@ -217,6 +251,7 @@ const episodes = snapshot.docs.map((doc) => {
     const cancelBtn = card.querySelector<HTMLButtonElement>('.cancel-btn')!;
     const titleInput = card.querySelector<HTMLInputElement>('.edit-title')!;
     const subtitleInput = card.querySelector<HTMLTextAreaElement>('.edit-subtitle')!;
+    const publishedAtInput = card.querySelector<HTMLInputElement>('.edit-published-at')!;
     const editStatus = card.querySelector<HTMLElement>('.edit-status')!;
     const titleDisplay = card.querySelector<HTMLElement>('.episode-title-display')!;
     const subtitleDisplay = card.querySelector<HTMLElement>('.episode-subtitle-display');
@@ -229,6 +264,7 @@ const episodes = snapshot.docs.map((doc) => {
     cancelBtn.addEventListener('click', () => {
       titleInput.value = titleDisplay.textContent ?? '';
       subtitleInput.value = subtitleDisplay?.textContent ?? '';
+      publishedAtInput.value = publishedAtInput.defaultValue;
       editStatus.textContent = '';
       editMode.classList.add('hidden');
       viewMode.classList.remove('hidden');
@@ -241,6 +277,11 @@ const episodes = snapshot.docs.map((doc) => {
         editStatus.textContent = 'タイトルは必須です';
         return;
       }
+      if (!publishedAtInput.value) {
+        editStatus.textContent = '公開日時は必須です';
+        return;
+      }
+      const publishedAt = new Date(publishedAtInput.value).toISOString();
 
       saveBtn.disabled = true;
       editStatus.textContent = '';
@@ -248,7 +289,7 @@ const episodes = snapshot.docs.map((doc) => {
         const res = await fetch(`/api/admin/podcast/${episodeId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, subtitle }),
+          body: JSON.stringify({ title, subtitle, publishedAt }),
         });
         if (!res.ok) throw new Error('更新に失敗しました');
         window.location.reload();
