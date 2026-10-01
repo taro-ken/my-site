@@ -4,7 +4,7 @@ const { isLoggedIn } = Astro.locals;
 const authUrl = isLoggedIn ? '/dashboard' : '/login';
 const authText = isLoggedIn ? 'MyPage' : 'Login';
 ---
-<footer class="bg-black text-white py-6 px-6 border-t border-zinc-900">
+<footer class="bg-zinc-950 text-white py-6 px-6 border-t border-zinc-900">
   <div class="max-w-6xl mx-auto text-center text-xs text-zinc-500 font-medium flex flex-col items-center gap-2">
     <p>© All Rights Reserved.</p>
     <div class="flex items-center gap-4">
