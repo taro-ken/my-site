@@ -19,9 +19,19 @@ const media = [
   title="Taro Essence | クリエイター・ミニマリズム実践者"
   description="Taro Essence | クリエイター・ミニマリズム実践者。YouTube などで発信。ライフスタイルデザインや自己啓発、テクノロジーについて。"
 >
-  <main class="min-h-screen bg-zinc-950 text-white font-sans selection:bg-white selection:text-black pb-12">
+  <main class="relative min-h-screen text-white font-sans selection:bg-white selection:text-black pb-12">
+    <div class="home-aurora" id="home-aurora" aria-hidden="true">
+      <span class="pa" style="--pc:16,185,129;--w:760px;--o:.85;left:-24%;top:0%"></span>
+      <span class="pa" style="--pc:8,145,178;--w:700px;--o:.75;right:-22%;top:2%;animation-delay:-6s"></span>
+      <span class="pa" style="--pc:52,211,153;--w:620px;--o:.32;left:24%;top:9%;animation-delay:-11s"></span>
+      <span class="pa" style="--pc:13,148,136;--w:720px;--o:.5;right:-24%;top:27%"></span>
+      <span class="pa" style="--pc:16,185,129;--w:760px;--o:.5;left:-26%;top:46%;animation-delay:-9s"></span>
+      <span class="pa" style="--pc:8,145,178;--w:720px;--o:.5;right:-24%;top:63%;animation-delay:-4s"></span>
+      <span class="pa" style="--pc:52,211,153;--w:760px;--o:.4;left:14%;top:79%"></span>
+      <span class="pa" style="--pc:8,145,178;--w:760px;--o:.55;right:-14%;top:91%;animation-delay:-13s"></span>
+    </div>
     {/* Home: サイトを開いた瞬間に何があるか分かるよう、各ページへのメニューだけにする。1行に「タイトル - 説明」、リンクはタイトルのみ */}
-    <section class="max-w-3xl mx-auto px-5 pt-20 md:pt-24 pb-4">
+    <section class="relative max-w-3xl mx-auto px-5 pt-20 md:pt-24 pb-4">
       <nav>
         <p>
           <a href="/profile" class="text-base md:text-lg font-medium tracking-tight underline underline-offset-4 decoration-zinc-700 hover:text-zinc-300 hover:decoration-zinc-400 transition-colors">Taro.</a>
@@ -32,7 +42,7 @@ const media = [
           {menu.map((item) => (
             item.title === 'Essence' ? (
               <p>
-                <a href={item.href} class="text-base md:text-lg font-light tracking-tight text-emerald-800 underline underline-offset-4 decoration-emerald-800/50 hover:text-emerald-600 hover:decoration-emerald-600 transition-colors">{item.title}</a>
+                <a href={item.href} id="essence-link" class="text-base md:text-lg font-light tracking-tight text-emerald-800 underline underline-offset-4 decoration-emerald-800/50 hover:text-emerald-600 hover:decoration-emerald-600 transition-colors">{item.title}</a>
                 <span class="text-xs text-zinc-500"> - {item.description}</span>
               </p>
             ) : (
@@ -63,6 +73,63 @@ const media = [
 
 <style>
   html {
-    background-color: black;
+    background-color: #09090b;
+  }
+
+  /* Essenceにカーソルが乗っている間だけ、/essence と同じオーロラ背景をフェードで見せる */
+  .home-aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .home-aurora.is-active {
+    opacity: 1;
+  }
+  .home-aurora .pa {
+    position: absolute;
+    width: var(--w);
+    height: var(--w);
+    border-radius: 9999px;
+    opacity: var(--o, 1);
+    background: radial-gradient(closest-side, rgba(var(--pc), 0.6) 0%, rgba(var(--pc), 0.24) 48%, rgba(var(--pc), 0) 100%);
+    will-change: transform;
+    animation: home-drift 24s ease-in-out infinite alternate;
+  }
+  @media (max-width: 767px) {
+    .home-aurora .pa {
+      width: calc(var(--w) * 0.62);
+      height: calc(var(--w) * 0.62);
+    }
+  }
+  @keyframes home-drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(48px, -36px, 0) scale(1.14); }
   }
 </style>
+
+<script>
+  function initHomeAurora() {
+    const link = document.getElementById('essence-link');
+    const aurora = document.getElementById('home-aurora');
+    if (!link || !aurora || link.dataset.auroraInitialized) return;
+    link.dataset.auroraInitialized = 'true';
+
+    const show = () => aurora.classList.add('is-active');
+    const hide = () => aurora.classList.remove('is-active');
+
+    link.addEventListener('mouseenter', show);
+    link.addEventListener('mouseleave', hide);
+    link.addEventListener('focus', show);
+    link.addEventListener('blur', hide);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHomeAurora);
+  } else {
+    initHomeAurora();
+  }
+</script>
