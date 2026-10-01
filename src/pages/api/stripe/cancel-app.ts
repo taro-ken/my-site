@@ -39,8 +39,10 @@ export const POST: APIRoute = async ({ request }) => {
         const currentPeriodEnd = currentPeriodEndUnix ? new Date(currentPeriodEndUnix * 1000) : null;
 
         // Webhookの到達を待たず、その場でFirestoreにも反映しておく(アプリ側の即時反映のため)。
+        // stripe_statusもStripeからの応答でここで直接書き込み、Webhook到着までのレースを無くす。
         await userRef.set(
             {
+                stripe_status: subscription.status,
                 stripe_cancel_at_period_end: true,
                 stripe_current_period_end: currentPeriodEnd,
                 updatedAt: new Date(),

@@ -2,15 +2,16 @@
 // Essenceへの参加ボタン。登録(/register)に進み、ログイン後にStripe決済へ進む。
 // 審査対応のため、アプリ内で決済を始めることはない(Webでの登録・決済のみ)。
 interface Props {
+  href?: string;
   size?: 'md' | 'lg';
   full?: boolean;
   class?: string;
 }
 
-const { size = 'md', full = false, class: className = '' } = Astro.props;
+const { href = '/register', size = 'md', full = false, class: className = '' } = Astro.props;
 ---
 
-<a href="/register" class:list={['dl-btn', size, { full }, className]}>
+<a href={href} class:list={['dl-btn', size, { full }, className]}>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
   Essenceに参加する
 </a>

@@ -30,12 +30,15 @@ export const POST: APIRoute = async ({ request }) => {
             return json({ error: "No active subscription found" }, 400);
         }
 
-        await stripe.subscriptions.update(subscriptionId, {
+        const subscription = await stripe.subscriptions.update(subscriptionId, {
             cancel_at_period_end: false,
         });
 
+        // Webhookの到達を待たず、その場でFirestoreにも反映しておく(アプリ側の即時反映のため)。
+        // stripe_statusもStripeからの応答でここで直接書き込み、Webhook到着までのレースを無くす。
         await userRef.set(
             {
+                stripe_status: subscription.status,
                 stripe_cancel_at_period_end: false,
                 updatedAt: new Date(),
             },
