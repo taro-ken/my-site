@@ -12,6 +12,9 @@ if (!isLoggedIn || !user) {
 // App Store公開後にIDを入れると、リンクが有効になる(未設定の間は「近日公開」の表示)。
 const APP_STORE_URL = '';
 
+// 自分(サイト管理者)のアカウントでログインしている時だけ、管理用リンクを表示する。
+const isAdmin = user.email === import.meta.env.ADMIN_EMAIL;
+
 const firebasePublicConfig = {
   apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
   authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -71,6 +74,17 @@ const firebasePublicConfig = {
       )}
       <a href="com.kk.essence://" class="text-center px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-all text-sm font-medium">アプリへ戻る</a>
     </div>
+
+    {isAdmin && (
+      <div class="max-w-md mt-10 p-6 rounded-2xl bg-zinc-950 border border-white/10 shadow-xl">
+        <h2 class="text-lg font-bold mb-5 text-white">管理</h2>
+        <div class="flex flex-col gap-3">
+          <a href="/admin/podcast" class="px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-all text-sm font-medium">Podcast管理</a>
+          <a href="/admin/courses" class="px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-all text-sm font-medium">Skills講座管理</a>
+          <a href="/admin/board" class="px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-all text-sm font-medium">掲示板の通報管理</a>
+        </div>
+      </div>
+    )}
   </main>
 </Layout>
 
