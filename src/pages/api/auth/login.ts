@@ -79,10 +79,10 @@ export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
         if (isPremium) {
             return redirect("/dashboard");
         } else {
-            return redirect("/membership");
+            return redirect("/api/stripe/checkout");
         }
     } catch {
         cookies.set("isPremium", "false", { path: "/" });
-        return redirect("/membership");
+        return redirect("/api/stripe/checkout");
     }
 };

@@ -6,13 +6,11 @@ const { isLoggedIn, isPremium, user } = Astro.locals;
 
 // Redirect strictly unauthorized users
 if (!isLoggedIn || !user) {
-  return Astro.redirect("/membership");
+  return Astro.redirect("/login");
 }
 
-// Non-subscribers cannot access dashboard
-if (!isPremium) {
-  return Astro.redirect("/");
-}
+// App Store公開後にIDを入れると、リンクが有効になる(未設定の間は「近日公開」の表示)。
+const APP_STORE_URL = '';
 
 const firebasePublicConfig = {
   apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
@@ -48,7 +46,24 @@ const firebasePublicConfig = {
           <p class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">ユーザーID</p>
           <p class="font-medium text-xs font-mono truncate text-zinc-400">{user.uid}</p>
         </div>
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">ステータス</p>
+          {isPremium ? (
+            <span class="inline-block px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-xs font-bold">Essenceメンバー</span>
+          ) : (
+            <span class="inline-block px-2.5 py-1 rounded-full bg-white/10 text-zinc-400 text-xs font-bold">非会員</span>
+          )}
+        </div>
       </div>
+    </div>
+
+    <div class="max-w-md mt-4 flex flex-col gap-3">
+      {APP_STORE_URL ? (
+        <a href={APP_STORE_URL} class="text-center px-5 py-3 rounded-xl bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-colors">App Storeで開く</a>
+      ) : (
+        <span class="text-center px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-zinc-500 text-sm font-bold">App Storeで近日公開</span>
+      )}
+      <a href="com.kk.essence://" class="text-center px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-all text-sm font-medium">アプリへ戻る</a>
     </div>
   </main>
 </Layout>

@@ -1,27 +1,19 @@
 ---
-// Essenceのダウンロードボタン。href(App StoreのURL)が空の間は、押せない「近日公開」の表示になる。
+// Essenceへの参加ボタン。登録(/register)に進み、ログイン後にStripe決済へ進む。
+// 審査対応のため、アプリ内で決済を始めることはない(Webでの登録・決済のみ)。
 interface Props {
-  href?: string;
   size?: 'md' | 'lg';
   full?: boolean;
   class?: string;
 }
 
-const { href = '', size = 'md', full = false, class: className = '' } = Astro.props;
-const ready = href !== '';
+const { size = 'md', full = false, class: className = '' } = Astro.props;
 ---
 
-{ready ? (
-  <a href={href} class:list={['dl-btn', size, { full }, className]}>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" /></svg>
-    アプリをダウンロード
-  </a>
-) : (
-  <span class:list={['dl-btn', 'off', size, { full }, className]} role="link" aria-disabled="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" /></svg>
-    App Storeで近日公開
-  </span>
-)}
+<a href="/register" class:list={['dl-btn', size, { full }, className]}>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+  Essenceに参加する
+</a>
 
 <style>
   .dl-btn {
@@ -47,12 +39,6 @@ const ready = href !== '';
     box-shadow: 0 16px 50px -10px rgba(52, 211, 153, 0.85);
   }
   .dl-btn.full { display: flex; width: 100%; }
-  .dl-btn.off {
-    cursor: default;
-    color: rgba(255, 255, 255, 0.72);
-    background: rgba(255, 255, 255, 0.07);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
-  }
   @media (min-width: 640px) {
     .dl-btn { padding: 0.875rem 1.75rem; font-size: 0.875rem; }
     .dl-btn.lg { padding: 1.05rem 2.25rem; font-size: 1rem; }
