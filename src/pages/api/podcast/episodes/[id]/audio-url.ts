@@ -37,7 +37,8 @@ export const GET: APIRoute = async ({ request, params }) => {
         adminDb.collection("podcastEpisodes").doc(episodeId).get(),
     ]);
 
-    if (userDoc.data()?.stripe_status !== "active") {
+    const userData = userDoc.data();
+    if (userData?.stripe_status !== "active" && userData?.apple_status !== "active") {
         return new Response(JSON.stringify({ error: "Subscription required" }), { status: 403 });
     }
     if (!episodeDoc.exists) {

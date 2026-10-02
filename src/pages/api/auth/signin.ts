@@ -45,8 +45,8 @@ export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
         // Check subscription status in Firestore → redirect accordingly
         try {
             const userDoc = await adminDb.collection('users').doc(decodedToken.uid).get();
-            const stripeStatus = userDoc.data()?.stripe_status;
-            const isPremium = stripeStatus === 'active';
+            const data = userDoc.data();
+            const isPremium = data?.stripe_status === 'active' || data?.apple_status === 'active';
 
             cookies.set("isPremium", isPremium ? "true" : "false", {
                 path: "/",

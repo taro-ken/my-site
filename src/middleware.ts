@@ -29,9 +29,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
             const user = await adminAuth.getUser(decodedToken.uid);
             context.locals.user = user;
 
-            // Check Firestore for premium status
+            // Check Firestore for premium status(Web/Stripeとアプリ内IAP、どちらでも会員扱いにする)
             const doc = await adminDb.collection('users').doc(decodedToken.uid).get();
-            if (doc.exists && doc.data()?.stripe_status === 'active') {
+            const data = doc.data();
+            if (doc.exists && (data?.stripe_status === 'active' || data?.apple_status === 'active')) {
                 context.locals.isPremium = true;
             }
         } catch (err) {
