@@ -1,8 +1,13 @@
 import type { APIRoute } from "astro";
 import { stripe } from "../../../lib/stripe";
 import { adminAuth } from "../../../lib/firebase/server";
+import { ESSENCE_JOIN_OPEN } from "../../../lib/essence";
 
 export const ALL: APIRoute = async ({ cookies, redirect, url }) => {
+    if (!ESSENCE_JOIN_OPEN) {
+        return redirect("/dashboard");
+    }
+
     const sessionCookie = cookies.get("session");
 
     if (!sessionCookie) {

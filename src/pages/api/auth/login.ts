@@ -1,5 +1,8 @@
 import type { APIRoute } from "astro";
 import { adminAuth, adminDb } from "../../../lib/firebase/server";
+import { ESSENCE_JOIN_OPEN } from "../../../lib/essence";
+
+const NON_MEMBER_URL = ESSENCE_JOIN_OPEN ? "/api/stripe/checkout" : "/dashboard";
 
 export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
     const formData = await request.formData();
@@ -79,10 +82,10 @@ export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
         if (isPremium) {
             return redirect("/dashboard");
         } else {
-            return redirect("/api/stripe/checkout");
+            return redirect(NON_MEMBER_URL);
         }
     } catch {
         cookies.set("isPremium", "false", { path: "/" });
-        return redirect("/api/stripe/checkout");
+        return redirect(NON_MEMBER_URL);
     }
 };

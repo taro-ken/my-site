@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { stripe } from "../../../lib/stripe";
 import { adminAuth } from "../../../lib/firebase/server";
+import { ESSENCE_JOIN_OPEN } from "../../../lib/essence";
 
 /**
  * ネイティブアプリ(Essence)向けのCheckout Sessionエンドポイント。
@@ -9,6 +10,10 @@ import { adminAuth } from "../../../lib/firebase/server";
  * 認証し、リダイレクトではなくJSONでCheckout URLを返す。
  */
 export const POST: APIRoute = async ({ request, url }) => {
+    if (!ESSENCE_JOIN_OPEN) {
+        return new Response(JSON.stringify({ error: "現在、新規参加は準備中です" }), { status: 403 });
+    }
+
     const authHeader = request.headers.get("Authorization");
     const idToken = authHeader?.split("Bearer ")[1];
 

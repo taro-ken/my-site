@@ -1,5 +1,8 @@
 import type { APIRoute } from "astro";
 import { adminAuth, adminDb } from "../../../lib/firebase/server";
+import { ESSENCE_JOIN_OPEN } from "../../../lib/essence";
+
+const NON_MEMBER_URL = ESSENCE_JOIN_OPEN ? "/api/stripe/checkout" : "/dashboard";
 
 export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
     // Extract ID Token from Authorization header
@@ -59,10 +62,10 @@ export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
             if (isPremium) {
                 return new Response(JSON.stringify({ success: true, url: "/dashboard" }), { status: 200 });
             }
-            return new Response(JSON.stringify({ success: true, url: "/api/stripe/checkout" }), { status: 200 });
+            return new Response(JSON.stringify({ success: true, url: NON_MEMBER_URL }), { status: 200 });
         } catch {
             cookies.set("isPremium", "false", { path: "/" });
-            return new Response(JSON.stringify({ success: true, url: "/api/stripe/checkout" }), { status: 200 });
+            return new Response(JSON.stringify({ success: true, url: NON_MEMBER_URL }), { status: 200 });
         }
     } catch (error: any) {
         console.error("Session creation error", error);

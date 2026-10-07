@@ -8,13 +8,22 @@ interface Props {
   class?: string;
 }
 
+import { ESSENCE_JOIN_OPEN } from '../lib/essence';
+
 const { href = '/register', size = 'md', full = false, class: className = '' } = Astro.props;
+const isPreparing = !ESSENCE_JOIN_OPEN;
 ---
 
-<a href={href} class:list={['dl-btn', size, { full }, className]}>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-  Essenceに参加する
-</a>
+{isPreparing ? (
+  <span role="button" aria-disabled="true" class:list={['dl-btn', 'is-disabled', size, { full }, className]}>
+    準備中
+  </span>
+) : (
+  <a href={href} class:list={['dl-btn', size, { full }, className]}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    Essenceに参加する
+  </a>
+)}
 
 <style>
   .dl-btn {
@@ -38,6 +47,13 @@ const { href = '/register', size = 'md', full = false, class: className = '' } =
     transform: translateY(-2px);
     filter: brightness(1.06);
     box-shadow: 0 16px 50px -10px rgba(52, 211, 153, 0.85);
+  }
+  .dl-btn.is-disabled {
+    color: #a1a1aa;
+    background: #27272a;
+    box-shadow: none;
+    cursor: not-allowed;
+    user-select: none;
   }
   .dl-btn.full { display: flex; width: 100%; }
   @media (min-width: 640px) {

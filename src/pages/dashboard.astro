@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import BackToHome from '../components/BackToHome.astro';
+import { ESSENCE_JOIN_OPEN } from '../lib/essence';
 
 const { isLoggedIn, isPremium, user } = Astro.locals;
 
@@ -62,7 +63,11 @@ const firebasePublicConfig = {
 
     {!isPremium && (
       <div class="max-w-md mt-4">
-        <a href="/api/stripe/checkout" class="block text-center px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-black text-sm font-bold hover:brightness-105 transition-all">Essenceに参加する</a>
+        {ESSENCE_JOIN_OPEN ? (
+          <a href="/api/stripe/checkout" class="block text-center px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-black text-sm font-bold hover:brightness-105 transition-all">Essenceに参加する</a>
+        ) : (
+          <span role="button" aria-disabled="true" class="block text-center px-5 py-3 rounded-xl bg-zinc-800 text-zinc-400 text-sm font-bold cursor-not-allowed select-none">準備中</span>
+        )}
       </div>
     )}
 
