@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 
 import { getBlogs, FILTER_EXCLUDE_GEARLIST } from '../lib/cms';
 
-const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://kentaro.life';
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://taroessence.com';
 
 const staticPages = [
   '',

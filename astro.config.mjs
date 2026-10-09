@@ -6,7 +6,7 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://kentaro.life',
+  site: 'https://taroessence.com',
   output: 'server',
   adapter: vercel(),
   integrations: [icon(), react()],

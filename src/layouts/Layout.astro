@@ -26,7 +26,7 @@ const {
   hideNav = false
 } = Astro.props;
 
-const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://kentaro.life";
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://taroessence.com";
 const currentUrl = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
 const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? ogImage : '/' + ogImage}`;
 

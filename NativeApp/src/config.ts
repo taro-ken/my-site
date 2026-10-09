@@ -1,4 +1,4 @@
-export const SITE_ORIGIN = 'https://kentaro.life';
+export const SITE_ORIGIN = 'https://taroessence.com';
 
 /** WebView からの表示をサイト側で判別するための User-Agent サフィックス */
 export const APP_WEBVIEW_USER_AGENT = 'TaroEssenceApp/1.0';
@@ -41,7 +41,7 @@ export function buildSiteUrl(path?: string, options?: BuildSiteUrlOptions): stri
 export function isInternalSiteUrl(url: string): boolean {
   try {
     const { hostname } = new URL(url);
-    return hostname === 'kentaro.life' || hostname === 'www.kentaro.life';
+    return hostname === 'taroessence.com' || hostname === 'www.taroessence.com';
   } catch {
     return false;
   }

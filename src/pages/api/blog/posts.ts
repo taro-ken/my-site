@@ -8,7 +8,7 @@ import {
 
 /**
  * ネイティブアプリ(Essence)向けブログ一覧エンドポイント。
- * kentaro.life/blog と同じデータソース(microCMS)・同じ絞り込み条件を使う。
+ * taroessence.com/blog と同じデータソース(microCMS)・同じ絞り込み条件を使う。
  * ブログ一覧は公開情報なので認証不要。
  */
 const HIDDEN_ROADMAP_ID = import.meta.env.MICROCMS_ENGINEERING_ROADMAP_ID || "gpx2f-h9gox";
