@@ -59,7 +59,7 @@
 - [ ] Search Console 用の meta タグ(新しいプロパティの確認コードに差し替え、またはDNS認証にする)
 
 ### 旧ドメインからの転送
-- [ ] Vercel で `kentaro.life` と `www.kentaro.life` を「`taroessence.com` へリダイレクト(308/301)」に設定
+- [x] Vercel で `kentaro.life` を 308 で `taroessence.com` へ転送(2026-10-09 済。パス・クエリ保持を確認。`www.kentaro.life` は元々 DNS 未設定のため対象外)
   - パスを保ったまま転送されることを確認(例: `kentaro.life/article/xxx` → `taroessence.com/article/xxx`)
 
 ## フェーズ3: 外部サービスの設定
@@ -74,7 +74,7 @@
 - [ ] 旧ドメイン(`kentaro.life`、`link.kentaro.life`)は 12/20 以降に承認済みドメイン・Hosting から削除
 
 ### Stripe
-- [ ] Webhook の送信先を `https://taroessence.com/api/stripe/webhook` に変更(新規作成した場合は署名シークレットを環境変数に入れ直す)
+- [x] Webhook の送信先を `https://taroessence.com/api/stripe/webhook` に変更(2026-10-09 済。既存の送信先を編集したので署名シークレットは変わらず)
 - [ ] ビジネス情報(サイトURL・サポートメール)、カスタマーポータル・領収書の表示URLを変更
 
 ### Apple
