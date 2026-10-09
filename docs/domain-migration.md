@@ -52,8 +52,8 @@
 - [x] `src/layouts/Layout.astro`・`src/pages/sitemap.xml.ts`・`src/pages/essence.astro` の既定URL
 - [x] 各ページの `canonicalUrl`(product / article / article/[slug] / gear-review/[slug] / contact / engineering-roadmap / purchase/materials / personal-projects)
 - [x] `src/pages/product.astro` の `https://kentaro.life/send` リンク
-- [x] 利用規約・プライバシーポリシー(`terms.astro` / `privacy.astro`)のサイト名(メールアドレスはフェーズ4で変更)
-- [ ] 特商法表記(`tokushoho.astro`)・`essence.astro` のメールアドレス
+- [x] 利用規約・プライバシーポリシー(`terms.astro` / `privacy.astro`)のサイト名とメールアドレス
+- [x] 特商法表記(`tokushoho.astro`)・`essence.astro` のメールアドレス(`hello@taroessence.com` に変更済)
 - [x] `src/pages/auth/action.astro` のコメント内URL
 - [x] `NativeApp/src/config.ts` の `SITE_ORIGIN` と許可ホスト
 - [ ] Search Console 用の meta タグ(新しいプロパティの確認コードに差し替え、またはDNS認証にする)
@@ -93,7 +93,7 @@
 
 ## フェーズ4: メール
 
-- [ ] Cloudflare Email Routing を `taroessence.com` で有効化し、`minimal@taroessence.com` を同じ受信箱へ転送
+- [x] Cloudflare Email Routing を `taroessence.com` で有効化し、`hello@taroessence.com` を同じ受信箱へ転送(2026-10-09 済。転送先 exiler2411k@gmail.com)
 - [ ] 送信もしている場合(Gmail の「別のアドレスから送信」等)は新アドレスで設定し直す
 - [ ] 新アドレスへの切替: Stripe / App Store Connect / Apple Developer / Google / YouTube / note / microCMS / Vercel / Firebase / お名前.com 等の登録メール
 - [ ] 旧アドレス `minimal@kentaro.life` は 12/20 まで転送を残し、届いたメールの送り主には新アドレスを案内
@@ -136,5 +136,5 @@
 - [ ] 新規登録・ログイン・ログアウトができる
 - [ ] パスワード再設定メールが届き、リンクから再設定できる(リンク先が新ドメイン)
 - [ ] Stripe の Webhook がダッシュボード上で成功している
-- [ ] `minimal@taroessence.com` 宛てのメールが届く
+- [x] `hello@taroessence.com` 宛てのメールが届く
 - [ ] Essence アプリ(開発ビルド)で新ドメインのAPIに接続できる
