@@ -59,7 +59,7 @@
 - [ ] Search Console 用の meta タグ(新しいプロパティの確認コードに差し替え、またはDNS認証にする)
 
 ### 旧ドメインからの転送
-- [x] Vercel で `kentaro.life` を 308 で `taroessence.com` へ転送(2026-10-09 済。パス・クエリ保持を確認。`www.kentaro.life` は元々 DNS 未設定のため対象外)
+- [x] `kentaro.life` の転送は Cloudflare のリダイレクトルールで 301(2026-10-09。DNS の `@` と `www` をプロキシ オン、式 `concat("https://taroessence.com", http.request.uri.path)`、クエリ保持)。Vercel は http→https を 308 で返すため、Search Console のアドレス変更が通らなかった
   - パスを保ったまま転送されることを確認(例: `kentaro.life/article/xxx` → `taroessence.com/article/xxx`)
 
 ## フェーズ3: 外部サービスの設定
@@ -89,9 +89,9 @@
 - 対応不要(Discord 連携は未使用。サイト・アプリから `/api/discord` への動線なし)
 
 ### Google Search Console
-- [ ] `taroessence.com` をプロパティとして追加・所有権確認
+- [x] `taroessence.com` をドメインプロパティとして追加・所有権確認(2026-10-09)
 - [ ] 新しいサイトマップ `https://taroessence.com/sitemap.xml` を送信
-- [ ] 旧プロパティ(`kentaro.life`)で「アドレス変更」ツールを実行(**旧ドメインの転送が有効な間しかできない**)
+- [x] 旧プロパティ(`kentaro.life`)で「アドレス変更」ツールを実行(2026-10-09 開始。Google は転送を 180 日以上残すことを推奨)
 
 ## フェーズ4: メール
 
