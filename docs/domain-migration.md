@@ -69,7 +69,9 @@
 - [ ] メールテンプレートのアクションURLを `https://taroessence.com/auth/action` に変更(**12/20 までに必須**)
   - コンソールから変更するとエラーになる(以前も Firebase サポートに依頼して設定してもらった)。サポートへ再依頼する
   - 変更されるまでは、`kentaro.life` → `taroessence.com` の 308 転送(パス・クエリ保持)で動作する
-- [ ] 認証メールの送信元ドメインを `taroessence.com` に設定(表示されるSPF/DKIMレコードを Cloudflare に追加)
+- [x] 認証メールの送信元を `Essence <essence@taroessence.com>` に変更(2026-10-09 済)
+  - SPF は Email Routing と 1 件に統合: `v=spf1 include:_spf.mx.cloudflare.net include:_spf.firebasemail.com ~all`
+  - TXT `firebase=fitw-prod`、CNAME `firebase1._domainkey` / `firebase2._domainkey`(DNS のみ)
 - [ ] メールリンク用ドメイン: Firebase Hosting に `link.taroessence.com` を接続(Cloudflare に指定レコードを追加)
 - [ ] 旧ドメイン(`kentaro.life`、`link.kentaro.life`)は 12/20 以降に承認済みドメイン・Hosting から削除
 
@@ -96,6 +98,14 @@
 - [x] Cloudflare Email Routing を `taroessence.com` で有効化し、`hello@taroessence.com` を同じ受信箱へ転送(2026-10-09 済。転送先 exiler2411k@gmail.com)
 - [ ] 送信もしている場合(Gmail の「別のアドレスから送信」等)は新アドレスで設定し直す
 - [ ] 新アドレスへの切替: Stripe / App Store Connect / Apple Developer / Google / YouTube / note / microCMS / Vercel / Firebase / お名前.com 等の登録メール
+### Kit(メルマガ・無料 E-Book 配布)
+- [x] 送信ドメイン `taroessence.com` を認証(2026-10-09 済。Cloudflare に CNAME 3 件 `ckespa` / `cka._domainkey` / `cka2._domainkey` と TXT `_dmarc` を追加)
+- [x] 差出人 `hello@taroessence.com` を追加・確認(2026-10-09 済)
+- [x] `hello@taroessence.com` を Default にする(2026-10-09 済)
+- [x] シーケンスは無料プランのため未使用(対応不要)
+- [ ] フォームの登録後リダイレクト先を `https://taroessence.com/minimalplan` に変更(E-Book のフォーム)
+- [x] `minimal@kentaro.life` と送信ドメイン `kentaro.life` を削除(2026-10-09)
+
 - [ ] 旧アドレス `minimal@kentaro.life` は 12/20 まで転送を残し、届いたメールの送り主には新アドレスを案内
 
 ## フェーズ5: アプリ
