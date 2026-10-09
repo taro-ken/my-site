@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { PanInfo } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './SlidePresentation.css';
 
 interface Slide {
@@ -16,36 +16,27 @@ const slides: Slide[] = Array.from({ length: 22 }, (_, i) => ({
     alt: `Slide ${i + 1}`,
 }));
 
+const FADE_MS = 300;
+
+const wrap = (index: number) => (index + slides.length) % slides.length;
+
 export default function SlidePresentation() {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [direction, setDirection] = useState(0);
+    // フェード中、新しいスライドの下に不透明のまま残す直前のスライド
+    const [previousSlide, setPreviousSlide] = useState<number | null>(null);
+    const fadeTimer = useRef<number | undefined>(undefined);
 
-    const slideVariants = {
-        enter: (direction: number) => ({
-            opacity: 0,
-        }),
-        center: {
-            opacity: 1,
-        },
-        exit: (direction: number) => ({
-            opacity: 0,
-        }),
-    };
-
-    const nextSlide = () => {
-        setDirection(1);
-        setCurrentSlide((prev) => (prev + 1) % slides.length);
-    };
-
-    const prevSlide = () => {
-        setDirection(-1);
-        setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    };
-
-    const goToSlide = (index: number) => {
-        setDirection(index > currentSlide ? 1 : -1);
+    const showSlide = (index: number) => {
+        if (index === currentSlide) return;
+        setPreviousSlide(currentSlide);
         setCurrentSlide(index);
+        window.clearTimeout(fadeTimer.current);
+        fadeTimer.current = window.setTimeout(() => setPreviousSlide(null), FADE_MS);
     };
+
+    const nextSlide = () => showSlide(wrap(currentSlide + 1));
+    const prevSlide = () => showSlide(wrap(currentSlide - 1));
+    const goToSlide = (index: number) => showSlide(index);
 
     // Handle drag end for swipe detection
     const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -60,28 +51,6 @@ export default function SlidePresentation() {
         }
     };
 
-    // Preload only next and previous slides for better performance
-    useEffect(() => {
-        const preloadImages = () => {
-            const imagesToPreload = [];
-
-            // Preload next slide
-            const nextIndex = (currentSlide + 1) % slides.length;
-            imagesToPreload.push(slides[nextIndex].image);
-
-            // Preload previous slide
-            const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-            imagesToPreload.push(slides[prevIndex].image);
-
-            imagesToPreload.forEach((src) => {
-                const img = new Image();
-                img.src = src;
-            });
-        };
-
-        preloadImages();
-    }, [currentSlide]);
-
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowRight') {
@@ -95,35 +64,37 @@ export default function SlidePresentation() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [currentSlide]);
 
+    useEffect(() => () => window.clearTimeout(fadeTimer.current), []);
+
+    // 前後のスライドも常に DOM に置き、切り替え時に画像の読み込み・デコードが起きないようにする
+    const mounted = new Set([wrap(currentSlide - 1), currentSlide, wrap(currentSlide + 1)]);
+    if (previousSlide !== null) mounted.add(previousSlide);
+
     return (
         <div className="slide-container">
-            <AnimatePresence initial={false} custom={direction} mode="wait">
-                <motion.div
-                    key={currentSlide}
-                    custom={direction}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                        duration: 0.3,
-                        ease: "easeInOut",
-                    }}
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.2}
-                    onDragEnd={handleDragEnd}
-                    className="slide"
-                >
-                    <img
-                        src={slides[currentSlide].image}
-                        alt={slides[currentSlide].alt}
-                        className="slide-image"
-                        loading="eager"
-                        draggable={false}
-                    />
-                </motion.div>
-            </AnimatePresence>
+            <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
+                className="slide-track"
+            >
+                {[...mounted].map((index) => {
+                    const state =
+                        index === currentSlide ? 'is-current' : index === previousSlide ? 'is-previous' : '';
+                    return (
+                        <div key={slides[index].id} className={`slide ${state}`}>
+                            <img
+                                src={slides[index].image}
+                                alt={slides[index].alt}
+                                className="slide-image"
+                                loading="eager"
+                                draggable={false}
+                            />
+                        </div>
+                    );
+                })}
+            </motion.div>
 
             {/* Navigation Buttons */}
             <button
