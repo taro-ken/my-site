@@ -90,7 +90,7 @@
 
 ### Google Search Console
 - [x] `taroessence.com` をドメインプロパティとして追加・所有権確認(2026-10-09)
-- [ ] 新しいサイトマップ `https://taroessence.com/sitemap.xml` を送信
+- [x] 新しいサイトマップ `https://taroessence.com/sitemap.xml` を送信(2026-10-09)
 - [x] 旧プロパティ(`kentaro.life`)で「アドレス変更」ツールを実行(2026-10-09 開始。Google は転送を 180 日以上残すことを推奨)
 
 ## フェーズ4: メール
@@ -103,7 +103,7 @@
 - [x] 差出人 `hello@taroessence.com` を追加・確認(2026-10-09 済)
 - [x] `hello@taroessence.com` を Default にする(2026-10-09 済)
 - [x] シーケンスは無料プランのため未使用(対応不要)
-- [ ] フォームの登録後リダイレクト先を `https://taroessence.com/minimalplan` に変更(E-Book のフォーム)
+- [x] ~~フォームの登録後リダイレクト先を `https://taroessence.com/minimalplan` に変更(E-Book のフォーム)~~(Substack へ移行したため不要)
 - [x] `minimal@kentaro.life` と送信ドメイン `kentaro.life` を削除(2026-10-09)
 
 - [ ] 旧アドレス `minimal@kentaro.life` は 12/20 まで転送を残し、届いたメールの送り主には新アドレスを案内
