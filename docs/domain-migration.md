@@ -108,6 +108,13 @@
 
 - [ ] 旧アドレス `minimal@kentaro.life` は 12/20 まで転送を残し、届いたメールの送り主には新アドレスを案内
 
+### ニュースレター(Kit → Substack に一本化)
+- [x] Substack のウェルカムメールに E-Book(`https://taroessence.com/minimalplan`)のボタンを設定
+- [x] `/send` とポップアップの登録フォームを Substack(`kentarokk.substack.com/embed`)に変更(2026-10-09)
+- [x] Kit の購読者を CSV で書き出し、Substack にインポート(2026-10-09、審査待ち)
+- [ ] インポート完了と人数を確認
+- [ ] Kit のフォーム 2 つを停止(アカウントはしばらく残す)
+
 ## フェーズ5: アプリ
 
 ### Essence(未リリース。リリース前に必ず)
