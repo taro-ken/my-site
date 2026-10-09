@@ -24,16 +24,6 @@ export default function NewsletterPopup() {
         if (isOpen) {
             // Prevent scrolling when modal is open
             document.body.style.overflow = 'hidden';
-
-            // Inject the Kit script into the container
-            const container = document.getElementById('kit-form-container');
-            if (container && !container.querySelector('script')) {
-                const script = document.createElement('script');
-                script.async = true;
-                script.dataset.uid = "62545307c6";
-                script.src = "https://kentaro.kit.com/62545307c6/index.js";
-                container.appendChild(script);
-            }
         } else {
             document.body.style.overflow = 'unset';
         }
@@ -79,39 +69,13 @@ export default function NewsletterPopup() {
                                 よりシンプルに、より本質的な視点を。<br />最新の記事やプロジェクトのアップデートをお届けします。
                             </p>
 
-                            {/* Kit Form Placeholder/Target */}
-                            <div id="kit-form-container" className="flex items-center justify-center bg-zinc-900/5 rounded-md">
-                                {/* Kit script will inject form here */}
-                            </div>
+                            <iframe
+                                src="https://kentarokk.substack.com/embed"
+                                title="ニュースレターを購読"
+                                className="block w-full h-[150px] mt-4 border-0 bg-transparent"
+                                scrolling="no"
+                            />
                         </div>
-
-                        <style dangerouslySetInnerHTML={{
-                            __html: `
-              /* Custom styles for Kit form to match your theme */
-              #kit-form-container iframe {
-                width: 100% !important;
-                border: none !important;
-              }
-              .formkit-powered-by-convertkit-container,
-              .formkit-powered-by-convertkit {
-                display: none !important;
-                opacity: 0 !important;
-                visibility: hidden !important;
-                height: 0 !important;
-                padding: 0 !important;
-                margin: 0 !important;
-              }
-              /* Ensure the Kit form's own modal styles don't conflict or appear */
-              .formkit-modal {
-                position: static !important;
-                display: block !important;
-                opacity: 1 !important;
-                visibility: visible !important;
-                background: transparent !important;
-                padding: 0 !important;
-                box-shadow: none !important;
-              }
-            ` }} />
                     </motion.div>
                 </div>
             )}

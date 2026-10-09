@@ -6,6 +6,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
     <title>E-book受け取り</title>
     <meta name="description" content="E-book受け取りページ" />
     <style is:global>
@@ -21,32 +22,88 @@
           sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        background: #ffffff;
+        background: #000000;
+        color: #fafafa;
+        color-scheme: dark;
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 2rem;
+        padding: 2rem 1.25rem;
       }
 
       .container {
-        max-width: 800px;
+        max-width: 560px;
         width: 100%;
-      }
-      .formkit-powered-by-convertkit-container,
-      .formkit-powered-by-convertkit {
-        display: none !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        padding: 0 !important;
-        margin: 0 !important;
+        text-align: center;
       }
 
+      .cover {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      .label {
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: #ffffff;
+        background: #172c1f;
+        padding: 0.3rem 0.9rem;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+      }
+
+      .lead {
+        font-size: 0.9rem;
+        line-height: 1.8;
+        color: #a1a1aa;
+        margin-bottom: 1rem;
+      }
+
+      .form-card {
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      /* 高さ 150px 以下だと Substack 側が誌名の見出しを非表示にする */
+      .form {
+        display: block;
+        width: 100%;
+        height: 150px;
+        border: none;
+        background: transparent;
+      }
     </style>
   </head>
   <body>
-    <div class="container">
-    <script async data-uid="0fd0943f50" src="https://kentaro.kit.com/0fd0943f50/index.js"></script>
+    <main class="container">
+      <img class="cover" src="/assets/resource/50rules.png" alt="50 Minimal Life Rules" width="1920" height="1080" />
+      <p class="label">無料 E-Book</p>
+      <h1>心とお金にゆとりを生む<br />50のミニマルライフルール</h1>
+      <p class="lead">
+        登録後すぐに、E-Book のリンクをメールでお届けします。
+      </p>
+      <div class="form-card">
+        <iframe
+          class="form"
+          src="https://kentarokk.substack.com/embed"
+          title="E-Book を受け取る"
+          frameborder="0"
+          scrolling="no"
+        ></iframe>
+      </div>
+    </main>
   </body>
 </html>
