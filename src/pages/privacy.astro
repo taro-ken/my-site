@@ -6,7 +6,7 @@ import LegalDocument from '../components/LegalDocument.astro';
   title="プライバシーポリシー"
   description="Essence（iPhoneアプリ）および taroessence.com における個人情報・データの取り扱いについて。"
   established="2026年9月20日"
-  revised="2026年9月20日"
+  revised="2026年10月10日"
 >
   <section>
     <h2>はじめに</h2>
@@ -26,7 +26,7 @@ import LegalDocument from '../components/LegalDocument.astro';
     <h2>2. 取得する情報</h2>
     <ul>
       <li><strong>アカウント情報</strong>：メールアドレスおよびパスワード。パスワードは認証基盤（Firebase Authentication）が暗号化して管理し、運営者が平文で保持することはありません。</li>
-      <li><strong>決済・課金に関する情報</strong>：お支払いは決済事業者 Stripe が処理します。カード番号等のカード情報を運営者が取得・保管することはありません。運営者は、Stripe の顧客ID・サブスクリプションID・課金状態（有効／解約）のみを保持します。</li>
+      <li><strong>決済・課金に関する情報</strong>：お支払いは、アプリ内ではApple（App Store）が、Webサイトでは決済事業者 Stripe が処理します。カード番号等のカード情報を運営者が取得・保管することはありません。運営者は、Stripe の顧客ID・サブスクリプションID、Apple の取引ID、および課金状態（有効／解約）のみを保持します。</li>
       <li><strong>Community の情報</strong>：ニックネーム、投稿・返信の内容と日時。通報が行われた場合は、通報者のID、対象の投稿・返信、通報理由。</li>
       <li><strong>Personal の記録</strong>：ジャーナル、ディープワークの記録、バランスシート（資産・負債の項目と金額）、瞑想の記録、スキル講座の視聴進捗。これらはご自身のアカウントにのみ紐づき、他のメンバーには表示されません。</li>
       <li><strong>ヘルスケアのデータ</strong>：ユーザーの許可のもとで、iPhone の「ヘルスケア」から歩数・睡眠時間・ワークアウトを<strong>読み取ります</strong>。表示のために、週ごとの集計値（歩数・日別の歩数・睡眠時間・ワークアウトの回数と時間）をご自身のアカウントに保存します。ヘルスケアへの書き込みは行いません。</li>
@@ -62,7 +62,8 @@ import LegalDocument from '../components/LegalDocument.astro';
     <p>運営者は、法令に基づく場合を除き、ご本人の同意なく個人データを第三者に提供しません。本サービスの提供にあたり、次の事業者のサービスを利用しています。</p>
     <ul>
       <li><strong>Google（Firebase）</strong>：ユーザー認証、データベース（Firestore）</li>
-      <li><strong>Stripe</strong>：サブスクリプションのお支払い処理</li>
+      <li><strong>Apple（App Store）</strong>：アプリ内課金のお支払い処理</li>
+      <li><strong>Stripe</strong>：Webサイトからのお申し込みの場合の、サブスクリプションのお支払い処理</li>
       <li><strong>Vercel</strong>：Web サイト・API のホスティング、アクセス解析</li>
       <li><strong>Cloudflare</strong>：Podcast の音声・スキル講座の動画の配信</li>
       <li><strong>microCMS</strong>：Article 記事の配信</li>
@@ -86,7 +87,8 @@ import LegalDocument from '../components/LegalDocument.astro';
     </ul>
     <p>
       ご利用中のアカウントは taroessence.com と共通のため、削除により Web サイト側のアカウントも同時に削除されます。
-      なお、決済に関する記録は、法令に基づき決済事業者（Stripe）が一定期間保持する場合があります。
+      なお、App Storeで登録したサブスクリプションは、アカウントを削除しても自動では解約されません。iPhoneの設定アプリ → Apple ID → サブスクリプションから、別途解約してください。
+      決済に関する記録は、法令に基づき決済事業者（Apple、Stripe）が一定期間保持する場合があります。
       システムのバックアップからデータが完全に消えるまで、一定の期間を要する場合があります。
     </p>
   </section>

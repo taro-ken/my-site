@@ -2,6 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import EssenceDownloadButton from '../components/EssenceDownloadButton.astro';
 import BackToHome from '../components/BackToHome.astro';
+import { ESSENCE_JOIN_OPEN } from '../lib/essence';
+
+// Webからの申し込み(Stripe)が開いている間だけ、Web決済に触れる文言にする。閉じている間はアプリ内課金(App Store)のみを案内する。
+const webOpen = ESSENCE_JOIN_OPEN;
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://taroessence.com';
 const pageUrl = `${siteUrl}/essence`;
@@ -106,8 +110,8 @@ const personalCards = [
 ];
 
 const steps = [
-  { n: '01', icon: 'user', t: 'アカウントを作成', d: 'Essenceアプリを開き、アカウントを作成（またはログイン）します。' },
-  { n: '02', icon: 'card', t: 'メンバーシップに登録', d: 'アプリ内の案内から、月額990円のメンバーシップに登録します。決済はStripeで安全に処理されます。' },
+  { n: '01', icon: 'user', t: 'アカウントを作成', d: webOpen ? 'EssenceアプリまたはWebサイトで、アカウントを作成（またはログイン）します。' : 'Essenceアプリを開き、アカウントを作成（またはログイン）します。' },
+  { n: '02', icon: 'card', t: 'メンバーシップに登録', d: webOpen ? '月額1,500円のメンバーシップに登録します。アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお支払いいただけます。' : 'アプリ内の案内から、月額1,500円のメンバーシップに登録します。お支払いはApp Storeのアカウントで行います。' },
   { n: '03', icon: 'leaf', t: 'すべての機能を使う', d: 'ホーム画面から、Podcast・Article・Skills・Community・Item List・Personalへ。' },
 ];
 
@@ -120,15 +124,15 @@ const pricingPoints = [
 
 const billingTerms = [
   { k: '課金', v: '初回お申し込み時、およびその後1か月ごとに自動更新されます。' },
-  { k: '解約', v: 'アプリの「設定」→「サブスクリプションを解約する」からいつでも可能です。次回更新日の前日までに手続きすると、次回以降の請求は発生しません。手続き完了後は、直ちにご利用が終了します。' },
-  { k: '返金', v: 'デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。' },
-  { k: 'お支払い', v: 'クレジットカード（Stripe）／ Apple Pay' },
+  { k: '解約', v: webOpen ? 'いつでも可能です。App Storeで登録した場合は、アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から、Webサイトで登録した場合は、アプリの「設定」→「サブスクリプションを解約する」から手続きします。次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。' : 'いつでも可能です。アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から手続きします。次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。' },
+  { k: '返金', v: 'デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。App Storeでのご購入は、Appleの規定に従います。' },
+  { k: 'お支払い', v: webOpen ? 'アプリ内: App Store ／ Webサイト: クレジットカード（Stripe）・Apple Pay' : 'App Store（アプリ内課金）' },
 ];
 
 const faq = [
   { q: 'Essenceとは、どんなアプリですか？', a: 'やりたくないことを減らし、自由な時間とお金を増やしていくための、メンバー向けアプリケーションです。音声（Podcast）、スキル講座（Skills）、記事（Article）でまず学び、持ち物の記録（Item List）やお金・時間を把握するツール（Personal）を使い、同じ方向を向くメンバーと話せる場（Community）まで、1つにまとめています。' },
-  { q: '料金と支払い方法を教えてください。', a: '月額990円（税込）のメンバーシップです。お支払いはクレジットカード（Stripe）またはApple Payで、初回お申し込み時とその後1か月ごとに自動で決済されます。登録はアプリ内から行います。' },
-  { q: '解約するには？ 返金はできますか？', a: 'アプリの「設定」→「サブスクリプションを解約する」からいつでも解約できます。次回更新日の前日までに手続きすると、次回以降の請求は発生しません。デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。詳細は<a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>をご確認ください。' },
+  { q: '料金と支払い方法を教えてください。', a: webOpen ? '月額1,500円（税込）のメンバーシップです。初回お申し込み時とその後1か月ごとに自動で決済されます。お支払いは、アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）またはApple Payです。どちらで登録しても、同じアカウントでアプリをご利用いただけます。' : '月額1,500円（税込）のメンバーシップです。お支払いはApp Storeのアカウントで、初回お申し込み時とその後1か月ごとに自動で決済されます。登録はアプリ内から行います。Webサイトからのお申し込みは、アプリのリリース後に開始予定です。' },
+  { q: '解約するには？ 返金はできますか？', a: (webOpen ? 'いつでも解約できます。App Storeで登録した場合はアプリの「設定」→「サブスクリプションを管理」から、Webサイトで登録した場合は「設定」→「サブスクリプションを解約する」から手続きします。' : 'いつでも解約できます。アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から手続きします。') + '次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。詳細は<a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>をご確認ください。' },
   { q: 'Personalに記録した内容は、他の人に見えますか？', a: 'いいえ。ジャーナル、ディープワーク、バランスシート、瞑想の記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。' },
   { q: 'ヘルスケアのデータは、何を取得しますか？', a: '歩数・睡眠時間・ワークアウトのみを、あなたの許可のもとで「読み取り」ます。ヘルスケアへの書き込みは一切行いません。表示のために、週ごとの集計値をあなたのアカウントに保存します。連携はiPhoneの設定からいつでも変更できます。' },
   { q: 'Communityでの不適切な投稿はどうなりますか？', a: 'Communityはメンバー限定の場です。不適切な投稿は運営が確認のうえ削除します。ご自身の投稿は、いつでもご自身で削除できます。' },
@@ -143,11 +147,11 @@ const jsonLd = {
   url: pageUrl,
   operatingSystem: 'iOS 17+',
   applicationCategory: 'LifestyleApplication',
-  description: 'Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額990円（税込）。',
+  description: 'Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額1,500円（税込）。',
   image: `${siteUrl}/assets/essence/app-icon.png`,
   offers: {
     '@type': 'Offer',
-    price: '990',
+    price: '1500',
     priceCurrency: 'JPY',
     description: '月額メンバーシップ（税込・1か月ごとの自動更新）',
   },
@@ -157,7 +161,7 @@ const jsonLd = {
 
 <Layout
   title="Essence｜選べる人生を、創る。"
-  description="Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額990円（税込）。"
+  description="Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額1,500円（税込）。"
   keywords="Essence, Taro Essence, ミニマリズム, 習慣, セルフマネジメント, Podcast, スキル, アプリケーション, 働き方, サイドFIRE"
   ogImage="/assets/essence/app-icon.png"
 >
@@ -207,7 +211,7 @@ const jsonLd = {
 
           <ul class="reveal mt-5 sm:mt-8 flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-1.5 sm:gap-y-2 text-[10px] sm:text-xs text-zinc-400" style="--d:320ms">
             <li class="flex items-center gap-2"><span class="dot"></span>iPhone（iOS 17以降）</li>
-            <li class="flex items-center gap-2"><span class="dot"></span>月額 ¥990（税込）</li>
+            <li class="flex items-center gap-2"><span class="dot"></span>月額 ¥1,500（税込）</li>
             <li class="flex items-center gap-2"><span class="dot"></span>いつでも解約可能</li>
             <li><a href="#pricing" class="underline underline-offset-4 text-zinc-300 hover:text-white transition-colors">料金・解約について</a></li>
           </ul>
@@ -382,7 +386,7 @@ const jsonLd = {
         ))}
       </div>
       <div class="reveal mt-8 md:mt-14 text-center">
-        <p class="text-xs md:text-sm font-bold text-zinc-300">6つの機能、月額990円ですべて使えます。</p>
+        <p class="text-xs md:text-sm font-bold text-zinc-300">6つの機能、月額1,500円ですべて使えます。</p>
         <div class="mt-4 flex justify-center"><EssenceDownloadButton href={joinHref} /></div>
       </div>
     </section>
@@ -494,7 +498,7 @@ const jsonLd = {
             <div class="gborder-inner p-8 md:p-10 h-full flex flex-col">
               <p class="text-xs font-bold tracking-[0.22em] uppercase text-emerald-200/80">Essence Membership</p>
               <div class="mt-6 flex items-end gap-2">
-                <span class="text-6xl md:text-7xl font-black tracking-tighter">¥990</span>
+                <span class="text-6xl md:text-7xl font-black tracking-tighter">¥1,500</span>
                 <span class="mb-2 text-sm font-bold text-zinc-400">/ 月（税込）</span>
               </div>
               <ul class="mt-8 space-y-4">
@@ -508,7 +512,7 @@ const jsonLd = {
               <div class="mt-auto pt-8">
                 <EssenceDownloadButton href={joinHref} full />
                 <p class="mt-4 text-xs leading-relaxed text-zinc-500">
-                  登録・お支払いはEssenceアプリ内から行います。Webからのお申し込みは受け付けておりません。
+                  {webOpen ? 'アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお申し込みいただけます。どちらも同じアカウントでご利用いただけます。' : '登録・お支払いはEssenceアプリ内から行います。Webからのお申し込みは、アプリのリリース後に開始予定です。'}
                 </p>
               </div>
             </div>
@@ -574,8 +578,8 @@ const jsonLd = {
           <dl class="grid sm:grid-cols-[9rem_1fr] gap-x-6 gap-y-4 text-sm">
             <dt class="text-zinc-500">サービス名</dt><dd class="text-zinc-200">Essence（アプリケーション）</dd>
             <dt class="text-zinc-500">運営者</dt><dd class="text-zinc-200">taro.（Taro Essence）</dd>
-            <dt class="text-zinc-500">料金</dt><dd class="text-zinc-200">月額990円（税込）／ 1か月ごとの自動更新</dd>
-            <dt class="text-zinc-500">お支払い方法</dt><dd class="text-zinc-200">クレジットカード（Stripe）／ Apple Pay</dd>
+            <dt class="text-zinc-500">料金</dt><dd class="text-zinc-200">月額1,500円（税込）／ 1か月ごとの自動更新</dd>
+            <dt class="text-zinc-500">お支払い方法</dt><dd class="text-zinc-200">{webOpen ? 'アプリ内: App Store ／ Webサイト: クレジットカード（Stripe）・Apple Pay' : 'App Store（アプリ内課金）'}</dd>
             <dt class="text-zinc-500">お問い合わせ</dt>
             <dd class="text-zinc-200">
               <a href="mailto:hello@taroessence.com" class="underline underline-offset-4 hover:text-white">hello@taroessence.com</a>
