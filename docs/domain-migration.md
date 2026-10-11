@@ -74,6 +74,12 @@
   - TXT `firebase=fitw-prod`、CNAME `firebase1._domainkey` / `firebase2._domainkey`(DNS のみ)
 - [ ] メールリンク用ドメイン: Firebase Hosting に `link.taroessence.com` を接続(Cloudflare に指定レコードを追加)
 - [ ] 旧ドメイン(`kentaro.life`、`link.kentaro.life`)は 12/20 以降に承認済みドメイン・Hosting から削除
+- [x] Google Cloud → 認証情報 → Browser key のウェブサイト制限に `https://taroessence.com/*` と `https://www.taroessence.com/*` を追加(2026-10-11 済)
+  - 未追加だと Web のログイン・登録・パスワード再設定が `Requests from referer ... are blocked` で失敗する(アプリは影響なし)
+
+### Cloudflare R2(Podcast 音声・講座動画のアップロード)
+- [x] バケットの CORS ポリシーの `AllowedOrigins` を `https://taroessence.com` / `https://www.taroessence.com` に変更(2026-10-11 済)
+  - 未変更だと管理画面のアップロードが `Failed to fetch` で失敗する
 
 ### Stripe
 - [x] Webhook の送信先を `https://taroessence.com/api/stripe/webhook` に変更(2026-10-09 済。既存の送信先を編集したので署名シークレットは変わらず)
