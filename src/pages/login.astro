@@ -94,6 +94,13 @@ const firebasePublicConfig = {
               </svg>
             </button>
           </div>
+          <div class="mt-2 text-right">
+            <a
+              href="/forgot-password"
+              id="forgot-link"
+              class="text-xs font-medium text-zinc-400 hover:text-white hover:underline underline-offset-4 transition-colors"
+            >パスワードをお忘れですか？</a>
+          </div>
         </div>
 
         <button 
@@ -152,6 +159,12 @@ const firebasePublicConfig = {
         btn.classList.remove('bg-accent', 'hover:bg-accent-hover');
       }
     }
+
+    const forgotLink = document.getElementById('forgot-link');
+    forgotLink.addEventListener('click', function () {
+      const email = emailInput.value.trim();
+      if (email) forgotLink.href = '/forgot-password?email=' + encodeURIComponent(email);
+    });
 
     emailInput.addEventListener('input', updateButtonStyle);
     passwordInput.addEventListener('input', updateButtonStyle);
