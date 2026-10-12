@@ -28,7 +28,7 @@ import LegalDocument from '../components/LegalDocument.astro';
       <li><strong>アカウント情報</strong>：メールアドレスおよびパスワード。パスワードは認証基盤（Firebase Authentication）が暗号化して管理し、運営者が平文で保持することはありません。</li>
       <li><strong>決済・課金に関する情報</strong>：お支払いは、アプリ内ではApple（App Store）が、Webサイトでは決済事業者 Stripe が処理します。カード番号等のカード情報を運営者が取得・保管することはありません。運営者は、Stripe の顧客ID・サブスクリプションID、Apple の取引ID、および課金状態（有効／解約）のみを保持します。</li>
       <li><strong>Community の情報</strong>：ニックネーム、投稿・返信の内容と日時。通報が行われた場合は、通報者のID、対象の投稿・返信、通報理由。</li>
-      <li><strong>Personal の記録</strong>：ジャーナル、ディープワークの記録、バランスシート（資産・負債の項目と金額）、瞑想の記録、スキル講座の視聴進捗。これらはご自身のアカウントにのみ紐づき、他のメンバーには表示されません。</li>
+      <li><strong>各ツールの記録</strong>：バランスシート（資産・負債の項目と金額）、瞑想の記録、スキル講座の視聴進捗。これらはご自身のアカウントにのみ紐づき、他のメンバーには表示されません。</li>
       <li><strong>ヘルスケアのデータ</strong>：ユーザーの許可のもとで、iPhone の「ヘルスケア」から歩数・睡眠時間・ワークアウトを<strong>読み取ります</strong>。表示のために、週ごとの集計値（歩数・日別の歩数・睡眠時間・ワークアウトの回数と時間）をご自身のアカウントに保存します。ヘルスケアへの書き込みは行いません。</li>
       <li><strong>持ち物リスト（Item List）のデータ</strong>：Web 版「Minima」と共有される、持ち物の名称・写真・価格・購入日・使用頻度・メモ、カテゴリ、ウィッシュリスト、外部同期（Notion／Google Sheets）の設定情報。</li>
       <li><strong>端末内に保存する情報</strong>：外観設定、実行中のタイマーの状態、瞑想BGMの選択、ヘルスケア連携の完了状況、ブロックしたユーザーの情報。これらは端末内にのみ保存され、運営者のサーバーには送信されません。</li>
@@ -40,7 +40,7 @@ import LegalDocument from '../components/LegalDocument.astro';
     <h2>3. 利用目的</h2>
     <ul>
       <li>アカウントの作成・ログイン・本人確認、会員資格（課金状態）の判定</li>
-      <li>Podcast・Article・Skills・Community・Item List・Personal など本サービスの提供・運営</li>
+      <li>Podcast・Article・Skills・Community・Item List・Balance Sheet・Meditation・Healthcare など本サービスの提供・運営</li>
       <li>お問い合わせへの対応、不正利用・不適切な投稿への対応</li>
       <li>サービスの維持・改善、重要なお知らせの連絡</li>
       <li>法令に基づく対応</li>
@@ -51,7 +51,7 @@ import LegalDocument from '../components/LegalDocument.astro';
   <section>
     <h2>4. ヘルスケアデータの取り扱い</h2>
     <p>
-      ヘルスケアのデータは、Personal の「ヘルスケア連携」で歩数・睡眠・ワークアウトを表示する目的にのみ利用します。
+      ヘルスケアのデータは、「Healthcare」（ヘルスケア連携）で歩数・睡眠・ワークアウトを表示する目的にのみ利用します。
       広告・マーケティング・データ販売の目的では利用せず、第三者へ提供することもありません。
       連携は、iPhone の「設定」→「ヘルスケア」→「データアクセスとデバイス」→「Essence」からいつでも変更・停止できます。
     </p>
@@ -80,7 +80,7 @@ import LegalDocument from '../components/LegalDocument.astro';
       アプリの「設定」→「アカウントを削除」から、いつでもアカウントを削除できます。削除を実行すると、次のデータをすべて削除し、元に戻すことはできません。
     </p>
     <ul>
-      <li>Firebase の認証情報、および Firestore 上のすべてのデータ（Personal の記録、ヘルスケアの週次サマリー、講座の進捗など）</li>
+      <li>Firebase の認証情報、および Firestore 上のすべてのデータ（バランスシート・瞑想の記録、ヘルスケアの週次サマリー、講座の進捗など）</li>
       <li>Community のご自身の投稿・返信、通報に関する情報</li>
       <li>Stripe の顧客情報（サブスクリプションは即時終了し、保存されたカード情報も削除されます）</li>
       <li>Minima（持ち物リスト・ウィッシュリスト・カテゴリ・外部同期の設定・写真）のデータ</li>

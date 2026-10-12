@@ -3,10 +3,11 @@ import { adminAuth, adminDb } from "../../../../../../lib/firebase/server";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { r2Client, R2_BUCKET_NAME, courseVideoKey } from "../../../../../../lib/r2";
+import { isActiveMember } from "../../../../../../lib/courses";
 
 /**
  * ネイティブアプリ(Essence)向け講座レッスン動画URL発行エンドポイント。
- * 動画本体はCloudflare R2に置き(転送量無料)、会員(stripe_status=active)にのみ
+ * 動画本体はCloudflare R2に置き(転送量無料)、会員(Stripe・App Storeのどちらか)にのみ
  * 期限付きの署名URLを発行する。他のapp向けエンドポイントと同様、Firebase IDトークンで認証する。
  * レッスン動画は長時間になりうるため、Podcast音声より長めの有効期限を設定する。
  */
@@ -37,7 +38,7 @@ export const GET: APIRoute = async ({ request, params }) => {
         adminDb.collection("courses").doc(courseId).collection("lessons").doc(lessonId).get(),
     ]);
 
-    if (userDoc.data()?.stripe_status !== "active") {
+    if (!isActiveMember(userDoc.data())) {
         return new Response(JSON.stringify({ error: "Subscription required" }), { status: 403 });
     }
     if (!lessonDoc.exists) {

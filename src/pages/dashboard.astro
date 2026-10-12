@@ -61,6 +61,29 @@ const firebasePublicConfig = {
       </div>
     </div>
 
+    {isPremium ? (
+      <a href="/courses" class="group max-w-md mt-4 flex items-center gap-4 p-5 rounded-2xl bg-zinc-950 border border-white/10 hover:border-emerald-300/40 transition-colors">
+        <span class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-400/15 text-emerald-300">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M8 5v14l11-7z" /></svg>
+        </span>
+        <span class="min-w-0 flex-1">
+          <span class="block text-sm font-bold">Skills講座を見る</span>
+          <span class="block mt-0.5 text-xs text-zinc-500">動画講座をWebでも。進捗はアプリと共有されます。</span>
+        </span>
+        <span class="text-zinc-500 group-hover:text-white transition-colors">→</span>
+      </a>
+    ) : (
+      <div class="max-w-md mt-4 flex items-center gap-4 p-5 rounded-2xl bg-zinc-950 border border-white/10 opacity-70">
+        <span class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center bg-white/5 text-zinc-500">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+        </span>
+        <span class="min-w-0">
+          <span class="block text-sm font-bold text-zinc-300">Skills講座</span>
+          <span class="block mt-0.5 text-xs text-zinc-500">Essenceメンバー限定で視聴できます。</span>
+        </span>
+      </div>
+    )}
+
     {!isPremium && (
       <div class="max-w-md mt-4">
         {ESSENCE_JOIN_OPEN ? (

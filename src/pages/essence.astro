@@ -46,13 +46,15 @@ const homeSections = [
     label: '使う',
     rows: [
       { t: 'Item List', d: '持ち物を見える化する。' },
-      { t: 'Personal', d: 'お金と時間を自分で把握する。' },
+      { t: 'Balance Sheet', d: 'お金の全体像を見える化する。' },
+      { t: 'Meditation', d: '5分から、頭の中を整える。' },
+      { t: 'Healthcare', d: '心と体の状態を確かめる。' },
     ],
   },
   {
     label: '話す',
     rows: [
-      { t: 'Community', d: '同じ方向を向く人と話す。' },
+      { t: 'Community', d: '同じ方向を向く人と話す。※メンバーが一定数に達したら解放します。' },
     ],
   },
 ];
@@ -84,41 +86,34 @@ const features = [
     body: '持っているものを記録し、本当に必要なものだけを残す。持ち物が減るほど、管理する時間もお金も浮き、選べる余白が増えていきます。',
   },
   {
-    id: 'personal', en: 'Personal', jp: 'お金と時間を、自分で把握する。', icon: 'user', color: '#0891B2',
-    body: 'お金と時間の使い方を、感覚ではなく記録で確認する。何を減らし、何に使うかを、自分の意思で選べるようになります。',
+    id: 'balance', en: 'Balance Sheet', jp: 'お金の全体像を、見える化する。', icon: 'yen', color: '#0891B2',
+    body: '資産と負債を書き出し、純資産をひと目で把握。お金の不安が減るほど、働き方も選びやすくなります。',
+  },
+  {
+    id: 'meditation', en: 'Meditation', jp: '5分から、頭の中を整える。', icon: 'leaf', color: '#34D399',
+    body: 'タイマーで、頭の中を一度整理する。判断に迷ったときほど、静かな時間が次の選択を助けます。',
+  },
+  {
+    id: 'health', en: 'Healthcare', jp: '心と体の状態を、確かめる。', icon: 'heart', color: '#0D9488',
+    body: '歩数・睡眠・ワークアウトを週単位で確認（読み取り専用）。心と体の状態を把握することも、選べる状態の土台になります。',
   },
   {
     id: 'community', en: 'Community', jp: '同じ方向を向く人と、比べずに話す。', icon: 'chat', color: '#0D9488',
     body: 'メンバーだけが話せる、小さな場所です。同じ方向を目指す人の存在が、迷ったときに一歩を踏み出す力になります。',
+    note: '※ メンバーが一定数に達したら解放します。',
   },
-];
-
-const personalTools = [
-  { icon: 'yen', c: '#0891B2', t: 'バランスシート', d: '資産と負債を書き出し、純資産をひと目で把握。お金の不安が減るほど、働き方も選びやすくなります。' },
-  { icon: 'timer', c: '#10B981', t: 'ディープワーク', d: '集中した時間を計測し、記録に残す。積み上げた時間が、次に何を学び何を手放すかの土台になります。' },
-  { icon: 'book', c: '#0D9488', t: 'ジャーナル', d: '日々の思考や出来事を書き留める。書き出すほど、本当にやりたいこと・やりたくないことがはっきりします。' },
-  { icon: 'leaf', c: '#34D399', t: '瞑想', d: '5分からのタイマーで、頭の中を一度整理する。判断に迷ったときほど、静かな時間が次の選択を助けます。' },
-  { icon: 'heart', c: '#0D9488', t: 'ヘルスケア連携', d: '歩数・睡眠・ワークアウトを週単位で確認（読み取り専用）。心と体の状態を把握することも、選べる状態の土台になります。' },
-];
-
-const personalCards = [
-  { t: 'バランスシート', icon: 'yen', c: '#0891B2', cap: '純資産', v: '¥1,250,000', u: '' },
-  { t: 'ディープワーク', icon: 'timer', c: '#10B981', cap: '今日の合計', v: '1h25m', u: '' },
-  { t: 'ジャーナル', icon: 'book', c: '#0D9488', cap: '記録した数', v: '12', u: '件' },
-  { t: '瞑想', icon: 'leaf', c: '#34D399', cap: '今週', v: '3', u: '回' },
-  { t: 'ヘルスケア', icon: 'heart', c: '#0D9488', cap: '今週の歩数', v: '42,180', u: '歩' },
 ];
 
 const steps = [
   { n: '01', icon: 'user', t: 'アカウントを作成', d: webOpen ? 'EssenceアプリまたはWebサイトで、アカウントを作成（またはログイン）します。' : 'Essenceアプリを開き、アカウントを作成（またはログイン）します。' },
   { n: '02', icon: 'card', t: 'メンバーシップに登録', d: webOpen ? '月額1,500円のメンバーシップに登録します。アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお支払いいただけます。' : 'アプリ内の案内から、月額1,500円のメンバーシップに登録します。お支払いはApp Storeのアカウントで行います。' },
-  { n: '03', icon: 'leaf', t: 'すべての機能を使う', d: 'ホーム画面から、Podcast・Article・Skills・Community・Item List・Personalへ。' },
+  { n: '03', icon: 'leaf', t: 'すべての機能を使う', d: 'ホーム画面から、Podcast・Article・Skills・Community・Item List・Balance Sheet・Meditation・Healthcareへ。' },
 ];
 
 const pricingPoints = [
   'Podcast・Skills（動画講座）を含む、すべての機能が使える',
-  'Communityへの参加',
-  'Personal（ジャーナル・ディープワーク・バランスシート・瞑想・ヘルスケア連携）',
+  'Communityへの参加（メンバーが一定数に達したら解放）',
+  'Balance Sheet・Meditation・Healthcare（バランスシート・瞑想・ヘルスケア連携）',
   'アプリの「設定」からいつでも解約可能',
 ];
 
@@ -130,10 +125,10 @@ const billingTerms = [
 ];
 
 const faq = [
-  { q: 'Essenceとは、どんなアプリですか？', a: 'やりたくないことを減らし、自由な時間とお金を増やしていくための、メンバー向けアプリケーションです。音声（Podcast）、スキル講座（Skills）、記事（Article）でまず学び、持ち物の記録（Item List）やお金・時間を把握するツール（Personal）を使い、同じ方向を向くメンバーと話せる場（Community）まで、1つにまとめています。' },
+  { q: 'Essenceとは、どんなアプリですか？', a: 'やりたくないことを減らし、自由な時間とお金を増やしていくための、メンバー向けアプリケーションです。音声（Podcast）、スキル講座（Skills）、記事（Article）でまず学び、持ち物の記録（Item List）やお金と心身を把握するツール（Balance Sheet・Meditation・Healthcare）を使い、同じ方向を向くメンバーと話せる場（Community）まで、1つにまとめています。' },
   { q: '料金と支払い方法を教えてください。', a: webOpen ? '月額1,500円（税込）のメンバーシップです。初回お申し込み時とその後1か月ごとに自動で決済されます。お支払いは、アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）またはApple Payです。どちらで登録しても、同じアカウントでアプリをご利用いただけます。' : '月額1,500円（税込）のメンバーシップです。お支払いはApp Storeのアカウントで、初回お申し込み時とその後1か月ごとに自動で決済されます。登録はアプリ内から行います。Webサイトからのお申し込みは、アプリのリリース後に開始予定です。' },
   { q: '解約するには？ 返金はできますか？', a: (webOpen ? 'いつでも解約できます。App Storeで登録した場合はアプリの「設定」→「サブスクリプションを管理」から、Webサイトで登録した場合は「設定」→「サブスクリプションを解約する」から手続きします。' : 'いつでも解約できます。アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から手続きします。') + '次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。詳細は<a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>をご確認ください。' },
-  { q: 'Personalに記録した内容は、他の人に見えますか？', a: 'いいえ。ジャーナル、ディープワーク、バランスシート、瞑想の記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。' },
+  { q: 'バランスシートや瞑想の記録は、他の人に見えますか？', a: 'いいえ。バランスシート、瞑想の記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。' },
   { q: 'ヘルスケアのデータは、何を取得しますか？', a: '歩数・睡眠時間・ワークアウトのみを、あなたの許可のもとで「読み取り」ます。ヘルスケアへの書き込みは一切行いません。表示のために、週ごとの集計値をあなたのアカウントに保存します。連携はiPhoneの設定からいつでも変更できます。' },
   { q: 'Communityでの不適切な投稿はどうなりますか？', a: 'Communityはメンバー限定の場です。不適切な投稿は運営が確認のうえ削除します。ご自身の投稿は、いつでもご自身で削除できます。' },
   { q: '対応端末を教えてください。', a: 'iOS 17以降を搭載したiPhoneに対応しています。Android版も今後リリースを予定しています。' },
@@ -278,7 +273,7 @@ const jsonLd = {
         <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">ひとつのアプリで、時間とお金を取り戻す。</h2>
       </div>
 
-      <div class="grid gap-2 md:gap-5 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-fr">
+      <div class="grid gap-2 md:gap-5 md:grid-cols-2 xl:grid-cols-4 md:auto-rows-fr">
         {features.map((f) => (
           <article class="feature-card card reveal p-3 md:p-7 grid grid-cols-[2rem_1fr] gap-x-3 gap-y-0.5 md:flex md:flex-col" style={`--c:${f.color}`}>
             <div class="contents md:flex md:items-center md:gap-3 md:mb-5">
@@ -289,6 +284,7 @@ const jsonLd = {
             </div>
             <h3 class="col-start-2 text-sm md:text-2xl font-black tracking-tight leading-snug">{f.jp}</h3>
             <p class="col-start-2 mt-0.5 md:mt-3 text-[10px] md:text-sm leading-[1.6] md:leading-[1.9] text-zinc-400 md:flex-1">{f.body}</p>
+            {f.note && <p class="col-start-2 mt-1 md:mt-2 text-[10px] md:text-xs font-bold text-emerald-300/80">{f.note}</p>}
 
             {/* 各カードの高さを揃えるため、ミニUIは固定高さの枠に収める */}
             <div class="feature-visual mt-6" aria-hidden="true">
@@ -370,14 +366,42 @@ const jsonLd = {
                 </div>
               )}
 
-              {f.id === 'personal' && (
-                <div class="flex flex-wrap justify-center gap-2">
-                  {personalTools.map((p) => (
-                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] text-zinc-300">
-                      <svg viewBox="0 0 24 24" fill="none" stroke={p.c} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" set:html={icons[p.icon]} />
-                      {p.t}
-                    </span>
-                  ))}
+              {f.id === 'balance' && (
+                <div class="text-xs">
+                  <p class="text-[10px] text-zinc-500">純資産</p>
+                  <p class="mt-1 text-2xl font-black tracking-tight text-cyan-400">¥1,250,000</p>
+                  <div class="mt-3 space-y-2 text-[10px] text-zinc-500">
+                    <div class="flex items-center gap-2"><span class="w-6">資産</span><div class="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-[82%] rounded-full bg-cyan-500"></div></div></div>
+                    <div class="flex items-center gap-2"><span class="w-6">負債</span><div class="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-[28%] rounded-full bg-zinc-500"></div></div></div>
+                  </div>
+                </div>
+              )}
+
+              {f.id === 'meditation' && (
+                <div class="flex items-center gap-4">
+                  <div class="relative w-14 h-14 shrink-0">
+                    <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
+                      <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="3" />
+                      <circle cx="18" cy="18" r="15" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-dasharray="94.2" stroke-dashoffset="34" />
+                    </svg>
+                    <span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-200">03:12</span>
+                  </div>
+                  <div class="text-xs">
+                    <p class="text-[10px] text-zinc-500">今週</p>
+                    <p class="mt-0.5 text-2xl font-black text-emerald-400">3<small class="ml-0.5 text-[10px] font-bold">回</small></p>
+                  </div>
+                </div>
+              )}
+
+              {f.id === 'health' && (
+                <div class="text-xs">
+                  <p class="text-[10px] text-zinc-500">今週の歩数</p>
+                  <p class="mt-0.5 text-2xl font-black text-teal-400">42,180<small class="ml-0.5 text-[10px] font-bold">歩</small></p>
+                  <div class="mt-3 flex items-end justify-between h-10">
+                    {[55, 80, 40, 95, 70, 60, 85].map((h) => (
+                      <span class="w-1.5 rounded-full bg-teal-500/80" style={`height:${Math.round(h * 0.4)}px`}></span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -386,79 +410,8 @@ const jsonLd = {
         ))}
       </div>
       <div class="reveal mt-8 md:mt-14 text-center">
-        <p class="text-xs md:text-sm font-bold text-zinc-300">6つの機能、月額1,500円ですべて使えます。</p>
+        <p class="text-xs md:text-sm font-bold text-zinc-300">8つの機能、月額1,500円ですべて使えます。</p>
         <div class="mt-4 flex justify-center"><EssenceDownloadButton href={joinHref} /></div>
-      </div>
-    </section>
-
-    {/* ───────────── Personal deep-dive ───────────── */}
-    <section id="personal" class="relative">
-      <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 sm:py-24 md:py-32 grid grid-cols-[0.8fr_1.2fr] lg:grid-cols-2 gap-3 sm:gap-10 lg:gap-16 items-center">
-
-        {/* Phone: Personal */}
-        <div class="personal-phone reveal relative min-w-0 mx-auto" style="--d:120ms">
-          <div class="phone-glow" aria-hidden="true"></div>
-          <div class="phone float-slow" role="img" aria-label="Personal画面のイメージ">
-            <div class="phone-bezel">
-              <div class="phone-screen">
-                <div class="island"></div>
-                <div class="screen-aurora a"></div>
-                <div class="screen-aurora b"></div>
-                <div class="pers">
-                  <p class="pers-title">Personal</p>
-                  <div class="pers-grid">
-                    {personalCards.map((c) => (
-                      <div class="pers-card" style={`--c:${c.c}`}>
-                        <div class="pers-card-top">
-                          <span class="pers-ico">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[c.icon]} />
-                          </span>
-                          <span class="pers-chev">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" set:html={icons.chevron} />
-                          </span>
-                        </div>
-                        <p class="pers-name">{c.t}</p>
-                        <p class="pers-cap">{c.cap}</p>
-                        <p class="pers-val">{c.v}<small>{c.u}</small></p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="contents sm:block min-w-0 personal-list">
-          <div class="personal-head min-w-0">
-          <p class="reveal eyebrow">Personal</p>
-          <h2 class="reveal mt-3 sm:mt-5 text-lg sm:text-3xl md:text-5xl font-black tracking-tight leading-[1.25] sm:leading-[1.2]" style="--d:80ms">
-            お金と時間を中心に、<br /><span class="gradient-text inline-block">自分の状態を</span><span class="gradient-text inline-block">把握する。</span>
-          </h2>
-          <p class="reveal mt-3 sm:mt-6 text-[10px] sm:text-sm leading-[1.7] sm:leading-[1.9] text-zinc-400" style="--d:120ms">
-            お金と時間の使い方を軸に、心と体の状態まで。バラバラになりがちな自分を、ひとつの画面で確認できます。
-          </p>
-          </div>
-
-          <ul class="max-sm:col-span-2 mt-0 sm:mt-10 space-y-2.5 sm:space-y-6">
-            {personalTools.map((p, i) => (
-              <li class="reveal flex gap-2 sm:gap-4" style={`--d:${i * 70}ms`}>
-                <span class="icon-chip shrink-0" style={`--c:${p.c}`}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[p.icon]} />
-                </span>
-                <div>
-                  <h3 class="font-bold text-xs sm:text-base">{p.t}</h3>
-                  <p class="mt-0.5 sm:mt-1 text-[10px] sm:text-sm leading-[1.6] sm:leading-[1.85] text-zinc-400">{p.d}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <div class="reveal max-sm:col-span-2 mt-1 sm:mt-10 flex gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.05] p-3 sm:p-5 text-[10px] sm:text-xs leading-[1.7] sm:leading-[1.9] text-zinc-300">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5" set:html={icons.lock} />
-            <p>Personalの記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。ヘルスケアのデータは歩数・睡眠・ワークアウトの読み取りのみで、書き込みは行いません。</p>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -874,14 +827,14 @@ const jsonLd = {
   .screen-aurora.b { width: 190px; height: 190px; right: -70px; top: 210px; background: rgba(8, 145, 178, 0.32); }
 
   /* スマホでもPCと同じ「左に文章・右に画面」の並びにするため、ヒーローの端末モックだけ縮小する */
-  .hero-phone .phone, .personal-phone .phone { zoom: 0.4; }
-  @media (min-width: 400px) { .hero-phone .phone, .personal-phone .phone { zoom: 0.45; } }
-  @media (min-width: 640px) { .hero-phone .phone, .personal-phone .phone { zoom: 0.8; } }
-  @media (min-width: 1024px) { .hero-phone .phone, .personal-phone .phone { zoom: 1; } }
+  .hero-phone .phone { zoom: 0.4; }
+  @media (min-width: 400px) { .hero-phone .phone { zoom: 0.45; } }
+  @media (min-width: 640px) { .hero-phone .phone { zoom: 0.8; } }
+  @media (min-width: 1024px) { .hero-phone .phone { zoom: 1; } }
   /* スマホでは、アイコンの丸も小さくしてカード・リストの高さを抑える */
   @media (max-width: 639px) {
-    .feature-card .icon-chip, .personal-list .icon-chip { width: 28px; height: 28px; border-radius: 9px; }
-    .feature-card .icon-chip svg, .personal-list .icon-chip svg { width: 14px; height: 14px; }
+    .feature-card .icon-chip { width: 28px; height: 28px; border-radius: 9px; }
+    .feature-card .icon-chip svg { width: 14px; height: 14px; }
   }
   .floating-cta {
     position: fixed;
@@ -924,34 +877,6 @@ const jsonLd = {
   .home-row .d { margin-top: 2px; font-size: 7.5px; color: rgba(255, 255, 255, 0.45); line-height: 1.4; }
   .home-row.settings { margin-top: 18px; }
 
-  /* personal replica */
-  .pers { position: relative; z-index: 2; padding: 50px 14px 16px; }
-  .pers-title { text-align: center; font-size: 10px; font-weight: 700; margin-bottom: 14px; color: rgba(255, 255, 255, 0.9); }
-  .pers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .pers-card {
-    min-height: 92px;
-    border-radius: 14px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.075);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  }
-  .pers-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
-  .pers-ico {
-    display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center;
-    border-radius: 9999px; color: var(--c); background: color-mix(in srgb, var(--c) 22%, transparent);
-  }
-  .pers-ico svg { width: 10px; height: 10px; }
-  .pers-chev {
-    display: inline-flex; width: 14px; height: 14px; align-items: center; justify-content: center;
-    border-radius: 9999px; background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.4);
-  }
-  .pers-chev svg { width: 7px; height: 7px; }
-  .pers-name { font-size: 8.5px; font-weight: 700; }
-  .pers-cap { margin-top: auto; font-size: 6.5px; color: rgba(255, 255, 255, 0.5); }
-  .pers-val { font-size: 14px; font-weight: 800; color: var(--c); letter-spacing: -0.01em; line-height: 1.15; white-space: nowrap; }
-  .pers-val small { margin-left: 2px; font-size: 7px; font-weight: 700; opacity: 0.85; }
 
   /* ── reveal on scroll (only hides content once JS has flagged the page) ── */
   :global(html.js-reveal) .reveal {

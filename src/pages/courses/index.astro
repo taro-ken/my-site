@@ -1,0 +1,115 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { adminDb } from '../../lib/firebase/server';
+import { fetchCompletedLessonIds, plainDescription, toWebCourse } from '../../lib/courses';
+
+const { isLoggedIn, isPremium, user } = Astro.locals;
+if (!isLoggedIn || !user) {
+  return Astro.redirect('/login');
+}
+if (!isPremium) {
+  return Astro.redirect('/dashboard');
+}
+
+const snapshot = await adminDb.collection('courses').orderBy('position', 'asc').get();
+const courses = await Promise.all(
+  snapshot.docs.map(async (doc) => {
+    const course = toWebCourse(doc);
+    const completedIds = await fetchCompletedLessonIds(user.uid, course.id);
+    return { ...course, completedCount: completedIds.length };
+  })
+);
+const categories = [...new Set(courses.map((course) => course.category).filter(Boolean))].sort();
+---
+
+<Layout title="Skills講座 | Taro Essence" description="Essenceメンバー限定の動画講座">
+  <main class="min-h-screen bg-black text-white px-5 md:px-8 pt-24 pb-24 max-w-6xl mx-auto">
+    <a href="/dashboard" class="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-white transition-colors">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M15 18l-6-6 6-6" /></svg>
+      ダッシュボード
+    </a>
+
+    <header class="mt-6 mb-10">
+      <p class="text-xs font-bold tracking-[0.25em] text-emerald-300">SKILL COURSES</p>
+      <h1 class="mt-3 text-3xl md:text-5xl font-black tracking-tight">動画で学ぶ、選べる力</h1>
+      <p class="mt-3 text-sm text-zinc-400">仕事と暮らしに効くスキルを、章ごとに順番に。アプリと進捗が共有されます。</p>
+    </header>
+
+    {categories.length > 0 && (
+      <div class="mb-8 flex flex-wrap gap-2" id="category-filter">
+        <button type="button" data-category="" class="category-chip is-active">すべて</button>
+        {categories.map((category) => (
+          <button type="button" data-category={category} class="category-chip">{category}</button>
+        ))}
+      </div>
+    )}
+
+    {courses.length === 0 ? (
+      <div class="rounded-2xl border border-white/10 bg-zinc-950 p-12 text-center text-sm text-zinc-500">講座は準備中です。</div>
+    ) : (
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {courses.map((course) => {
+          const fraction = course.lessonCount > 0 ? Math.min(1, course.completedCount / course.lessonCount) : 0;
+          return (
+            <a href={`/courses/${course.id}`} data-course-category={course.category} class="course-card group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-950 hover:border-white/25 transition-colors">
+              <div class="aspect-video bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center overflow-hidden">
+                {course.thumbnailUrl ? (
+                  <img src={course.thumbnailUrl} alt="" loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" />
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-emerald-300/70"><path d="M8 5v14l11-7z" /></svg>
+                )}
+              </div>
+              <div class="flex flex-1 flex-col p-5">
+                {course.category && (
+                  <span class="self-start rounded-full bg-emerald-400/10 px-2.5 py-1 text-[11px] font-bold text-emerald-300">{course.category}</span>
+                )}
+                <h2 class="mt-3 text-lg font-bold leading-snug">{course.title}</h2>
+                {course.description && (
+                  <p class="mt-2 text-sm text-zinc-400 leading-relaxed line-clamp-2">{plainDescription(course.description)}</p>
+                )}
+                <div class="mt-auto pt-5 flex items-center gap-3">
+                  <div class="h-1.5 flex-1 rounded-full bg-white/10 overflow-hidden">
+                    <div class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400" style={`width:${fraction * 100}%`}></div>
+                  </div>
+                  <span class="shrink-0 text-xs font-bold text-emerald-300">{course.completedCount}/{course.lessonCount} 完了</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .category-chip {
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #a1a1aa;
+    transition: all 0.15s;
+  }
+  .category-chip:hover { color: #fff; }
+  .category-chip.is-active {
+    border-color: transparent;
+    background: linear-gradient(90deg, #34d399, #22d3ee);
+    color: #000;
+  }
+</style>
+
+<script>
+  const filter = document.getElementById('category-filter');
+  filter?.addEventListener('click', (event) => {
+    const chip = (event.target as HTMLElement).closest<HTMLButtonElement>('.category-chip');
+    if (!chip) return;
+    const category = chip.dataset.category ?? '';
+    filter.querySelectorAll('.category-chip').forEach((el) => el.classList.toggle('is-active', el === chip));
+    document.querySelectorAll<HTMLElement>('.course-card').forEach((card) => {
+      card.style.display = !category || card.dataset.courseCategory === category ? '' : 'none';
+    });
+  });
+</script>

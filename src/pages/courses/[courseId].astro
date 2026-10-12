@@ -1,0 +1,277 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { adminDb } from '../../lib/firebase/server';
+import { r2Client, R2_BUCKET_NAME, courseVideoKey } from '../../lib/r2';
+import { fetchCompletedLessonIds, linkifyDescription, toWebCourse, type WebLesson } from '../../lib/courses';
+
+const { isLoggedIn, isPremium, user } = Astro.locals;
+if (!isLoggedIn || !user) {
+  return Astro.redirect('/login');
+}
+if (!isPremium) {
+  return Astro.redirect('/dashboard');
+}
+
+const { courseId } = Astro.params;
+if (!courseId) {
+  return Astro.redirect('/courses');
+}
+
+const courseRef = adminDb.collection('courses').doc(courseId);
+const [courseDoc, lessonsSnapshot, completedIds] = await Promise.all([
+  courseRef.get(),
+  courseRef.collection('lessons').orderBy('position', 'asc').get(),
+  fetchCompletedLessonIds(user.uid, courseId),
+]);
+if (!courseDoc.exists) {
+  return Astro.redirect('/courses');
+}
+
+const course = toWebCourse(courseDoc);
+const lessons: WebLesson[] = lessonsSnapshot.docs.map((doc) => {
+  const data = doc.data();
+  return {
+    id: doc.id,
+    title: (data.title as string) ?? '',
+    description: (data.description as string) ?? '',
+    chapterTitle: (data.chapterTitle as string) || null,
+  };
+});
+const completedSet = new Set(completedIds);
+
+const requestedId = Astro.url.searchParams.get('lesson');
+const current =
+  lessons.find((lesson) => lesson.id === requestedId) ??
+  lessons.find((lesson) => !completedSet.has(lesson.id)) ??
+  lessons[0];
+const currentIndex = current ? lessons.indexOf(current) : -1;
+const nextLesson = currentIndex >= 0 ? lessons[currentIndex + 1] : undefined;
+
+let videoUrl: string | null = null;
+if (current) {
+  try {
+    videoUrl = await getSignedUrl(
+      r2Client,
+      new GetObjectCommand({ Bucket: R2_BUCKET_NAME, Key: courseVideoKey(courseId, current.id) }),
+      { expiresIn: 3600 }
+    );
+  } catch (err) {
+    console.error('[courses] failed to sign video url', err);
+  }
+}
+
+// 章タイトルが連続するレッスンを1つのグループにまとめる(章なしは null のグループ)。
+const groups: { chapter: string | null; items: { lesson: WebLesson; number: number }[] }[] = [];
+lessons.forEach((lesson, index) => {
+  const last = groups[groups.length - 1];
+  if (last && last.chapter === lesson.chapterTitle) {
+    last.items.push({ lesson, number: index + 1 });
+  } else {
+    groups.push({ chapter: lesson.chapterTitle, items: [{ lesson, number: index + 1 }] });
+  }
+});
+
+const fraction = lessons.length > 0 ? completedSet.size / lessons.length : 0;
+---
+
+<Layout title={`${course.title} | Taro Essence`} description="Essenceメンバー限定の動画講座">
+  <main class="min-h-screen bg-black text-white px-5 md:px-8 pt-24 pb-24 max-w-6xl mx-auto">
+    <a href="/courses" class="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-white transition-colors">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M15 18l-6-6 6-6" /></svg>
+      講座一覧
+    </a>
+
+    <header class="mt-6 mb-8">
+      {course.category && (
+        <span class="inline-block rounded-full bg-emerald-400/10 px-2.5 py-1 text-[11px] font-bold text-emerald-300">{course.category}</span>
+      )}
+      <h1 class="mt-3 text-2xl md:text-4xl font-black tracking-tight">{course.title}</h1>
+    </header>
+
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <section class="min-w-0">
+        {current ? (
+          <>
+            <div class="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-zinc-950">
+              {videoUrl ? (
+                <video
+                  id="lesson-video"
+                  src={videoUrl}
+                  controls
+                  playsinline
+                  preload="metadata"
+                  controlslist="nodownload"
+                  oncontextmenu="return false;"
+                  poster={course.thumbnailUrl || undefined}
+                  class="w-full h-full bg-black"
+                ></video>
+              ) : (
+                <div class="w-full h-full flex items-center justify-center text-sm text-zinc-500">動画を読み込めませんでした。時間をおいて再読み込みしてください。</div>
+              )}
+            </div>
+
+            <div class="mt-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div class="min-w-0">
+                <p class="text-xs font-bold tracking-[0.2em] text-zinc-500">LESSON {String(currentIndex + 1).padStart(2, '0')} / {String(lessons.length).padStart(2, '0')}</p>
+                <h2 class="mt-2 text-xl md:text-2xl font-bold leading-snug">{current.title}</h2>
+              </div>
+              <div class="flex shrink-0 gap-2">
+                <button
+                  type="button"
+                  id="complete-btn"
+                  data-course-id={courseId}
+                  data-lesson-id={current.id}
+                  data-completed={completedSet.has(current.id) ? 'true' : 'false'}
+                  class="complete-btn"
+                >
+                  <span class="label-done">✓ 完了済み</span>
+                  <span class="label-todo">完了にする</span>
+                </button>
+                {nextLesson && (
+                  <a href={`/courses/${courseId}?lesson=${nextLesson.id}`} class="rounded-xl bg-white text-black px-4 py-2.5 text-sm font-bold hover:bg-zinc-200 transition-colors">次のレッスン →</a>
+                )}
+              </div>
+            </div>
+
+            {current.description && (
+              <div class="mt-6 rounded-2xl border border-white/10 bg-zinc-950 p-5 md:p-6">
+                <p class="text-xs font-bold tracking-[0.2em] text-zinc-500 mb-3">このレッスンについて</p>
+                <div class="text-sm leading-[1.9] text-zinc-300" set:html={linkifyDescription(current.description)} />
+              </div>
+            )}
+          </>
+        ) : (
+          <div class="rounded-2xl border border-white/10 bg-zinc-950 p-12 text-center text-sm text-zinc-500">レッスンは準備中です。</div>
+        )}
+
+        {course.description && (
+          <div class="mt-6 rounded-2xl border border-white/10 bg-zinc-950 p-5 md:p-6">
+            <p class="text-xs font-bold tracking-[0.2em] text-zinc-500 mb-3">この講座について</p>
+            <div class="text-sm leading-[1.9] text-zinc-300" set:html={linkifyDescription(course.description)} />
+          </div>
+        )}
+      </section>
+
+      <aside class="min-w-0">
+        <div class="lg:sticky lg:top-24 rounded-2xl border border-white/10 bg-zinc-950 overflow-hidden">
+          <div class="p-5 border-b border-white/10">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span class="text-zinc-400">進捗</span>
+              <span class="text-emerald-300" id="progress-label">{completedSet.size}/{lessons.length} 完了</span>
+            </div>
+            <div class="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
+              <div id="progress-bar" class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all" style={`width:${fraction * 100}%`}></div>
+            </div>
+          </div>
+          <ol class="max-h-[60vh] overflow-y-auto py-2" data-total={lessons.length}>
+            {groups.map((group) => (
+              <li>
+                {group.chapter && (
+                  <p class="px-5 pt-4 pb-2 text-[11px] font-bold tracking-wider text-zinc-500">{group.chapter}</p>
+                )}
+                <ul>
+                  {group.items.map(({ lesson, number }) => {
+                    const isCurrent = lesson.id === current?.id;
+                    const isDone = completedSet.has(lesson.id);
+                    return (
+                      <li>
+                        <a
+                          href={`/courses/${courseId}?lesson=${lesson.id}`}
+                          data-lesson-row={lesson.id}
+                          data-completed={isDone ? 'true' : 'false'}
+                          class:list={[
+                            'lesson-row flex items-center gap-3 px-5 py-3 text-sm transition-colors',
+                            isCurrent ? 'bg-emerald-400/10 text-white' : 'text-zinc-300 hover:bg-white/5',
+                          ]}
+                        >
+                          <span class="lesson-mark shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">
+                            <span class="mark-done">✓</span>
+                            <span class="mark-todo">{number}</span>
+                          </span>
+                          <span class="min-w-0 truncate font-medium">{lesson.title}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .complete-btn {
+    border-radius: 0.75rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.15s;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e4e4e7;
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .complete-btn:hover { background: rgba(255, 255, 255, 0.08); }
+  .complete-btn[data-completed='true'] {
+    border-color: transparent;
+    background: linear-gradient(90deg, #34d399, #22d3ee);
+    color: #000;
+  }
+  .complete-btn .label-done { display: none; }
+  .complete-btn[data-completed='true'] .label-done { display: inline; }
+  .complete-btn[data-completed='true'] .label-todo { display: none; }
+  .complete-btn:disabled { opacity: 0.6; }
+
+  .lesson-mark { border: 1px solid rgba(255, 255, 255, 0.2); color: #a1a1aa; }
+  .lesson-mark .mark-done { display: none; }
+  .lesson-row[data-completed='true'] .lesson-mark { border-color: transparent; background: #34d399; color: #000; }
+  .lesson-row[data-completed='true'] .mark-done { display: inline; }
+  .lesson-row[data-completed='true'] .mark-todo { display: none; }
+</style>
+
+<script>
+  const button = document.getElementById('complete-btn') as HTMLButtonElement | null;
+
+  function refreshProgress() {
+    const rows = document.querySelectorAll<HTMLElement>('[data-lesson-row]');
+    const done = Array.from(rows).filter((row) => row.dataset.completed === 'true').length;
+    const label = document.getElementById('progress-label');
+    const bar = document.getElementById('progress-bar');
+    if (label) label.textContent = `${done}/${rows.length} 完了`;
+    if (bar) bar.style.width = `${rows.length ? (done / rows.length) * 100 : 0}%`;
+  }
+
+  async function setCompleted(completed: boolean) {
+    if (!button) return;
+    const { courseId, lessonId } = button.dataset;
+    button.disabled = true;
+    try {
+      const res = await fetch(`/api/courses/${courseId}/progress`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lessonId, completed }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      button.dataset.completed = completed ? 'true' : 'false';
+      const row = document.querySelector<HTMLElement>(`[data-lesson-row="${lessonId}"]`);
+      if (row) row.dataset.completed = completed ? 'true' : 'false';
+      refreshProgress();
+    } catch (err) {
+      console.error(err);
+      alert('保存できませんでした。時間をおいてもう一度お試しください。');
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  button?.addEventListener('click', () => setCompleted(button.dataset.completed !== 'true'));
+
+  document.getElementById('lesson-video')?.addEventListener('ended', () => {
+    if (button && button.dataset.completed !== 'true') setCompleted(true);
+  });
+</script>
