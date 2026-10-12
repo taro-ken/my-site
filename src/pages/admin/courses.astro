@@ -31,15 +31,21 @@ const courses = await Promise.all(
       title: data.title as string,
       description: (data.description as string) ?? '',
       thumbnailUrl: (data.thumbnailUrl as string) ?? '',
+      category: (data.category as string) ?? '',
       lessons,
     };
   })
 );
+const categories = [...new Set(courses.map((course) => course.category).filter(Boolean))].sort();
 ---
 
 <Layout title="講座管理 | Taro Essence" description="スキル講座・レッスンの管理(管理者専用)">
   <main class="min-h-screen bg-black text-white p-8 pt-24 max-w-2xl mx-auto">
     <h1 class="text-2xl md:text-4xl font-black tracking-tight mb-10">講座管理</h1>
+
+    <datalist id="course-categories">
+      {categories.map((category) => <option value={category} />)}
+    </datalist>
 
     <form id="course-form" class="p-6 rounded-2xl bg-zinc-950 border border-white/10 shadow-xl space-y-5">
       <h2 class="text-sm font-bold uppercase tracking-wider text-zinc-500">新しい講座を作成</h2>
@@ -52,6 +58,12 @@ const courses = await Promise.all(
         <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">説明</label>
         <textarea name="description" rows="3"
           class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30 resize-y"></textarea>
+      </div>
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">ジャンル(任意)</label>
+        <input name="category" type="text" list="course-categories" placeholder="例: デジタルスキル、ヘルスケア"
+          class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30" />
+        <p class="text-[10px] text-zinc-500 mt-2">アプリの講座一覧で、このジャンルで絞り込めるようになります。既存のジャンルは候補から選べます。</p>
       </div>
       <div>
         <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">サムネイル画像(任意)</label>
@@ -80,6 +92,9 @@ const courses = await Promise.all(
             </label>
             <div class="min-w-0 flex-1">
               <div class="edit-view">
+                {course.category && (
+                  <span class="inline-block mb-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">{course.category}</span>
+                )}
                 <p class="font-bold text-sm">{course.title}</p>
                 {course.description && <p class="text-xs text-zinc-400 mt-1 whitespace-pre-wrap">{course.description}</p>}
               </div>
@@ -88,6 +103,8 @@ const courses = await Promise.all(
                   class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
                 <textarea name="description" rows="3" placeholder="説明"
                   class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30 resize-y">{course.description}</textarea>
+                <input name="category" type="text" list="course-categories" value={course.category} placeholder="ジャンル(任意)"
+                  class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
                 <div class="flex gap-2">
                   <button type="submit" class="edit-save-btn px-3 py-1.5 rounded-md bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors disabled:opacity-50">保存</button>
                   <button type="button" class="edit-cancel-btn px-3 py-1.5 rounded-md bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition-colors">キャンセル</button>
@@ -202,6 +219,7 @@ const courses = await Promise.all(
         body: JSON.stringify({
           title: formData.get('title'),
           description: formData.get('description'),
+          category: formData.get('category'),
         }),
       });
       if (!res.ok) {
@@ -290,6 +308,7 @@ const courses = await Promise.all(
           body: JSON.stringify({
             title: formData.get('title'),
             description: formData.get('description'),
+            category: formData.get('category'),
           }),
         });
         if (!res.ok) {

@@ -5,7 +5,7 @@ import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { r2Client, R2_BUCKET_NAME, courseVideoKey, courseThumbnailKey } from "../../../../lib/r2";
 
 /**
- * 管理者専用: 講座のタイトル・説明を更新する。
+ * 管理者専用: 講座のタイトル・説明・ジャンルを更新する。
  */
 export const PATCH: APIRoute = async ({ params, request, cookies }) => {
     const admin = await requireAdmin(cookies);
@@ -18,7 +18,7 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
         return new Response(JSON.stringify({ error: "Missing course id" }), { status: 400 });
     }
 
-    let body: { title?: string; description?: string };
+    let body: { title?: string; description?: string; category?: string };
     try {
         body = await request.json();
     } catch {
@@ -34,7 +34,11 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
     if (!(await courseRef.get()).exists) {
         return new Response(JSON.stringify({ error: "講座が見つかりません" }), { status: 404 });
     }
-    await courseRef.update({ title, description: body.description ?? "" });
+    await courseRef.update({
+        title,
+        description: body.description ?? "",
+        category: body.category?.trim() || null,
+    });
 
     return new Response(JSON.stringify({ ok: true }), {
         status: 200,

@@ -11,14 +11,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
     }
 
-    let body: { title?: string; description?: string; thumbnailUrl?: string };
+    let body: { title?: string; description?: string; thumbnailUrl?: string; category?: string };
     try {
         body = await request.json();
     } catch {
         return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
     }
 
-    const { title, description, thumbnailUrl } = body;
+    const { title, description, thumbnailUrl, category } = body;
     if (!title) {
         return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
     }
@@ -29,6 +29,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         title,
         description: description ?? "",
         thumbnailUrl: thumbnailUrl || null,
+        category: category?.trim() || null,
         lessonCount: 0,
         position: countSnapshot.data().count,
     });
