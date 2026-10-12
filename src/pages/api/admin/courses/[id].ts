@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { adminDb } from "../../../../lib/firebase/server";
 import { requireAdmin } from "../../../../lib/admin";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { r2Client, R2_BUCKET_NAME, courseVideoKey } from "../../../../lib/r2";
+import { r2Client, R2_BUCKET_NAME, courseVideoKey, courseThumbnailKey } from "../../../../lib/r2";
 
 /**
  * 管理者専用: 講座を、その下のレッスンごと削除する。
@@ -29,6 +29,9 @@ export const DELETE: APIRoute = async ({ params, cookies }) => {
                 .catch((err) => console.error("[course delete] R2 delete failed:", err))
         )
     );
+    await r2Client
+        .send(new DeleteObjectCommand({ Bucket: R2_BUCKET_NAME, Key: courseThumbnailKey(courseId) }))
+        .catch((err) => console.error("[course delete] R2 thumbnail delete failed:", err));
 
     await adminDb.recursiveDelete(courseRef);
 

@@ -54,9 +54,10 @@ const courses = await Promise.all(
           class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30 resize-y"></textarea>
       </div>
       <div>
-        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">サムネイルURL(任意)</label>
-        <input name="thumbnailUrl" type="url"
-          class="w-full px-4 py-3 rounded-md bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/30" />
+        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">サムネイル画像(任意)</label>
+        <input name="thumbnail" type="file" accept="image/jpeg,image/png,image/webp"
+          class="w-full text-xs text-zinc-300 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-white/10 file:text-white file:text-[10px] file:font-bold file:uppercase file:tracking-wider" />
+        <p class="text-[10px] text-zinc-500 mt-2">JPEG・PNG・WebP、4MB まで。アプリでは 16:10 で表示されます。</p>
       </div>
       <button type="submit" id="course-submit-btn"
         class="w-full py-3 px-4 bg-white text-black font-bold text-sm tracking-wide rounded-md hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
@@ -70,7 +71,14 @@ const courses = await Promise.all(
       {courses.map((course) => (
         <div class="course-card p-4 rounded-xl bg-zinc-950 border border-white/10" data-course-id={course.id}>
           <div class="flex items-start justify-between gap-4">
-            <div class="min-w-0">
+            <label class="thumbnail-picker relative shrink-0 w-24 aspect-[16/10] rounded-md overflow-hidden bg-white/5 border border-white/10 cursor-pointer group" title="サムネイルを変更">
+              {course.thumbnailUrl
+                ? <img src={course.thumbnailUrl} alt="" class="w-full h-full object-cover" />
+                : <span class="absolute inset-0 flex items-center justify-center text-[10px] text-zinc-500">画像なし</span>}
+              <span class="thumbnail-label absolute inset-0 flex items-center justify-center bg-black/60 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">変更</span>
+              <input type="file" accept="image/jpeg,image/png,image/webp" class="thumbnail-input hidden" data-course-id={course.id} />
+            </label>
+            <div class="min-w-0 flex-1">
               <p class="font-bold text-sm">{course.title}</p>
               {course.description && <p class="text-xs text-zinc-400 mt-1 whitespace-pre-wrap">{course.description}</p>}
             </div>
@@ -128,6 +136,16 @@ const courses = await Promise.all(
   const courseSubmitBtn = document.getElementById('course-submit-btn') as HTMLButtonElement;
   const courseStatusEl = document.getElementById('course-status') as HTMLParagraphElement;
 
+  async function uploadThumbnail(courseId: string, file: File) {
+    const body = new FormData();
+    body.append('image', file);
+    const res = await fetch(`/api/admin/courses/${courseId}/thumbnail`, { method: 'POST', body });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'サムネイルのアップロードに失敗しました');
+    }
+  }
+
   courseForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     courseSubmitBtn.disabled = true;
@@ -142,12 +160,25 @@ const courses = await Promise.all(
         body: JSON.stringify({
           title: formData.get('title'),
           description: formData.get('description'),
-          thumbnailUrl: formData.get('thumbnailUrl'),
         }),
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || '作成に失敗しました');
+      }
+      const { id } = await res.json();
+
+      const thumbnail = formData.get('thumbnail') as File | null;
+      if (thumbnail && thumbnail.size > 0) {
+        courseStatusEl.textContent = 'サムネイルをアップロード中...';
+        try {
+          await uploadThumbnail(id, thumbnail);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'サムネイルのアップロードに失敗しました';
+          alert(`講座は作成しましたが、${message}。講座一覧の画像枠から再度設定してください。`);
+          window.location.reload();
+          return;
+        }
       }
       courseStatusEl.textContent = '作成しました。';
       courseStatusEl.classList.add('text-emerald-400');
@@ -157,6 +188,29 @@ const courses = await Promise.all(
       courseStatusEl.classList.add('text-red-400');
       courseSubmitBtn.disabled = false;
     }
+  });
+
+  document.querySelectorAll<HTMLInputElement>('.thumbnail-input').forEach((input) => {
+    input.addEventListener('change', async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const label = input.closest('.thumbnail-picker')?.querySelector<HTMLSpanElement>('.thumbnail-label');
+      if (label) {
+        label.textContent = 'アップロード中...';
+        label.classList.remove('opacity-0');
+      }
+      try {
+        await uploadThumbnail(input.dataset.courseId!, file);
+        window.location.reload();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : 'サムネイルのアップロードに失敗しました');
+        if (label) {
+          label.textContent = '変更';
+          label.classList.add('opacity-0');
+        }
+        input.value = '';
+      }
+    });
   });
 
   document.querySelectorAll<HTMLButtonElement>('.delete-course-btn').forEach((btn) => {

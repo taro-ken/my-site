@@ -26,3 +26,12 @@ export const COURSE_VIDEO_CONTENT_TYPE = "video/mp4";
 export function courseVideoKey(courseId: string, lessonId: string): string {
     return `courses/${courseId}/lessons/${lessonId}.mp4`;
 }
+
+export const COURSE_THUMBNAIL_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+// Vercel Function のリクエストボディ上限(4.5MB)を超えないようにする
+export const COURSE_THUMBNAIL_MAX_BYTES = 4 * 1024 * 1024;
+
+export function courseThumbnailKey(courseId: string): string {
+    return `courses/${courseId}/thumbnail`;
+}
