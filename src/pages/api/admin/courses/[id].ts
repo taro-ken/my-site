@@ -5,6 +5,44 @@ import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { r2Client, R2_BUCKET_NAME, courseVideoKey, courseThumbnailKey } from "../../../../lib/r2";
 
 /**
+ * 管理者専用: 講座のタイトル・説明を更新する。
+ */
+export const PATCH: APIRoute = async ({ params, request, cookies }) => {
+    const admin = await requireAdmin(cookies);
+    if (!admin) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
+    const courseId = params.id;
+    if (!courseId) {
+        return new Response(JSON.stringify({ error: "Missing course id" }), { status: 400 });
+    }
+
+    let body: { title?: string; description?: string };
+    try {
+        body = await request.json();
+    } catch {
+        return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
+    }
+
+    const title = body.title?.trim();
+    if (!title) {
+        return new Response(JSON.stringify({ error: "タイトルを入力してください" }), { status: 400 });
+    }
+
+    const courseRef = adminDb.collection("courses").doc(courseId);
+    if (!(await courseRef.get()).exists) {
+        return new Response(JSON.stringify({ error: "講座が見つかりません" }), { status: 404 });
+    }
+    await courseRef.update({ title, description: body.description ?? "" });
+
+    return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+    });
+};
+
+/**
  * 管理者専用: 講座を、その下のレッスンごと削除する。
  * Firestoreのメタデータに加えて、各レッスンのR2上の動画ファイルも削除する。
  */

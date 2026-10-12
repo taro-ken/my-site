@@ -70,7 +70,7 @@ const courses = await Promise.all(
       {courses.length === 0 && <p class="text-sm text-zinc-500">まだ講座がありません。</p>}
       {courses.map((course) => (
         <div class="course-card p-4 rounded-xl bg-zinc-950 border border-white/10" data-course-id={course.id}>
-          <div class="flex items-start justify-between gap-4">
+          <div class="edit-row flex items-start justify-between gap-4">
             <label class="thumbnail-picker relative shrink-0 w-24 aspect-[16/10] rounded-md overflow-hidden bg-white/5 border border-white/10 cursor-pointer group" title="サムネイルを変更">
               {course.thumbnailUrl
                 ? <img src={course.thumbnailUrl} alt="" class="w-full h-full object-cover" />
@@ -79,32 +79,74 @@ const courses = await Promise.all(
               <input type="file" accept="image/jpeg,image/png,image/webp" class="thumbnail-input hidden" data-course-id={course.id} />
             </label>
             <div class="min-w-0 flex-1">
-              <p class="font-bold text-sm">{course.title}</p>
-              {course.description && <p class="text-xs text-zinc-400 mt-1 whitespace-pre-wrap">{course.description}</p>}
+              <div class="edit-view">
+                <p class="font-bold text-sm">{course.title}</p>
+                {course.description && <p class="text-xs text-zinc-400 mt-1 whitespace-pre-wrap">{course.description}</p>}
+              </div>
+              <form class="edit-form course-edit-form hidden space-y-2" data-course-id={course.id}>
+                <input name="title" type="text" value={course.title} required placeholder="タイトル"
+                  class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
+                <textarea name="description" rows="3" placeholder="説明"
+                  class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30 resize-y">{course.description}</textarea>
+                <div class="flex gap-2">
+                  <button type="submit" class="edit-save-btn px-3 py-1.5 rounded-md bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors disabled:opacity-50">保存</button>
+                  <button type="button" class="edit-cancel-btn px-3 py-1.5 rounded-md bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition-colors">キャンセル</button>
+                </div>
+                <p class="edit-status text-xs text-red-400"></p>
+              </form>
             </div>
-            <button
-              data-delete-course={course.id}
-              data-delete-title={course.title}
-              class="delete-course-btn shrink-0 px-3 py-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold transition-colors"
-            >
-              講座ごと削除
-            </button>
+            <div class="shrink-0 flex flex-col items-end gap-2">
+              <button class="edit-toggle-btn px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors">
+                編集
+              </button>
+              <button
+                data-delete-course={course.id}
+                data-delete-title={course.title}
+                class="delete-course-btn px-3 py-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold transition-colors"
+              >
+                講座ごと削除
+              </button>
+            </div>
           </div>
 
           <div class="mt-4 pl-4 border-l border-white/10 space-y-3">
             {course.lessons.map((lesson) => (
-              <div class="flex items-start justify-between gap-3">
-                <div class="min-w-0">
-                  {lesson.chapterTitle && <p class="text-[10px] font-bold text-emerald-400 mb-0.5">{lesson.chapterTitle}</p>}
-                  <p class="text-xs font-bold text-zinc-200">{lesson.title}</p>
+              <div class="edit-row flex items-start justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <div class="edit-view">
+                    {lesson.chapterTitle && <p class="text-[10px] font-bold text-emerald-400 mb-0.5">{lesson.chapterTitle}</p>}
+                    <p class="text-xs font-bold text-zinc-200">{lesson.title}</p>
+                    {lesson.description && <p class="text-[11px] text-zinc-500 mt-0.5 whitespace-pre-wrap">{lesson.description}</p>}
+                  </div>
+                  <form class="edit-form lesson-edit-form hidden space-y-2" data-course-id={course.id} data-lesson-id={lesson.id}>
+                    <input name="chapterTitle" type="text" value={lesson.chapterTitle ?? ''} placeholder="章タイトル(任意)"
+                      class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
+                    <input name="title" type="text" value={lesson.title} required placeholder="レッスンタイトル"
+                      class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30" />
+                    <textarea name="description" rows="3" placeholder="説明(任意)"
+                      class="w-full px-3 py-2 rounded-md bg-black border border-white/10 text-white text-xs focus:outline-none focus:border-white/30 resize-y">{lesson.description}</textarea>
+                    <label class="block text-[10px] text-zinc-500">動画を差し替える場合のみ選択</label>
+                    <input name="video" type="file" accept="video/*"
+                      class="w-full text-xs text-zinc-300 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-white/10 file:text-white file:text-[10px] file:font-bold file:uppercase file:tracking-wider" />
+                    <div class="flex gap-2">
+                      <button type="submit" class="edit-save-btn px-3 py-1.5 rounded-md bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors disabled:opacity-50">保存</button>
+                      <button type="button" class="edit-cancel-btn px-3 py-1.5 rounded-md bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition-colors">キャンセル</button>
+                    </div>
+                    <p class="edit-status text-xs text-red-400"></p>
+                  </form>
                 </div>
-                <button
-                  data-delete-lesson={lesson.id}
-                  data-course-id={course.id}
-                  class="delete-lesson-btn shrink-0 px-2 py-1 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[10px] font-bold transition-colors"
-                >
-                  削除
-                </button>
+                <div class="shrink-0 flex gap-1.5">
+                  <button class="edit-toggle-btn px-2 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold transition-colors">
+                    編集
+                  </button>
+                  <button
+                    data-delete-lesson={lesson.id}
+                    data-course-id={course.id}
+                    class="delete-lesson-btn px-2 py-1 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[10px] font-bold transition-colors"
+                  >
+                    削除
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -209,6 +251,109 @@ const courses = await Promise.all(
           label.classList.add('opacity-0');
         }
         input.value = '';
+      }
+    });
+  });
+
+  function setEditing(row: Element, editing: boolean) {
+    row.querySelector('.edit-view')?.classList.toggle('hidden', editing);
+    row.querySelector('.edit-form')?.classList.toggle('hidden', !editing);
+    row.querySelector('.edit-toggle-btn')?.classList.toggle('hidden', editing);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.edit-toggle-btn').forEach((btn) => {
+    btn.addEventListener('click', () => setEditing(btn.closest('.edit-row')!, true));
+  });
+
+  document.querySelectorAll<HTMLFormElement>('.edit-form').forEach((form) => {
+    const row = form.closest('.edit-row')!;
+    form.querySelector<HTMLButtonElement>('.edit-cancel-btn')!.addEventListener('click', () => {
+      form.reset();
+      form.querySelector<HTMLParagraphElement>('.edit-status')!.textContent = '';
+      setEditing(row, false);
+    });
+  });
+
+  document.querySelectorAll<HTMLFormElement>('.course-edit-form').forEach((form) => {
+    const saveBtn = form.querySelector<HTMLButtonElement>('.edit-save-btn')!;
+    const statusEl = form.querySelector<HTMLParagraphElement>('.edit-status')!;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      saveBtn.disabled = true;
+      statusEl.textContent = '';
+      try {
+        const formData = new FormData(form);
+        const res = await fetch(`/api/admin/courses/${form.dataset.courseId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: formData.get('title'),
+            description: formData.get('description'),
+          }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || '保存に失敗しました');
+        }
+        window.location.reload();
+      } catch (error) {
+        statusEl.textContent = error instanceof Error ? error.message : '保存に失敗しました';
+        saveBtn.disabled = false;
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLFormElement>('.lesson-edit-form').forEach((form) => {
+    const saveBtn = form.querySelector<HTMLButtonElement>('.edit-save-btn')!;
+    const statusEl = form.querySelector<HTMLParagraphElement>('.edit-status')!;
+    const lessonUrl = `/api/admin/courses/${form.dataset.courseId}/lessons/${form.dataset.lessonId}`;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      saveBtn.disabled = true;
+      statusEl.textContent = '';
+      try {
+        const formData = new FormData(form);
+
+        const video = formData.get('video') as File | null;
+        if (video && video.size > 0) {
+          if (!confirm('動画を差し替えます。元の動画は上書きされます。よろしいですか?')) {
+            saveBtn.disabled = false;
+            return;
+          }
+          statusEl.textContent = 'アップロードURLを発行中...';
+          const urlRes = await fetch(lessonUrl, { method: 'POST' });
+          if (!urlRes.ok) throw new Error('アップロードURLの発行に失敗しました');
+          const { uploadUrl } = await urlRes.json();
+
+          statusEl.textContent = '動画をアップロード中...';
+          const uploadRes = await fetch(uploadUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'video/mp4' },
+            body: video,
+          });
+          if (!uploadRes.ok) throw new Error('動画のアップロードに失敗しました');
+        }
+
+        statusEl.textContent = '保存中...';
+        const res = await fetch(lessonUrl, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chapterTitle: formData.get('chapterTitle'),
+            title: formData.get('title'),
+            description: formData.get('description'),
+          }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || '保存に失敗しました');
+        }
+        window.location.reload();
+      } catch (error) {
+        statusEl.textContent = error instanceof Error ? error.message : '保存に失敗しました';
+        saveBtn.disabled = false;
       }
     });
   });
