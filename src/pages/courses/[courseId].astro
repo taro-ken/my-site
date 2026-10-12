@@ -4,7 +4,7 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { adminDb } from '../../lib/firebase/server';
 import { r2Client, R2_BUCKET_NAME, courseVideoKey } from '../../lib/r2';
-import { fetchCompletedLessonIds, linkifyDescription, toWebCourse, type WebLesson } from '../../lib/courses';
+import { fetchCompletedLessonIds, renderDescription, toWebCourse, type WebLesson } from '../../lib/courses';
 
 const { isLoggedIn, isPremium, user } = Astro.locals;
 if (!isLoggedIn || !user) {
@@ -94,19 +94,31 @@ const fraction = lessons.length > 0 ? completedSet.size / lessons.length : 0;
       <section class="min-w-0">
         {current ? (
           <>
-            <div class="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-zinc-950">
+            <div id="player-shell" class="relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-zinc-950 select-none" oncontextmenu="return false;">
               {videoUrl ? (
-                <video
-                  id="lesson-video"
-                  src={videoUrl}
-                  controls
-                  playsinline
-                  preload="metadata"
-                  controlslist="nodownload"
-                  oncontextmenu="return false;"
-                  poster={course.thumbnailUrl || undefined}
-                  class="w-full h-full bg-black"
-                ></video>
+                <>
+                  <video
+                    id="lesson-video"
+                    src={videoUrl}
+                    controls
+                    playsinline
+                    preload="metadata"
+                    controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"
+                    disablepictureinpicture
+                    disableremoteplayback
+                    x-webkit-airplay="deny"
+                    poster={course.thumbnailUrl || undefined}
+                    class="w-full h-full bg-black"
+                  ></video>
+                  <div id="watermark" class="watermark" aria-hidden="true">{user.email ?? user.uid}</div>
+                  <button type="button" id="fullscreen-btn" class="absolute top-3 right-3 z-20 w-9 h-9 rounded-lg bg-black/50 hover:bg-black/70 flex items-center justify-center text-white" aria-label="全画面表示">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3" /></svg>
+                  </button>
+                  <div id="capture-shield" class="capture-shield" hidden>
+                    <p class="text-sm font-bold">再生を一時停止しました</p>
+                    <p class="mt-1 text-xs text-zinc-400">この画面に戻ると、続きから再生できます。</p>
+                  </div>
+                </>
               ) : (
                 <div class="w-full h-full flex items-center justify-center text-sm text-zinc-500">動画を読み込めませんでした。時間をおいて再読み込みしてください。</div>
               )}
@@ -138,7 +150,7 @@ const fraction = lessons.length > 0 ? completedSet.size / lessons.length : 0;
             {current.description && (
               <div class="mt-6 rounded-2xl border border-white/10 bg-zinc-950 p-5 md:p-6">
                 <p class="text-xs font-bold tracking-[0.2em] text-zinc-500 mb-3">このレッスンについて</p>
-                <div class="text-sm leading-[1.9] text-zinc-300" set:html={linkifyDescription(current.description)} />
+                <div class="description text-sm leading-[1.9] text-zinc-300" set:html={renderDescription(current.description)} />
               </div>
             )}
           </>
@@ -149,7 +161,7 @@ const fraction = lessons.length > 0 ? completedSet.size / lessons.length : 0;
         {course.description && (
           <div class="mt-6 rounded-2xl border border-white/10 bg-zinc-950 p-5 md:p-6">
             <p class="text-xs font-bold tracking-[0.2em] text-zinc-500 mb-3">この講座について</p>
-            <div class="text-sm leading-[1.9] text-zinc-300" set:html={linkifyDescription(course.description)} />
+            <div class="description text-sm leading-[1.9] text-zinc-300" set:html={renderDescription(course.description)} />
           </div>
         )}
       </section>
@@ -227,6 +239,72 @@ const fraction = lessons.length > 0 ? completedSet.size / lessons.length : 0;
   .complete-btn[data-completed='true'] .label-todo { display: none; }
   .complete-btn:disabled { opacity: 0.6; }
 
+  .description > :global(* + *) { margin-top: 0.9rem; }
+  .description :global(.copy-block) {
+    border-radius: 0.875rem;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.875rem;
+  }
+  .description :global(.copy-block-head) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #a1a1aa;
+  }
+  .description :global(.copy-block-btn) {
+    border-radius: 9999px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6ee7b7;
+    background: rgba(52, 211, 153, 0.14);
+    transition: all 0.15s;
+  }
+  .description :global(.copy-block-btn:hover) { background: rgba(52, 211, 153, 0.24); }
+  .description :global(.copy-block-btn.is-copied) { color: #000; background: #34d399; }
+  .description :global(.copy-block-body) {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    line-height: 1.8;
+    color: #e4e4e7;
+    user-select: text;
+  }
+
+  .watermark {
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.28);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+    transition: top 1.2s ease, left 1.2s ease;
+    top: 12%;
+    left: 8%;
+  }
+  .capture-shield {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    text-align: center;
+  }
+  .capture-shield[hidden] { display: none; }
+  #player-shell:fullscreen { border-radius: 0; border: 0; }
+  #player-shell:fullscreen video { object-fit: contain; }
+
   .lesson-mark { border: 1px solid rgba(255, 255, 255, 0.2); color: #a1a1aa; }
   .lesson-mark .mark-done { display: none; }
   .lesson-row[data-completed='true'] .lesson-mark { border-color: transparent; background: #34d399; color: #000; }
@@ -271,7 +349,75 @@ const fraction = lessons.length > 0 ? completedSet.size / lessons.length : 0;
 
   button?.addEventListener('click', () => setCompleted(button.dataset.completed !== 'true'));
 
-  document.getElementById('lesson-video')?.addEventListener('ended', () => {
+  document.addEventListener('click', async (event) => {
+    const copyButton = (event.target as HTMLElement).closest<HTMLButtonElement>('.copy-block-btn');
+    if (!copyButton) return;
+    const body = copyButton.closest('.copy-block')?.querySelector('.copy-block-body');
+    if (!body?.textContent) return;
+    try {
+      await navigator.clipboard.writeText(body.textContent);
+      copyButton.textContent = '✓ コピーしました';
+      copyButton.classList.add('is-copied');
+      setTimeout(() => {
+        copyButton.textContent = 'コピー';
+        copyButton.classList.remove('is-copied');
+      }, 1600);
+    } catch {
+      alert('コピーできませんでした。文章を選択してコピーしてください。');
+    }
+  });
+
+  const video = document.getElementById('lesson-video') as HTMLVideoElement | null;
+  const shell = document.getElementById('player-shell');
+  const watermark = document.getElementById('watermark');
+  const shield = document.getElementById('capture-shield');
+
+  // 録画されても視聴者を特定できるよう、メールアドレスの透かしを数秒ごとに移動させる。
+  if (watermark) {
+    const move = () => {
+      watermark.style.top = `${8 + Math.random() * 76}%`;
+      watermark.style.left = `${4 + Math.random() * 60}%`;
+    };
+    move();
+    setInterval(move, 4000);
+  }
+
+  // ネイティブの全画面は透かしが消えるため、透かしごと全画面にする。
+  document.getElementById('fullscreen-btn')?.addEventListener('click', () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      shell?.requestFullscreen?.();
+    }
+  });
+
+  function hidePlayer() {
+    if (!video || !shield) return;
+    video.pause();
+    shield.hidden = false;
+  }
+  function showPlayer() {
+    if (shield) shield.hidden = true;
+  }
+  window.addEventListener('blur', hidePlayer);
+  window.addEventListener('focus', showPlayer);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) hidePlayer();
+  });
+  window.addEventListener('keyup', (event) => {
+    if (event.key === 'PrintScreen') {
+      hidePlayer();
+      navigator.clipboard?.writeText('').catch(() => {});
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    const key = event.key.toLowerCase();
+    if ((event.metaKey && event.shiftKey && ['3', '4', '5'].includes(key)) || key === 'printscreen') {
+      hidePlayer();
+    }
+  });
+
+  video?.addEventListener('ended', () => {
     if (button && button.dataset.completed !== 'true') setCompleted(true);
   });
 </script>

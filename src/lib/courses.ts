@@ -79,6 +79,60 @@ export function linkifyDescription(text: string): string {
     return html.replace(/\n/g, "<br />");
 }
 
+type DescriptionSegment = { kind: "text" | "copy"; value: string };
+
+/**
+ * 説明文を「普通の文章」と「コピー用ブロック」に分ける(アプリの DescriptionSegment.parse と同じ規則)。
+ * 「▼…コピー」の行から「▲」の行までがコピー用ブロック。終わりの印が無ければ全体を普通の文章として扱う。
+ */
+function parseDescription(source: string): DescriptionSegment[] {
+    const lines = source.split("\n");
+    const segments: DescriptionSegment[] = [];
+    let textBuffer: string[] = [];
+    let copyBuffer: string[] = [];
+    let inCopy = false;
+    let blockStart = 0;
+
+    const flushText = () => {
+        const joined = textBuffer.join("\n").trim();
+        if (joined) segments.push({ kind: "text", value: joined });
+        textBuffer = [];
+    };
+
+    lines.forEach((line, index) => {
+        if (!inCopy) {
+            if (line.includes("▼") && line.includes("コピー")) {
+                flushText();
+                inCopy = true;
+                blockStart = index;
+                copyBuffer = [];
+            } else {
+                textBuffer.push(line);
+            }
+        } else if (line.includes("▲")) {
+            const body = copyBuffer.join("\n").trim();
+            if (body) segments.push({ kind: "copy", value: body });
+            inCopy = false;
+        } else {
+            copyBuffer.push(line);
+        }
+    });
+    if (inCopy) textBuffer.push(...lines.slice(blockStart));
+    flushText();
+    return segments;
+}
+
+/** 説明文を HTML にする。コピー用ブロックは「コピー」ボタン付きのカードになる(クリック処理はページ側)。 */
+export function renderDescription(text: string): string {
+    return parseDescription(text)
+        .map((segment) =>
+            segment.kind === "text"
+                ? `<div>${linkifyDescription(segment.value)}</div>`
+                : `<div class="copy-block"><div class="copy-block-head"><span>コピーして使う</span><button type="button" class="copy-block-btn">コピー</button></div><pre class="copy-block-body">${escapeHtml(segment.value)}</pre></div>`
+        )
+        .join("");
+}
+
 /** 一覧のプレビュー用に、Markdown リンクを表示テキストだけにする。 */
 export function plainDescription(text: string): string {
     return text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, "$1");
