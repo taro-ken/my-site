@@ -96,7 +96,12 @@ const categories = [...new Set(courses.map((course) => course.category).filter(B
                   <span class="inline-block mb-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">{course.category}</span>
                 )}
                 <p class="font-bold text-sm">{course.title}</p>
-                {course.description && <p class="text-xs text-zinc-400 mt-1 whitespace-pre-wrap">{course.description}</p>}
+                {course.description && (
+                  <details class="desc-accordion mt-1">
+                    <summary class="text-[11px] font-bold text-zinc-500 hover:text-zinc-300">概要を表示</summary>
+                    <p class="text-xs text-zinc-400 mt-1 whitespace-pre-wrap">{course.description}</p>
+                  </details>
+                )}
               </div>
               <form class="edit-form course-edit-form hidden space-y-2" data-course-id={course.id}>
                 <input name="title" type="text" value={course.title} required placeholder="タイトル"
@@ -133,7 +138,12 @@ const categories = [...new Set(courses.map((course) => course.category).filter(B
                   <div class="edit-view">
                     {lesson.chapterTitle && <p class="text-[10px] font-bold text-emerald-400 mb-0.5">{lesson.chapterTitle}</p>}
                     <p class="text-xs font-bold text-zinc-200">{lesson.title}</p>
-                    {lesson.description && <p class="text-[11px] text-zinc-500 mt-0.5 whitespace-pre-wrap">{lesson.description}</p>}
+                    {lesson.description && (
+                      <details class="desc-accordion mt-0.5">
+                        <summary class="text-[11px] font-bold text-zinc-500 hover:text-zinc-300">概要を表示</summary>
+                        <p class="text-[11px] text-zinc-500 mt-1 whitespace-pre-wrap">{lesson.description}</p>
+                      </details>
+                    )}
                   </div>
                   <form class="edit-form lesson-edit-form hidden space-y-2" data-course-id={course.id} data-lesson-id={lesson.id}>
                     <input name="chapterTitle" type="text" value={lesson.chapterTitle ?? ''} placeholder="章タイトル(任意)"
@@ -189,6 +199,37 @@ const categories = [...new Set(courses.map((course) => course.category).filter(B
     </div>
   </main>
 </Layout>
+
+<style>
+  .desc-accordion > summary {
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    user-select: none;
+  }
+  .desc-accordion > summary::-webkit-details-marker {
+    display: none;
+  }
+  .desc-accordion > summary::before {
+    content: '▸';
+    transition: transform 0.15s;
+  }
+  .desc-accordion[open] > summary::before {
+    transform: rotate(90deg);
+  }
+  .desc-accordion[open] > summary {
+    font-size: 0;
+  }
+  .desc-accordion[open] > summary::before {
+    font-size: 11px;
+  }
+  .desc-accordion[open] > summary::after {
+    content: '概要を閉じる';
+    font-size: 11px;
+  }
+</style>
 
 <script>
   const courseForm = document.getElementById('course-form') as HTMLFormElement;
