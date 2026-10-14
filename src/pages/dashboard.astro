@@ -84,6 +84,28 @@ const firebasePublicConfig = {
       </div>
     )}
 
+    <div class="max-w-md mt-4 p-5 rounded-2xl bg-zinc-950 border border-white/10">
+      <div class="flex items-center gap-4">
+        <span class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-400/15 text-emerald-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M8 20h8M12 16v4" /></svg>
+        </span>
+        <span class="min-w-0 flex-1">
+          <span class="block text-sm font-bold">壁紙</span>
+          <span class="block mt-0.5 text-xs text-zinc-500">Essenceの背景をスマホ・PCの壁紙に。</span>
+        </span>
+      </div>
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <a href="/wallpapers/essence-wallpaper-phone.png" download="essence-wallpaper-phone.png" class="text-center px-3 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-all text-sm font-medium">
+          スマホ用
+          <span class="block mt-0.5 text-[11px] text-zinc-500">1290×2796 · 4MB</span>
+        </a>
+        <a href="/wallpapers/essence-wallpaper-pc.png" download="essence-wallpaper-pc.png" class="text-center px-3 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-all text-sm font-medium">
+          PC用
+          <span class="block mt-0.5 text-[11px] text-zinc-500">3840×2160 · 9MB</span>
+        </a>
+      </div>
+    </div>
+
     {!isPremium && (
       <div class="max-w-md mt-4">
         {ESSENCE_JOIN_OPEN ? (
