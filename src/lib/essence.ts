@@ -3,3 +3,13 @@
  * false の間は参加ボタンを「準備中」にし、決済への導線・決済APIも止める。募集再開時は true に戻す。
  */
 export const ESSENCE_JOIN_OPEN = false;
+
+/** App Store Connect の「Apple ID」(数字)。空の間は /app から紹介ページへ案内する。 */
+export const ESSENCE_APP_STORE_ID = '';
+
+export const ESSENCE_APP_STORE_URL = ESSENCE_APP_STORE_ID
+  ? `https://apps.apple.com/jp/app/id${ESSENCE_APP_STORE_ID}`
+  : '/essence';
+
+/** ユニバーサルリンクの対象アプリ(<Team ID>.<Bundle ID>)。 */
+export const ESSENCE_IOS_APP_ID = 'ZCR4QT36HT.com.kk.essence';
