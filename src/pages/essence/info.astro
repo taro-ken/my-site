@@ -1,0 +1,73 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { ESSENCE_JOIN_OPEN } from '../../lib/essence';
+
+const webOpen = ESSENCE_JOIN_OPEN;
+
+const billingTerms = [
+  { k: '課金', v: '初回お申し込み時、およびその後1か月ごとに自動更新されます。' },
+  { k: '解約', v: webOpen ? 'いつでも可能です。App Storeで登録した場合は、アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から、Webサイトで登録した場合は、アプリの「設定」→「サブスクリプションを解約する」から手続きします。次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。' : 'いつでも可能です。アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から手続きします。次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。' },
+  { k: '返金', v: 'デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。App Storeでのご購入は、Appleの規定に従います。' },
+  { k: 'お支払い', v: webOpen ? 'アプリ内: App Store ／ Webサイト: クレジットカード（Stripe）・Apple Pay' : 'App Store（アプリ内課金）' },
+];
+
+const operator = [
+  { k: 'サービス名', v: 'Essence（アプリケーション）' },
+  { k: '運営者', v: 'taro.（Taro Essence）' },
+  { k: '料金', v: '月額1,500円（税込）／ 1か月ごとの自動更新' },
+  { k: 'お支払い方法', v: webOpen ? 'アプリ内: App Store ／ Webサイト: クレジットカード（Stripe）・Apple Pay' : 'App Store（アプリ内課金）' },
+];
+---
+
+<Layout
+  title="課金・解約・返金とサービス運営者情報 | Essence"
+  description="Essenceの課金・解約・返金の条件と、サービス運営者情報を掲載しています。"
+>
+  <main class="min-h-screen bg-black text-white pt-10 pb-32 px-5 font-sans selection:bg-white selection:text-black">
+    <div class="max-w-2xl mx-auto w-full">
+      <a href="/essence" class="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Essenceに戻る
+      </a>
+
+      <section id="billing" class="mt-12 scroll-mt-10">
+        <h1 class="text-2xl md:text-3xl font-black tracking-tight">課金・解約・返金について</h1>
+        <dl class="mt-8 divide-y divide-white/10">
+          {billingTerms.map((b) => (
+            <div class="py-5 grid sm:grid-cols-[7rem_1fr] gap-2 sm:gap-6">
+              <dt class="text-xs font-bold text-emerald-200/80">{b.k}</dt>
+              <dd class="text-sm leading-[1.85] text-zinc-300">{b.v}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section id="operator" class="mt-20 scroll-mt-10">
+        <h2 class="text-2xl md:text-3xl font-black tracking-tight">サービス運営者情報</h2>
+        <dl class="mt-8 divide-y divide-white/10">
+          {operator.map((o) => (
+            <div class="py-5 grid sm:grid-cols-[7rem_1fr] gap-2 sm:gap-6">
+              <dt class="text-xs font-bold text-zinc-500">{o.k}</dt>
+              <dd class="text-sm leading-[1.85] text-zinc-300">{o.v}</dd>
+            </div>
+          ))}
+          <div class="py-5 grid sm:grid-cols-[7rem_1fr] gap-2 sm:gap-6">
+            <dt class="text-xs font-bold text-zinc-500">お問い合わせ</dt>
+            <dd class="text-sm leading-[1.85] text-zinc-300">
+              <a href="mailto:hello@taroessence.com" class="underline underline-offset-4 hover:text-white">hello@taroessence.com</a>
+              <span class="block text-xs text-zinc-500">10:00〜18:00 土日祝日を除く</span>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <p class="mt-16 text-sm text-zinc-400">
+        詳しい表記は<a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>をご確認ください。
+      </p>
+    </div>
+  </main>
+  <SiteFooter />
+</Layout>

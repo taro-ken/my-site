@@ -33,69 +33,75 @@ const icons: Record<string, string> = {
   gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
 };
 
-const homeSections = [
-  {
-    label: '学ぶ',
-    rows: [
-      { t: 'Podcast', d: '考え方を耳から学ぶ。' },
-      { t: 'Skills', d: '章立ての動画講座で学ぶ。' },
-      { t: 'Article', d: '暮らしと働き方を綴る記事。' },
-    ],
-  },
-  {
-    label: '使う',
-    rows: [
-      { t: 'Item List', d: '持ち物を見える化する。' },
-      { t: 'Balance Sheet', d: 'お金の全体像を見える化する。' },
-      { t: 'Meditation', d: '5分から、頭の中を整える。' },
-      { t: 'Healthcare', d: '心と体の状態を確かめる。' },
-    ],
-  },
-  {
-    label: '話す',
-    rows: [
-      { t: 'Community', d: '同じ方向を向く人と話す。※メンバーが一定数に達したら解放します。' },
-    ],
-  },
-];
-
 const forYou = [
-  '今の働き方に、やりたくないことが多すぎると感じている',
-  'モノを減らすだけでなく、お金や時間の使い方まで見直したい',
-  'いきなり独立はしないけれど、選べる状態を少しずつつくりたい',
-  'サイドFIRE（経済的自立＋個人事業）を目指している',
+  'やりたくないことを減らして、働き方を選び直したい人',
+  'モノを手放し、お金と時間の使い方まで見直したい人',
+  '会社員のまま、少しずつ選べる状態をつくりたい人',
+  'フリーランスとして独立したい人',
 ];
 
-const wave = Array.from({ length: 34 }, (_, i) => Math.round(22 + Math.abs(Math.sin(i * 1.7) * 55 + Math.cos(i * 0.9) * 20)));
+const sampleItems = [
+  { name: 'iPhone13mini', meta: '¥98,000 ・ 週に7回' },
+  { name: 'AirPods Pro2', meta: '¥35,999 ・ 週に7回' },
+  { name: 'MagSafe Wallet', meta: '¥10,853' },
+];
+
+const meditationSounds = [
+  { name: '静寂', bg: 'linear-gradient(160deg,#2b2a5a,#151a33)', active: true },
+  { name: 'Boundless', bg: 'linear-gradient(160deg,#14a085,#0b4d3e)', active: false },
+  { name: 'Sunrise', bg: 'linear-gradient(160deg,#f59e0b,#be123c)', active: false },
+];
+
+const healthStats = [
+  { value: '42,180', label: '歩数' },
+  { value: '6h52m', label: '睡眠' },
+  { value: '3回', label: '運動' },
+];
+
+const healthDaily = [
+  { day: '月', h: 22 },
+  { day: '火', h: 34 },
+  { day: '水', h: 18 },
+  { day: '木', h: 40 },
+  { day: '金', h: 28 },
+  { day: '土', h: 24 },
+  { day: '日', h: 36, today: true },
+];
+
+const wave = Array.from({ length: 40 }, (_, i) => Math.round(25 + Math.abs(Math.sin(i * 1.7) * 50 + Math.cos(i * 0.9) * 20)));
+
+const courseShowcase = [
+  { id: 'minimalism', tag: 'ミニマリズム', title: '過剰からの救済 ― 5つの過剰から、選べる人生を取り戻す' },
+  { id: 'web', tag: 'Webアプリ開発', title: 'バイブコーディングで、未経験からWebアプリをつくる' },
+  { id: 'native', tag: 'スマホアプリ開発', title: 'バイブコーディングで、未経験からスマホアプリをリリースする' },
+  { id: 'breath', tag: 'ヘルスケア', title: '呼吸から整える、毎日のメンタル・メンテナンス' },
+];
 
 const features = [
   {
-    id: 'podcast', en: 'Podcast', jp: '考え方を、耳から。', icon: 'mic', color: '#34D399',
-    body: '選べる人生を創るための考え方を、音声で。家事や移動の時間が、そのまま次の一歩を考える時間になります。',
+    id: 'skills', en: 'Course', jp: '選ぶ力を付ける', icon: 'play', color: '#10B981',
+    body: '動画形式でいつでも閲覧できる講座。見たその日からすぐに実践。削る・創る・選ぶという方法を、実際に手を動かせるところまで身につけます。',
+    note: '※ Webのダッシュボードからも視聴できます。',
   },
   {
-    id: 'skills', en: 'Skills', jp: '方法を、順番に学ぶ。', icon: 'play', color: '#10B981',
-    body: '削る・創る・選ぶという方法を、動画講座で身につける。知って終わりにせず、実際に手を動かせるところまで連れていきます。',
+    id: 'podcast', en: 'Podcast', jp: 'メンバー限定Podcast', icon: 'mic', color: '#34D399',
+    body: 'YouTubeでは語らない実践の思考や裏側を、声でお届けします。家事や移動の時間が、そのまま次の一歩を考える時間になります。',
   },
   {
-    id: 'article', en: 'Article', jp: '暮らしと働き方を綴る。', icon: 'file', color: '#0891B2',
-    body: 'ミニマリズム、お金、仕事の選び方について。今の働き方を見直すきっかけになる考えを、文章でじっくり届けます。',
+    id: 'items', en: 'Item List', jp: '自身を知る', icon: 'box', color: '#34D399',
+    body: '本当に必要なものを可視化するツール。持ち物を記録し、必要なものだけを残すほど、管理する時間もお金も浮いていきます。',
   },
   {
-    id: 'items', en: 'Item List', jp: '持ち物を、見える化する。', icon: 'box', color: '#34D399',
-    body: '持っているものを記録し、本当に必要なものだけを残す。持ち物が減るほど、管理する時間もお金も浮き、選べる余白が増えていきます。',
+    id: 'meditation', en: 'Meditation Timer', jp: '頭の中を整える', icon: 'leaf', color: '#34D399',
+    body: '呼吸で精神を安定させる、現代の必須科目。背景サウンドとベルで、判断に迷ったときほど静かな時間をつくります。',
   },
   {
-    id: 'balance', en: 'Balance Sheet', jp: 'お金の全体像を、見える化する。', icon: 'yen', color: '#0891B2',
-    body: '資産と負債を書き出し、純資産をひと目で把握。お金の不安が減るほど、働き方も選びやすくなります。',
+    id: 'balance', en: 'Balance Sheet', jp: 'お金を見える化する', icon: 'yen', color: '#0891B2',
+    body: '数字を把握し、不要を手放す。純資産・固定費・資産配分をひと目で確認でき、お金の不安が減るほど働き方も選びやすくなります。',
   },
   {
-    id: 'meditation', en: 'Meditation', jp: '5分から、頭の中を整える。', icon: 'leaf', color: '#34D399',
-    body: 'タイマーで、頭の中を一度整理する。判断に迷ったときほど、静かな時間が次の選択を助けます。',
-  },
-  {
-    id: 'health', en: 'Healthcare', jp: '心と体の状態を、確かめる。', icon: 'heart', color: '#0D9488',
-    body: '歩数・睡眠・ワークアウトを週単位で確認（読み取り専用）。心と体の状態を把握することも、選べる状態の土台になります。',
+    id: 'health', en: 'Healthcare', jp: '体の状態を知る', icon: 'heart', color: '#0D9488',
+    body: '選び続けるための土台となる体を観察。歩数・睡眠・ワークアウトを日ごとに確認できます（読み取り専用）。',
   },
   {
     id: 'community', en: 'Community', jp: '同じ方向を向く人と、比べずに話す。', icon: 'chat', color: '#0D9488',
@@ -105,33 +111,30 @@ const features = [
 ];
 
 const steps = [
-  { n: '01', icon: 'user', t: 'アカウントを作成', d: webOpen ? 'EssenceアプリまたはWebサイトで、アカウントを作成（またはログイン）します。' : 'Essenceアプリを開き、アカウントを作成（またはログイン）します。' },
-  { n: '02', icon: 'card', t: 'メンバーシップに登録', d: webOpen ? '月額1,500円のメンバーシップに登録します。アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお支払いいただけます。' : 'アプリ内の案内から、月額1,500円のメンバーシップに登録します。お支払いはApp Storeのアカウントで行います。' },
-  { n: '03', icon: 'leaf', t: 'すべての機能を使う', d: 'ホーム画面から、Podcast・Article・Skills・Community・Item List・Balance Sheet・Meditation・Healthcareへ。' },
+  { n: '01', icon: 'user', t: 'アカウントを作成', d: webOpen ? 'EssenceアプリまたはWebサイトで、アカウントを作成（またはログイン）します。' : 'EssenceアプリまたはWebサイトで、アカウントを作成（またはログイン）します。' },
+  { n: '02', icon: 'card', t: 'メンバーシップに登録', d: webOpen ? '月額1,500円のメンバーシップに登録します。アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお支払いいただけます。' : 'アプリまたはWebサイトから、月額1,500円のメンバーシップに登録します。' },
 ];
 
 const pricingPoints = [
-  'Podcast・Skills（動画講座）を含む、すべての機能が使える',
-  'Communityへの参加（メンバーが一定数に達したら解放）',
-  'Balance Sheet・Meditation・Healthcare（バランスシート・瞑想・ヘルスケア連携）',
-  'アプリの「設定」からいつでも解約可能',
+  'すべての機能が使える',
+  'いつでも解約可能',
 ];
 
-const billingTerms = [
-  { k: '課金', v: '初回お申し込み時、およびその後1か月ごとに自動更新されます。' },
-  { k: '解約', v: webOpen ? 'いつでも可能です。App Storeで登録した場合は、アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から、Webサイトで登録した場合は、アプリの「設定」→「サブスクリプションを解約する」から手続きします。次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。' : 'いつでも可能です。アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から手続きします。次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。' },
-  { k: '返金', v: 'デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。App Storeでのご購入は、Appleの規定に従います。' },
-  { k: 'お支払い', v: webOpen ? 'アプリ内: App Store ／ Webサイト: クレジットカード（Stripe）・Apple Pay' : 'App Store（アプリ内課金）' },
+const footerLinks = [
+  { href: '/essence/info#billing', label: '課金・解約・返金について' },
+  { href: '/essence/info#operator', label: 'サービス運営者情報' },
+  { href: '/privacy', label: 'プライバシーポリシー' },
+  { href: '/terms', label: '利用規約' },
+  { href: '/tokushoho', label: '特定商取引法に基づく表記' },
 ];
 
 const faq = [
-  { q: 'Essenceとは、どんなアプリですか？', a: 'やりたくないことを減らし、自由な時間とお金を増やしていくための、メンバー向けアプリケーションです。音声（Podcast）、スキル講座（Skills）、記事（Article）でまず学び、持ち物の記録（Item List）やお金と心身を把握するツール（Balance Sheet・Meditation・Healthcare）を使い、同じ方向を向くメンバーと話せる場（Community）まで、1つにまとめています。' },
-  { q: '料金と支払い方法を教えてください。', a: webOpen ? '月額1,500円（税込）のメンバーシップです。初回お申し込み時とその後1か月ごとに自動で決済されます。お支払いは、アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）またはApple Payです。どちらで登録しても、同じアカウントでアプリをご利用いただけます。' : '月額1,500円（税込）のメンバーシップです。お支払いはApp Storeのアカウントで、初回お申し込み時とその後1か月ごとに自動で決済されます。登録はアプリ内から行います。Webサイトからのお申し込みは、アプリのリリース後に開始予定です。' },
+  { q: '料金と支払い方法を教えてください。', a: webOpen ? '月額1,500円（税込）のメンバーシップです。初回お申し込み時とその後1か月ごとに自動で決済されます。お支払いは、アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）またはApple Payです。どちらで登録しても、同じアカウントでアプリをご利用いただけます。' : '月額1,500円（税込）のメンバーシップです。アプリまたはWebサイトから登録でき、初回お申し込み時とその後1か月ごとに自動で決済されます。どちらで登録しても、同じアカウントでアプリをご利用いただけます。' },
   { q: '解約するには？ 返金はできますか？', a: (webOpen ? 'いつでも解約できます。App Storeで登録した場合はアプリの「設定」→「サブスクリプションを管理」から、Webサイトで登録した場合は「設定」→「サブスクリプションを解約する」から手続きします。' : 'いつでも解約できます。アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から手続きします。') + '次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。詳細は<a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>をご確認ください。' },
-  { q: 'バランスシートや瞑想の記録は、他の人に見えますか？', a: 'いいえ。バランスシート、瞑想の記録は、あなたのアカウントにのみ紐づいて保存され、他のメンバーには表示されません。' },
-  { q: 'ヘルスケアのデータは、何を取得しますか？', a: '歩数・睡眠時間・ワークアウトのみを、あなたの許可のもとで「読み取り」ます。ヘルスケアへの書き込みは一切行いません。表示のために、週ごとの集計値をあなたのアカウントに保存します。連携はiPhoneの設定からいつでも変更できます。' },
-  { q: 'Communityでの不適切な投稿はどうなりますか？', a: 'Communityはメンバー限定の場です。不適切な投稿は運営が確認のうえ削除します。ご自身の投稿は、いつでもご自身で削除できます。' },
+  { q: 'バランスシートや瞑想の記録は、他の人に見えますか？', a: 'いいえ。記録はGoogleのクラウド（Firebase）に暗号化して保存され、あなたのアカウントでログインしたときだけ読み書きできる設定になっています。他のメンバーや第三者に見られることはありません。' },
+  { q: 'ヘルスケアのデータは、何を取得しますか？', a: '歩数・睡眠時間・ワークアウトのみを、あなたの許可のもとで「読み取り」ます。ヘルスケアへの書き込みは一切行いません。日ごとの記録はiPhone上で集計して表示し、週ごとの集計値のみをあなたのアカウントに保存します。連携はiPhoneの設定からいつでも変更できます。' },
   { q: '対応端末を教えてください。', a: 'iOS 17以降を搭載したiPhoneに対応しています。Android版も今後リリースを予定しています。' },
+  { q: 'Courseはパソコンでも見られますか？', a: 'はい。Webサイトにログインすると、ダッシュボードからCourseを視聴できます。アプリと同じアカウントで利用でき、進み具合も共通です。' },
   { q: '問い合わせ先はどこですか？', a: '<a href="mailto:hello@taroessence.com" class="underline underline-offset-4 hover:text-white">hello@taroessence.com</a> までご連絡ください（対応時間: 10:00〜18:00 土日祝日を除く）。' },
 ];
 
@@ -217,34 +220,7 @@ const jsonLd = {
         <div class="hero-phone reveal relative min-w-0 mx-auto lg:ml-auto" style="--d:200ms">
           <div class="phone-glow" aria-hidden="true"></div>
           <div class="phone float" role="img" aria-label="Essenceのホーム画面のイメージ">
-            <div class="phone-bezel">
-              <div class="phone-screen">
-                <div class="island"></div>
-                <div class="screen-aurora a"></div>
-                <div class="screen-aurora b"></div>
-                <div class="home">
-                  <div class="home-head">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons.leaf} />
-                    <p>Essence</p>
-                  </div>
-                  {homeSections.map((sec) => (
-                    <div class="home-sec">
-                      <div class="home-sec-label"><span>{sec.label}</span><i></i></div>
-                      {sec.rows.map((r) => (
-                        <div class="home-row">
-                          <p class="t">{r.t}</p>
-                          <p class="d">{r.d}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                  <div class="home-row settings">
-                    <p class="t">Settings</p>
-                    <p class="d">アカウント・外観・外部連携の管理。</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <img src="/assets/essence/home-device.png" alt="" class="phone-device" width="838" height="1698" loading="eager" decoding="async" />
           </div>
         </div>
       </div>
@@ -287,53 +263,46 @@ const jsonLd = {
             {f.note && <p class="col-start-2 mt-1 md:mt-2 text-[10px] md:text-xs font-bold text-emerald-300/80">{f.note}</p>}
 
             {/* 各カードの高さを揃えるため、ミニUIは固定高さの枠に収める */}
-            <div class="feature-visual mt-6" aria-hidden="true">
+            <div class="feature-visual col-span-2 mt-4 md:mt-6" aria-hidden="true">
               {f.id === 'podcast' && (
-                <div>
-                  <div class="flex items-end gap-[3px] h-14">
+                <div class="text-[10px]">
+                  <p class="font-bold tracking-[0.2em] text-emerald-400 text-[8px]">NOW PLAYING</p>
+                  <p class="mt-1 text-zinc-500">EP 2 ・ 10分</p>
+                  <p class="mt-0.5 text-sm font-bold text-zinc-100">30代の投資戦略</p>
+                  <div class="mt-3 flex items-center gap-[3px] h-9">
                     {wave.map((h, k) => (
-                      <span class="wave-bar" style={`height:${h}%;animation-delay:${k * 55}ms`}></span>
+                      <span class={`flex-1 min-w-[2px] rounded-full ${k < wave.length * 0.35 ? 'bg-emerald-400' : 'bg-white/15'}`} style={`height:${h}%`}></span>
                     ))}
                   </div>
-                  <div class="mt-3 flex items-center gap-3 text-[10px] text-zinc-500">
-                    <span class="w-6 h-6 rounded-full flex items-center justify-center bg-emerald-400 text-black">
-                      <svg viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3"><path d="M8 5v14l11-7z" /></svg>
+                  <div class="mt-1.5 flex justify-between text-zinc-500 tabular-nums"><span>03:12</span><span>10:00</span></div>
+                  <div class="mt-2 flex items-center justify-center gap-6 text-zinc-300">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" /></svg>
+                    <span class="w-9 h-9 rounded-full flex items-center justify-center bg-emerald-400 text-black">
+                      <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
                     </span>
-                    <span>ミニプレイヤー</span>
-                    <span class="ml-auto">00:12</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" /></svg>
                   </div>
-                </div>
-              )}
-
-              {f.id === 'article' && (
-                <div class="space-y-3">
-                  <div class="skeleton" style="width:92%"></div>
-                  <div class="skeleton" style="width:78%"></div>
-                  <div class="skeleton" style="width:86%"></div>
-                  <div class="skeleton" style="width:54%"></div>
                 </div>
               )}
 
               {f.id === 'skills' && (
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between text-[10px] text-zinc-500">
-                    <span>2/4レッスン完了</span><span class="text-emerald-300">50%</span>
+                <div class="course-carousel">
+                  <div class="course-marquee">
+                    <div class="course-track">
+                      {courseShowcase.map((c) => (
+                        <div class="course-slide">
+                          <img src={`/assets/essence/course-thumb-${c.id}.jpg`} alt="" width="640" height="360" loading="lazy" decoding="async" />
+                          <span class="course-tag">{c.tag}</span>
+                          <p class="course-title">{c.title}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-1/2 rounded-full" style="background:linear-gradient(90deg,#10B981,#0891B2)"></div></div>
-                  <div class="space-y-2">
-                    {['はじめに', '基本の考え方'].map((t) => (
-                      <div class="flex items-center gap-2.5 text-xs text-zinc-300">
-                        <span class="w-4 h-4 rounded-full flex items-center justify-center bg-emerald-400 text-black">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5" set:html={icons.check} />
-                        </span>{t}
-                      </div>
-                    ))}
-                    {['実践編 1', '実践編 2'].map((t) => (
-                      <div class="flex items-center gap-2.5 text-xs text-zinc-500">
-                        <span class="w-4 h-4 rounded-full border border-white/20"></span>{t}
-                      </div>
-                    ))}
-                  </div>
+                  {[-1, 1].map((dir) => (
+                    <button type="button" class={`course-arrow ${dir < 0 ? 'prev' : 'next'}`} data-dir={dir} tabindex="-1" disabled={dir < 0}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d={dir < 0 ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'} /></svg>
+                    </button>
+                  ))}
                 </div>
               )}
 
@@ -354,52 +323,89 @@ const jsonLd = {
               )}
 
               {f.id === 'items' && (
-                <div class="flex items-center gap-4">
-                  <span class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(52,211,153,.16);color:#34D399">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons.box} />
-                  </span>
-                  <div class="text-xs">
-                    <p class="font-bold text-sm text-zinc-100">サンプルアイテム</p>
-                    <p class="mt-0.5 text-zinc-500">¥12,000 ・ 週に3回</p>
-                    <p class="mt-0.5 text-[10px] text-zinc-600">購入から 214日</p>
+                <div class="text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-bold text-zinc-200">Portable</span>
+                    <span class="px-1.5 rounded-full text-[9px] font-bold text-black bg-emerald-400">6</span>
+                  </div>
+                  <div class="mt-2 space-y-1.5">
+                    {sampleItems.map((item) => (
+                      <div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.07]">
+                        <span class="w-7 h-7 shrink-0 rounded-md flex items-center justify-center" style="background:rgba(52,211,153,.16);color:#34D399">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" set:html={icons.box} />
+                        </span>
+                        <div class="min-w-0">
+                          <p class="font-bold text-[11px] text-zinc-100 truncate">{item.name}</p>
+                          <p class="text-[9px] text-zinc-500">{item.meta}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
 
               {f.id === 'balance' && (
-                <div class="text-xs">
-                  <p class="text-[10px] text-zinc-500">純資産</p>
-                  <p class="mt-1 text-2xl font-black tracking-tight text-cyan-400">¥1,250,000</p>
-                  <div class="mt-3 space-y-2 text-[10px] text-zinc-500">
-                    <div class="flex items-center gap-2"><span class="w-6">資産</span><div class="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-[82%] rounded-full bg-cyan-500"></div></div></div>
-                    <div class="flex items-center gap-2"><span class="w-6">負債</span><div class="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-[28%] rounded-full bg-zinc-500"></div></div></div>
+                <div class="text-[10px]">
+                  <div class="grid grid-cols-3 gap-1 p-1 rounded-full bg-white/[0.06] border border-white/[0.08] text-center font-bold">
+                    <span class="py-1 rounded-full text-white bg-gradient-to-r from-emerald-500 to-teal-500">純資産</span>
+                    <span class="py-1 text-zinc-400">固定費</span>
+                    <span class="py-1 text-zinc-400">資産配分</span>
+                  </div>
+                  <div class="mt-2.5 rounded-xl p-3 text-white bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 shadow-[0_10px_30px_-10px_rgba(16,185,129,0.6)]">
+                    <p class="text-[8px] font-bold tracking-[0.2em] text-white/80">NET WORTH<span class="ml-1.5 tracking-normal">純資産</span></p>
+                    <p class="mt-1 text-2xl font-black tracking-tight">¥32,400,000</p>
+                    <div class="mt-2 h-1 rounded-full bg-white/25 overflow-hidden"><div class="h-full w-[92%] rounded-full bg-white"></div></div>
+                    <div class="mt-1.5 flex justify-between text-[9px]">
+                      <span><span class="text-white/70">資産</span> <b>¥35,200,000</b></span>
+                      <span><span class="text-white/70">負債</span> <b>¥2,800,000</b></span>
+                    </div>
                   </div>
                 </div>
               )}
 
               {f.id === 'meditation' && (
                 <div class="flex items-center gap-4">
-                  <div class="relative w-14 h-14 shrink-0">
+                  <div class="relative w-[88px] h-[88px] shrink-0">
                     <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
-                      <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="3" />
-                      <circle cx="18" cy="18" r="15" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-dasharray="94.2" stroke-dashoffset="34" />
+                      <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2" />
+                      <circle cx="18" cy="18" r="16" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="38" />
                     </svg>
-                    <span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-200">03:12</span>
+                    <span class="absolute inset-0 flex flex-col items-center justify-center">
+                      <span class="text-base font-black text-zinc-100 tabular-nums">06:12</span>
+                      <span class="text-[9px] text-zinc-500">/ 10分</span>
+                    </span>
                   </div>
-                  <div class="text-xs">
-                    <p class="text-[10px] text-zinc-500">今週</p>
-                    <p class="mt-0.5 text-2xl font-black text-emerald-400">3<small class="ml-0.5 text-[10px] font-bold">回</small></p>
+                  <div class="min-w-0 flex-1 text-[10px]">
+                    <p class="text-zinc-500">背景サウンド</p>
+                    <div class="mt-1.5 grid grid-cols-3 gap-1.5">
+                      {meditationSounds.map((m) => (
+                        <div class={`h-12 min-w-0 rounded-lg p-1.5 flex items-end text-[8px] font-bold text-white ${m.active ? 'ring-2 ring-white/80' : ''}`} style={`background:${m.bg}`}><span class="truncate">{m.name}</span></div>
+                      ))}
+                    </div>
+                    <p class="mt-2.5 text-zinc-500">ベル</p>
+                    <p class="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-emerald-300 bg-emerald-400/10 border border-emerald-400/30">ハーモニック</p>
                   </div>
                 </div>
               )}
 
               {f.id === 'health' && (
-                <div class="text-xs">
-                  <p class="text-[10px] text-zinc-500">今週の歩数</p>
-                  <p class="mt-0.5 text-2xl font-black text-teal-400">42,180<small class="ml-0.5 text-[10px] font-bold">歩</small></p>
-                  <div class="mt-3 flex items-end justify-between h-10">
-                    {[55, 80, 40, 95, 70, 60, 85].map((h) => (
-                      <span class="w-1.5 rounded-full bg-teal-500/80" style={`height:${Math.round(h * 0.4)}px`}></span>
+                <div class="text-[10px]">
+                  <p class="text-zinc-500">今週</p>
+                  <div class="mt-1.5 grid grid-cols-3 divide-x divide-white/10 text-center">
+                    {healthStats.map((h) => (
+                      <div>
+                        <p class="text-sm font-black text-zinc-100 tabular-nums">{h.value}</p>
+                        <p class="text-[9px] text-zinc-500">{h.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p class="mt-3 text-zinc-500">日別の歩数</p>
+                  <div class="mt-1.5 grid grid-cols-7 gap-1.5 items-end h-14">
+                    {healthDaily.map((d) => (
+                      <div class="flex flex-col items-center gap-1">
+                        <span class={`w-2.5 rounded-full ${d.today ? 'bg-teal-400' : 'bg-teal-500/40'}`} style={`height:${d.h}px`}></span>
+                        <span class={`text-[8px] ${d.today ? 'text-teal-300' : 'text-zinc-500'}`}>{d.day}</span>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -410,7 +416,7 @@ const jsonLd = {
         ))}
       </div>
       <div class="reveal mt-8 md:mt-14 text-center">
-        <p class="text-xs md:text-sm font-bold text-zinc-300">8つの機能、月額1,500円ですべて使えます。</p>
+        <p class="text-xs md:text-sm font-bold text-zinc-300">7つの機能、月額1,500円ですべて使えます。</p>
         <div class="mt-4 flex justify-center"><EssenceDownloadButton href={joinHref} /></div>
       </div>
     </section>
@@ -421,7 +427,7 @@ const jsonLd = {
         <p class="reveal eyebrow">How it works</p>
         <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">はじめかた</h2>
       </div>
-      <div class="grid md:grid-cols-3 gap-4">
+      <div class="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
         {steps.map((s, i) => (
           <div class="card reveal p-8" style={`--c:#34D399;--d:${i * 90}ms`}>
             <div class="flex items-center justify-between mb-8">
@@ -446,7 +452,7 @@ const jsonLd = {
           <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">シンプルな、ひとつのプラン。</h2>
         </div>
 
-        <div class="grid lg:grid-cols-[1fr_1.05fr] gap-6 items-stretch">
+        <div class="max-w-md mx-auto">
           <div class="reveal gborder">
             <div class="gborder-inner p-8 md:p-10 h-full flex flex-col">
               <p class="text-xs font-bold tracking-[0.22em] uppercase text-emerald-200/80">Essence Membership</p>
@@ -465,26 +471,10 @@ const jsonLd = {
               <div class="mt-auto pt-8">
                 <EssenceDownloadButton href={joinHref} full />
                 <p class="mt-4 text-xs leading-relaxed text-zinc-500">
-                  {webOpen ? 'アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお申し込みいただけます。どちらも同じアカウントでご利用いただけます。' : '登録・お支払いはEssenceアプリ内から行います。Webからのお申し込みは、アプリのリリース後に開始予定です。'}
+                  {webOpen ? 'アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお申し込みいただけます。どちらも同じアカウントでご利用いただけます。' : '登録・お支払いは、EssenceアプリまたはWebサイトから行えます。どちらも同じアカウントでご利用いただけます。'}
                 </p>
               </div>
             </div>
-          </div>
-
-          <div class="reveal rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-8 md:p-10" style="--d:100ms">
-            <h3 class="text-base font-black">課金・解約・返金について</h3>
-            <dl class="mt-6 divide-y divide-white/10">
-              {billingTerms.map((b) => (
-                <div class="py-4 grid grid-cols-[5.5rem_1fr] gap-4 first:pt-0">
-                  <dt class="text-xs font-bold text-emerald-200/80">{b.k}</dt>
-                  <dd class="text-sm leading-[1.85] text-zinc-300">{b.v}</dd>
-                </div>
-              ))}
-            </dl>
-            <a href="/tokushoho" class="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-white underline underline-offset-4 transition-colors">
-              特定商取引法に基づく表記を見る
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" set:html={icons.chevron} />
-            </a>
           </div>
         </div>
       </div>
@@ -526,27 +516,12 @@ const jsonLd = {
       </div>
 
       <div class="max-w-4xl mx-auto px-5 md:px-8 pb-24">
-        <div class="reveal rounded-3xl border border-white/10 bg-white/[0.03] p-7 md:p-9">
-          <h3 class="text-xs font-bold tracking-[0.22em] uppercase text-zinc-400 mb-6">サービス運営者情報</h3>
-          <dl class="grid sm:grid-cols-[9rem_1fr] gap-x-6 gap-y-4 text-sm">
-            <dt class="text-zinc-500">サービス名</dt><dd class="text-zinc-200">Essence（アプリケーション）</dd>
-            <dt class="text-zinc-500">運営者</dt><dd class="text-zinc-200">taro.（Taro Essence）</dd>
-            <dt class="text-zinc-500">料金</dt><dd class="text-zinc-200">月額1,500円（税込）／ 1か月ごとの自動更新</dd>
-            <dt class="text-zinc-500">お支払い方法</dt><dd class="text-zinc-200">{webOpen ? 'アプリ内: App Store ／ Webサイト: クレジットカード（Stripe）・Apple Pay' : 'App Store（アプリ内課金）'}</dd>
-            <dt class="text-zinc-500">お問い合わせ</dt>
-            <dd class="text-zinc-200">
-              <a href="mailto:hello@taroessence.com" class="underline underline-offset-4 hover:text-white">hello@taroessence.com</a>
-              <span class="block mt-1 text-xs text-zinc-500">10:00〜18:00 土日祝日を除く</span>
-            </dd>
-            <dt class="text-zinc-500">規約・表記</dt>
-            <dd class="text-zinc-200 flex flex-wrap gap-x-5 gap-y-1">
-              <a href="/privacy" class="underline underline-offset-4 hover:text-white">プライバシーポリシー</a>
-              <a href="/terms" class="underline underline-offset-4 hover:text-white">利用規約</a>
-              <a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>
-            </dd>
-          </dl>
-        </div>
-        <p class="mt-10 text-center text-[11px] text-zinc-600">© taro. All rights reserved.</p>
+        <nav class="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-zinc-500">
+          {footerLinks.map((l) => (
+            <a href={l.href} class="underline underline-offset-4 hover:text-white transition-colors">{l.label}</a>
+          ))}
+        </nav>
+        <p class="mt-8 text-center text-[11px] text-zinc-600">© taro. All rights reserved.</p>
       </div>
     </section>
 
@@ -691,8 +666,73 @@ const jsonLd = {
     background: rgba(0, 0, 0, 0.4);
   }
   .feature-visual > * { width: 100%; }
-  @media (max-width: 767px) {
-    .feature-visual { display: none; }
+  .feature-visual:has(.course-marquee) { padding: 14px 0; }
+  .course-carousel { position: relative; }
+  .course-arrow {
+    position: absolute;
+    top: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9999px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.2s, background 0.2s;
+  }
+  .course-arrow:hover { background: rgba(16, 185, 129, 0.85); }
+  .course-arrow:disabled { opacity: 0; pointer-events: none; }
+  .course-arrow.prev { left: 8px; }
+  .course-arrow.next { right: 8px; }
+  .course-marquee {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 18px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  }
+  .course-track {
+    display: flex;
+    gap: 12px;
+    width: max-content;
+    padding: 0 18px 8px;
+  }
+  .course-slide { scroll-snap-align: start; }
+  .course-slide {
+    width: 180px;
+    flex-shrink: 0;
+  }
+  .course-slide img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .course-tag {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 10px;
+    color: #34d399;
+    background: rgba(52, 211, 153, 0.12);
+  }
+  .course-title {
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.92);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .skeleton {
     height: 9px;
@@ -704,19 +744,6 @@ const jsonLd = {
   @keyframes skel {
     from { background-position: 100% 0; }
     to { background-position: -100% 0; }
-  }
-  .wave-bar {
-    flex: 1;
-    min-width: 2px;
-    border-radius: 9999px;
-    background: linear-gradient(180deg, #6ee7b7, #0891b2);
-    transform-origin: bottom;
-    animation: wave 1.7s ease-in-out infinite;
-    opacity: 0.9;
-  }
-  @keyframes wave {
-    0%, 100% { transform: scaleY(0.45); }
-    50% { transform: scaleY(1); }
   }
 
   /* ── pricing ── */
@@ -791,40 +818,12 @@ const jsonLd = {
     background: radial-gradient(closest-side, rgba(16, 185, 129, 0.4), transparent 70%);
     filter: blur(30px);
   }
-  .phone-bezel {
-    border-radius: 46px;
-    padding: 9px;
-    background: linear-gradient(160deg, #3f4a46, #111615 45%, #2a3330);
-    box-shadow:
-      0 50px 120px -30px rgba(16, 185, 129, 0.4),
-      0 0 0 1px rgba(255, 255, 255, 0.08),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  .phone-device {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 40px 60px rgba(16, 185, 129, 0.25));
   }
-  .phone-screen {
-    position: relative;
-    overflow: hidden;
-    border-radius: 38px;
-    aspect-ratio: 9 / 19;
-    background: #000;
-  }
-  .island {
-    position: absolute;
-    z-index: 5;
-    top: 10px;
-    left: 50%;
-    width: 84px;
-    height: 24px;
-    margin-left: -42px;
-    border-radius: 9999px;
-    background: #000;
-  }
-  .screen-aurora {
-    position: absolute;
-    border-radius: 9999px;
-    filter: blur(36px);
-  }
-  .screen-aurora.a { width: 200px; height: 200px; left: -60px; top: -40px; background: rgba(52, 211, 153, 0.4); }
-  .screen-aurora.b { width: 190px; height: 190px; right: -70px; top: 210px; background: rgba(8, 145, 178, 0.32); }
 
   /* スマホでもPCと同じ「左に文章・右に画面」の並びにするため、ヒーローの端末モックだけ縮小する */
   .hero-phone .phone { zoom: 0.4; }
@@ -860,22 +859,6 @@ const jsonLd = {
     50% { transform: translateY(-12px); }
   }
 
-  /* home replica */
-  .home {
-    position: relative;
-    z-index: 2;
-    padding: 58px 22px 20px;
-  }
-  .home-head { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 22px; }
-  .home-head p { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
-  .home-sec { margin-bottom: 16px; }
-  .home-sec-label { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
-  .home-sec-label span { font-size: 7.5px; font-weight: 800; letter-spacing: 0.18em; color: rgba(255, 255, 255, 0.55); }
-  .home-sec-label i { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.14); }
-  .home-row { margin-bottom: 10px; }
-  .home-row .t { font-size: 13.5px; font-weight: 700; color: rgba(255, 255, 255, 0.92); line-height: 1.25; }
-  .home-row .d { margin-top: 2px; font-size: 7.5px; color: rgba(255, 255, 255, 0.45); line-height: 1.4; }
-  .home-row.settings { margin-top: 18px; }
 
 
   /* ── reveal on scroll (only hides content once JS has flagged the page) ── */
@@ -892,7 +875,7 @@ const jsonLd = {
   .card.reveal.is-visible:hover { transform: translateY(-3px); transition-delay: 0ms; }
 
   @media (prefers-reduced-motion: reduce) {
-    .pa, .float, .float-slow, .gradient-text, .wave-bar, .skeleton { animation: none !important; }
+    .pa, .float, .float-slow, .gradient-text, .skeleton { animation: none !important; }
     :global(html.js-reveal) .reveal { opacity: 1; transform: none; transition: none; }
   }
 </style>
@@ -930,6 +913,26 @@ const jsonLd = {
     window.addEventListener('scroll', update, { passive: true });
     update();
   }
+
+  document.querySelectorAll<HTMLElement>('.course-carousel').forEach((carousel) => {
+    const scroller = carousel.querySelector<HTMLElement>('.course-marquee');
+    const slide = carousel.querySelector<HTMLElement>('.course-slide');
+    const arrows = carousel.querySelectorAll<HTMLButtonElement>('.course-arrow');
+    if (!scroller || !slide) return;
+    const sync = () => {
+      const max = scroller.scrollWidth - scroller.clientWidth - 2;
+      arrows.forEach((btn) => {
+        btn.disabled = Number(btn.dataset.dir) < 0 ? scroller.scrollLeft <= 2 : scroller.scrollLeft >= max;
+      });
+    };
+    arrows.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        scroller.scrollBy({ left: Number(btn.dataset.dir) * (slide.offsetWidth + 12), behavior: 'smooth' });
+      });
+    });
+    scroller.addEventListener('scroll', sync, { passive: true });
+    sync();
+  });
 
   document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
     card.addEventListener('pointermove', (e) => {

@@ -22,7 +22,7 @@ const courses = await Promise.all(
 const categories = [...new Set(courses.map((course) => course.category).filter(Boolean))].sort();
 ---
 
-<Layout title="Skills講座 | Taro Essence" description="Essenceメンバー限定の動画講座">
+<Layout title="Course | Taro Essence" description="Essenceメンバー限定の動画講座">
   <main class="min-h-screen bg-black text-white px-5 md:px-8 pt-24 pb-24 max-w-6xl mx-auto">
     <a href="/dashboard" class="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-white transition-colors">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M15 18l-6-6 6-6" /></svg>
@@ -30,9 +30,9 @@ const categories = [...new Set(courses.map((course) => course.category).filter(B
     </a>
 
     <header class="mt-6 mb-10">
-      <p class="text-xs font-bold tracking-[0.25em] text-emerald-300">SKILL COURSES</p>
-      <h1 class="mt-3 text-3xl md:text-5xl font-black tracking-tight">動画で学ぶ、選べる力</h1>
-      <p class="mt-3 text-sm text-zinc-400">仕事と暮らしに効くスキルを、章ごとに順番に。アプリと進捗が共有されます。</p>
+      <p class="text-xs font-bold tracking-[0.25em] text-emerald-300">COURSE</p>
+      <h1 class="mt-3 text-3xl md:text-5xl font-black tracking-tight">選ぶ力を付ける</h1>
+      <p class="mt-3 text-sm text-zinc-400">動画形式でいつでも閲覧できる講座。見たその日からすぐに実践</p>
     </header>
 
     {categories.length > 0 && (

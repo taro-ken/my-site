@@ -14,6 +14,7 @@ const staticPages = [
   '/product',
   '/profile',
   '/essence',
+  '/essence/info',
   '/privacy',
   '/terms',
   '/tokushoho',
