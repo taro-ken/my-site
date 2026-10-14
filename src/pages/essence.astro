@@ -104,7 +104,7 @@ const features = [
     body: '選び続けるための土台となる体を観察。歩数・睡眠・ワークアウトを日ごとに確認できます（読み取り専用）。',
   },
   {
-    id: 'community', en: 'Community', jp: '同じ方向を向く人と、比べずに話す。', icon: 'chat', color: '#0D9488',
+    id: 'community', en: 'Community', jp: '同じ方向を向く人と、比べずに話す', icon: 'chat', color: '#0D9488',
     body: 'メンバーだけが話せる、小さな場所です。同じ方向を目指す人の存在が、迷ったときに一歩を踏み出す力になります。',
     note: '※ メンバーが一定数に達したら解放します。',
   },
@@ -190,12 +190,11 @@ const jsonLd = {
       <div class="max-w-6xl mx-auto px-5 md:px-8 grid grid-cols-[1.3fr_0.7fr] sm:grid-cols-[1.1fr_0.9fr] gap-3 sm:gap-8 items-center">
         <div class="min-w-0">
 
-          <h1 class="reveal text-[1.65rem] min-[380px]:text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.15] sm:leading-[1.08]" style="--d:80ms">
-            選べる人生を、<br />
-            <span class="gradient-text">創る。</span>
+          <h1 class="reveal whitespace-nowrap text-lg min-[380px]:text-xl sm:text-3xl lg:text-5xl font-bold tracking-tight leading-tight" style="--d:80ms">
+            選べる人生を、<span class="gradient-text">創る</span>
           </h1>
 
-          <p class="reveal mt-4 sm:mt-7 text-[11px] leading-[1.7] sm:text-base md:text-lg sm:leading-relaxed text-zinc-300 max-w-xl" style="--d:160ms">
+          <p class="reveal mt-4 sm:mt-7 text-[11px] leading-[1.7] sm:text-sm md:text-base sm:leading-relaxed text-zinc-300 max-w-xl" style="--d:160ms">
             やりたくないことを減らし、自由な時間とお金を増やしていく。
             Essenceは、そのための考え方と道具をまとめた、メンバーのためのアプリケーションです。
           </p>
@@ -230,7 +229,7 @@ const jsonLd = {
     <section id="for-you" class="max-w-4xl mx-auto px-5 md:px-8 pb-14 md:pb-20">
       <div class="reveal rounded-3xl border border-white/10 bg-white/[0.03] p-7 md:p-10">
         <p class="eyebrow text-center">For You</p>
-        <h2 class="mt-3 text-center text-xl sm:text-2xl md:text-3xl font-black tracking-tight">こんな人のために</h2>
+        <h2 class="mt-3 text-center text-lg sm:text-xl md:text-2xl font-bold tracking-tight">こんな人のために</h2>
         <ul class="mt-7 md:mt-8 space-y-3.5 md:space-y-4 max-w-xl mx-auto">
           {forYou.map((item) => (
             <li class="flex items-start gap-3 text-sm md:text-base text-zinc-200 leading-relaxed">
@@ -246,7 +245,7 @@ const jsonLd = {
     <section id="features" class="max-w-6xl mx-auto px-5 md:px-8 py-14 md:py-32">
       <div class="text-center mb-8 md:mb-14">
         <p class="reveal eyebrow">Features</p>
-        <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">ひとつのアプリで、時間とお金を取り戻す。</h2>
+        <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">ひとつのアプリで、時間とお金を取り戻す</h2>
       </div>
 
       <div class="grid gap-2 md:gap-5 md:grid-cols-2 xl:grid-cols-4 md:auto-rows-fr">
@@ -258,7 +257,7 @@ const jsonLd = {
               </span>
               <span class="col-start-2 text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">{f.en}</span>
             </div>
-            <h3 class="col-start-2 text-sm md:text-2xl font-black tracking-tight leading-snug">{f.jp}</h3>
+            <h3 class="col-start-2 text-sm md:text-lg font-bold tracking-tight leading-snug">{f.jp}</h3>
             <p class="col-start-2 mt-0.5 md:mt-3 text-[10px] md:text-sm leading-[1.6] md:leading-[1.9] text-zinc-400 md:flex-1">{f.body}</p>
             {f.note && <p class="col-start-2 mt-1 md:mt-2 text-[10px] md:text-xs font-bold text-emerald-300/80">{f.note}</p>}
 
@@ -425,18 +424,18 @@ const jsonLd = {
     <section id="start" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32">
       <div class="text-center mb-14">
         <p class="reveal eyebrow">How it works</p>
-        <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">はじめかた</h2>
+        <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">はじめかた</h2>
       </div>
       <div class="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
         {steps.map((s, i) => (
           <div class="card reveal p-8" style={`--c:#34D399;--d:${i * 90}ms`}>
             <div class="flex items-center justify-between mb-8">
-              <span class="text-5xl font-black tracking-tight gradient-text-static">{s.n}</span>
+              <span class="text-3xl font-bold tracking-tight gradient-text-static">{s.n}</span>
               <span class="icon-chip" style="--c:#34D399">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[s.icon]} />
               </span>
             </div>
-            <h3 class="text-lg font-black">{s.t}</h3>
+            <h3 class="text-base font-bold">{s.t}</h3>
             <p class="mt-3 text-sm leading-[1.9] text-zinc-400">{s.d}</p>
           </div>
         ))}
@@ -449,7 +448,7 @@ const jsonLd = {
       <div class="max-w-5xl mx-auto px-5 md:px-8">
         <div class="text-center mb-14">
           <p class="reveal eyebrow">Pricing</p>
-          <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">シンプルな、ひとつのプラン。</h2>
+          <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">シンプルな、ひとつのプラン</h2>
         </div>
 
         <div class="max-w-md mx-auto">
@@ -457,7 +456,7 @@ const jsonLd = {
             <div class="gborder-inner p-8 md:p-10 h-full flex flex-col">
               <p class="text-xs font-bold tracking-[0.22em] uppercase text-emerald-200/80">Essence Membership</p>
               <div class="mt-6 flex items-end gap-2">
-                <span class="text-6xl md:text-7xl font-black tracking-tighter">¥1,500</span>
+                <span class="text-4xl md:text-5xl font-bold tracking-tight">¥1,500</span>
                 <span class="mb-2 text-sm font-bold text-zinc-400">/ 月（税込）</span>
               </div>
               <ul class="mt-8 space-y-4">
@@ -484,7 +483,7 @@ const jsonLd = {
     <section id="faq" class="max-w-3xl mx-auto px-5 md:px-8 py-24 md:py-32">
       <div class="text-center mb-12">
         <p class="reveal eyebrow">FAQ</p>
-        <h2 class="reveal mt-5 text-3xl md:text-5xl font-black tracking-tight" style="--d:80ms">よくある質問</h2>
+        <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">よくある質問</h2>
       </div>
       <div class="space-y-3">
         {faq.map((f, i) => (
@@ -505,8 +504,8 @@ const jsonLd = {
     <section id="final-cta" class="relative">
       <div class="max-w-4xl mx-auto px-5 md:px-8 pt-24 md:pt-32 pb-16 text-center">
         <img src="/assets/essence/app-icon.png" alt="Essence" width="72" height="72" class="reveal mx-auto w-[72px] h-[72px] rounded-[22%] shadow-[0_18px_60px_-12px_rgba(16,185,129,0.55)]" />
-        <h2 class="reveal mt-8 text-4xl md:text-6xl font-black tracking-tight leading-[1.15]" style="--d:80ms">
-          選べる人生を、<span class="gradient-text">創ろう。</span>
+        <h2 class="reveal mt-8 text-2xl md:text-4xl font-bold tracking-tight leading-[1.3]" style="--d:80ms">
+          選べる人生を、<span class="gradient-text">創ろう</span>
         </h2>
         <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3" style="--d:160ms">
           <EssenceDownloadButton href={joinHref} size="lg" />
