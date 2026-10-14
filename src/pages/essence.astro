@@ -80,33 +80,33 @@ const courseShowcase = [
 const features = [
   {
     id: 'skills', en: 'Course', jp: '選ぶ力を付ける', icon: 'play', color: '#10B981',
-    body: '動画形式でいつでも閲覧できる講座。見たその日からすぐに実践。削る・創る・選ぶという方法を、実際に手を動かせるところまで身につけます。',
-    note: '※ Webのダッシュボードからも視聴できます。',
+    body: '動画形式でいつでも閲覧できる講座。見たその日からすぐに実践',
+    note: '※ 月1〜2回更新。Webのダッシュボードからも視聴できます。',
   },
   {
     id: 'podcast', en: 'Podcast', jp: 'メンバー限定Podcast', icon: 'mic', color: '#34D399',
-    body: 'YouTubeでは語らない実践の思考や裏側を、声でお届けします。家事や移動の時間が、そのまま次の一歩を考える時間になります。',
+    body: 'YouTubeでは語らない実践の思考や裏側を、声でお届けします',
+    note: '※ 週1回更新。',
   },
   {
     id: 'items', en: 'Item List', jp: '自身を知る', icon: 'box', color: '#34D399',
-    body: '本当に必要なものを可視化するツール。持ち物を記録し、必要なものだけを残すほど、管理する時間もお金も浮いていきます。',
+    body: '本当に必要なものを可視化するツール',
   },
   {
     id: 'meditation', en: 'Meditation Timer', jp: '頭の中を整える', icon: 'leaf', color: '#34D399',
-    body: '呼吸で精神を安定させる、現代の必須科目。背景サウンドとベルで、判断に迷ったときほど静かな時間をつくります。',
+    body: '呼吸で精神を安定させる、現代の必須科目',
   },
   {
     id: 'balance', en: 'Balance Sheet', jp: 'お金を見える化する', icon: 'yen', color: '#0891B2',
-    body: '数字を把握し、不要を手放す。純資産・固定費・資産配分をひと目で確認でき、お金の不安が減るほど働き方も選びやすくなります。',
+    body: '数字を把握し、不要を手放す',
   },
   {
     id: 'health', en: 'Healthcare', jp: '体の状態を知る', icon: 'heart', color: '#0D9488',
-    body: '選び続けるための土台となる体を観察。歩数・睡眠・ワークアウトを日ごとに確認できます（読み取り専用）。',
+    body: '選び続けるための土台となる体を観察',
   },
   {
     id: 'community', en: 'Community', jp: '同じ方向を向く人と、比べずに話す', icon: 'chat', color: '#0D9488',
-    body: 'メンバーだけが話せる、小さな場所です。同じ方向を目指す人の存在が、迷ったときに一歩を踏み出す力になります。',
-    note: '※ メンバーが一定数に達したら解放します。',
+    body: 'メンバーが一定数に達したら解放します',
   },
 ];
 
@@ -190,29 +190,21 @@ const jsonLd = {
       <div class="max-w-6xl mx-auto px-5 md:px-8 grid grid-cols-[1.3fr_0.7fr] sm:grid-cols-[1.1fr_0.9fr] gap-3 sm:gap-8 items-center">
         <div class="min-w-0">
 
-          <h1 class="reveal whitespace-nowrap text-lg min-[380px]:text-xl sm:text-3xl lg:text-5xl font-bold tracking-tight leading-tight" style="--d:80ms">
+          <h1 class="reveal whitespace-nowrap text-xl min-[400px]:text-2xl sm:text-3xl lg:text-5xl font-bold tracking-tight leading-tight" style="--d:80ms">
             選べる人生を、<span class="gradient-text">創る</span>
           </h1>
 
-          <p class="reveal mt-4 sm:mt-7 text-[11px] leading-[1.7] sm:text-sm md:text-base sm:leading-relaxed text-zinc-300 max-w-xl" style="--d:160ms">
+          <p class="reveal mt-4 sm:mt-7 text-[13px] leading-relaxed sm:text-sm md:text-base text-zinc-300 max-w-xl" style="--d:160ms">
             やりたくないことを減らし、自由な時間とお金を増やしていく。
             Essenceは、そのための考え方と道具をまとめた、メンバーのためのアプリケーションです。
           </p>
 
           <div class="reveal mt-5 sm:mt-9 flex flex-wrap items-center gap-2 sm:gap-3" style="--d:240ms">
             <EssenceDownloadButton href={joinHref} />
-            <a href="#features" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[11px] sm:px-7 sm:py-3.5 sm:text-sm font-bold text-white hover:bg-white/10 transition-colors">
+            <a href="#features" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[13px] sm:px-7 sm:py-3.5 sm:text-sm font-bold text-white hover:bg-white/10 transition-colors">
               機能を見る
             </a>
           </div>
-
-          <ul class="reveal mt-5 sm:mt-8 flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-1.5 sm:gap-y-2 text-[10px] sm:text-xs text-zinc-400" style="--d:320ms">
-            <li class="flex items-center gap-2"><span class="dot"></span>iPhone（iOS 17以降）</li>
-            <li class="flex items-center gap-2"><span class="dot"></span>月額 ¥1,500（税込）</li>
-            <li class="flex items-center gap-2"><span class="dot"></span>いつでも解約可能</li>
-            <li><a href="#pricing" class="underline underline-offset-4 text-zinc-300 hover:text-white transition-colors">料金・解約について</a></li>
-          </ul>
-          <p class="reveal mt-3 sm:mt-4 text-[10px] sm:text-[11px] text-zinc-500" style="--d:380ms">Android版も今後リリース予定です。</p>
         </div>
 
         {/* Phone: Home screen */}
@@ -242,27 +234,27 @@ const jsonLd = {
     </section>
 
     {/* ───────────── Features ───────────── */}
-    <section id="features" class="max-w-6xl mx-auto px-5 md:px-8 py-14 md:py-32">
+    <section id="features" class="max-w-4xl mx-auto px-5 md:px-8 py-14 md:py-32">
       <div class="text-center mb-8 md:mb-14">
         <p class="reveal eyebrow">Features</p>
         <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">ひとつのアプリで、時間とお金を取り戻す</h2>
       </div>
 
-      <div class="grid gap-2 md:gap-5 md:grid-cols-2 xl:grid-cols-4 md:auto-rows-fr">
+      <div class="grid gap-2 md:gap-4">
         {features.map((f) => (
-          <article class="feature-card card reveal p-3 md:p-7 grid grid-cols-[2rem_1fr] gap-x-3 gap-y-0.5 md:flex md:flex-col" style={`--c:${f.color}`}>
+          <article class="feature-card card reveal p-4 md:p-7 flex flex-col" style={`--c:${f.color}`}>
             <div class="contents md:flex md:items-center md:gap-3 md:mb-5">
-              <span class="icon-chip row-span-3 self-start md:row-auto" style={`--c:${f.color}`}>
+              <span class="icon-chip" style={`--c:${f.color}`}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[f.icon]} />
               </span>
-              <span class="col-start-2 text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">{f.en}</span>
+              <span class="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">{f.en}</span>
             </div>
-            <h3 class="col-start-2 text-sm md:text-lg font-bold tracking-tight leading-snug">{f.jp}</h3>
-            <p class="col-start-2 mt-0.5 md:mt-3 text-[10px] md:text-sm leading-[1.6] md:leading-[1.9] text-zinc-400 md:flex-1">{f.body}</p>
-            {f.note && <p class="col-start-2 mt-1 md:mt-2 text-[10px] md:text-xs font-bold text-emerald-300/80">{f.note}</p>}
+            <h3 class="mt-0.5 md:mt-0 text-base md:text-lg font-bold tracking-tight leading-snug">{f.jp}</h3>
+            <p class="mt-1 md:mt-3 text-[13px] md:text-sm leading-[1.7] md:leading-[1.9] text-zinc-400 md:flex-1">{f.body}</p>
+            {f.note && <p class="mt-1.5 md:mt-2 text-xs font-bold text-emerald-300/80">{f.note}</p>}
 
             {/* 各カードの高さを揃えるため、ミニUIは固定高さの枠に収める */}
-            <div class="feature-visual col-span-2 mt-4 md:mt-6" aria-hidden="true">
+            <div class="feature-visual mt-4 md:mt-6" aria-hidden="true">
               {f.id === 'podcast' && (
                 <div class="text-[10px]">
                   <p class="font-bold tracking-[0.2em] text-emerald-400 text-[8px]">NOW PLAYING</p>
@@ -549,13 +541,11 @@ const jsonLd = {
   .essence-page h2,
   .essence-page h3 {
     text-wrap: balance;
-    word-break: auto-phrase;
   }
   .essence-page p,
   .essence-page dd,
   .essence-page li {
     text-wrap: pretty;
-    word-break: auto-phrase;
   }
   .eyebrow {
     font-size: 11px;
@@ -829,10 +819,8 @@ const jsonLd = {
   @media (min-width: 400px) { .hero-phone .phone { zoom: 0.45; } }
   @media (min-width: 640px) { .hero-phone .phone { zoom: 0.8; } }
   @media (min-width: 1024px) { .hero-phone .phone { zoom: 1; } }
-  /* スマホでは、アイコンの丸も小さくしてカード・リストの高さを抑える */
-  @media (max-width: 639px) {
-    .feature-card .icon-chip { width: 28px; height: 28px; border-radius: 9px; }
-    .feature-card .icon-chip svg { width: 14px; height: 14px; }
+  @media (max-width: 767px) {
+    .feature-card .icon-chip { display: none; }
   }
   .floating-cta {
     position: fixed;
