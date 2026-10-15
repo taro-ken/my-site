@@ -13,3 +13,10 @@ export const ESSENCE_APP_STORE_URL = ESSENCE_APP_STORE_ID
 
 /** ユニバーサルリンクの対象アプリ(<Team ID>.<Bundle ID>)。 */
 export const ESSENCE_IOS_APP_ID = 'ZCR4QT36HT.com.kk.essence';
+
+/**
+ * iOSアプリの強制アップデート用。これ未満のバージョンは起動時に更新を求める。
+ * 例: 次の必須アップデートを 1.1 にしたら '1.1' に上げる(アプリの再提出は不要)。
+ * 今の公開版は 1.0 なので、当面は '1.0' のまま(=強制はかからない)。
+ */
+export const ESSENCE_IOS_MINIMUM_VERSION = '1.0';
