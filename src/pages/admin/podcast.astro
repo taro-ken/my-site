@@ -15,10 +15,19 @@ const snapshot = await adminDb
 
 const now = new Date();
 
-// <input type="datetime-local"> にそのまま渡せる "YYYY-MM-DDTHH:mm" 形式(ローカル時刻)にする。
+// Vercel(UTC)上でも日本時間の datetime-local 値になるようにする。
 const toDatetimeLocal = (date: Date) => {
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
+  return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
 };
 
 const episodes = snapshot.docs.map((doc) => {
@@ -89,7 +98,7 @@ const episodes = snapshot.docs.map((doc) => {
                 {ep.isScheduled && (
                   <span class="inline-block mr-1.5 px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 font-bold">予約中</span>
                 )}
-                {ep.publishedAt ? ep.publishedAt.toLocaleString('ja-JP') : '-'} ・ {Math.round(ep.durationSeconds / 60)}分
+                {ep.publishedAt ? ep.publishedAt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }) : '-'} ・ {Math.round(ep.durationSeconds / 60)}分
               </p>
               <p class="episode-title-display font-bold text-sm">{ep.title}</p>
               {ep.subtitle && <p class="episode-subtitle-display text-xs text-zinc-400 mt-1 line-clamp-3 whitespace-pre-wrap">{ep.subtitle}</p>}
