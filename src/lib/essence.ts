@@ -5,7 +5,7 @@
 export const ESSENCE_JOIN_OPEN = false;
 
 /** App Store Connect の「Apple ID」(数字)。空の間は /app から紹介ページへ案内する。 */
-export const ESSENCE_APP_STORE_ID = '';
+export const ESSENCE_APP_STORE_ID = '6814047000';
 
 export const ESSENCE_APP_STORE_URL = ESSENCE_APP_STORE_ID
   ? `https://apps.apple.com/jp/app/id${ESSENCE_APP_STORE_ID}`

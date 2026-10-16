@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import BackToHome from '../components/BackToHome.astro';
-import { ESSENCE_JOIN_OPEN } from '../lib/essence';
+import { ESSENCE_JOIN_OPEN, ESSENCE_APP_STORE_URL } from '../lib/essence';
 
 const { isLoggedIn, isPremium, user } = Astro.locals;
 
@@ -10,8 +10,7 @@ if (!isLoggedIn || !user) {
   return Astro.redirect("/login");
 }
 
-// App Store公開後にIDを入れると、リンクが有効になる(未設定の間は「近日公開」の表示)。
-const APP_STORE_URL = '';
+const APP_STORE_URL = ESSENCE_APP_STORE_URL.startsWith('http') ? ESSENCE_APP_STORE_URL : '';
 
 // 自分(サイト管理者)のアカウントでログインしている時だけ、管理用リンクを表示する。
 const isAdmin = user.email === import.meta.env.ADMIN_EMAIL;
