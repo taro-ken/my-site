@@ -6,11 +6,19 @@ interface Props {
   size?: 'md' | 'lg';
   full?: boolean;
   class?: string;
+  /** 開いているときのボタン文言。未指定は「Essenceに参加する」 */
+  label?: string;
 }
 
 import { ESSENCE_JOIN_OPEN } from '../lib/essence';
 
-const { href = '/register', size = 'md', full = false, class: className = '' } = Astro.props;
+const {
+  href = '/register',
+  size = 'md',
+  full = false,
+  class: className = '',
+  label = 'Essenceに参加する',
+} = Astro.props;
 const isPreparing = !ESSENCE_JOIN_OPEN;
 ---
 
@@ -21,7 +29,7 @@ const isPreparing = !ESSENCE_JOIN_OPEN;
 ) : (
   <a href={href} class:list={['dl-btn', size, { full }, className]}>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-    Essenceに参加する
+    {label}
   </a>
 )}
 

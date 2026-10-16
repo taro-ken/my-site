@@ -15,29 +15,22 @@ const joinHref = Astro.locals.isLoggedIn ? '/dashboard' : '/register';
 
 const icons: Record<string, string> = {
   mic: '<path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8"/>',
-  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
   play: '<circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/>',
   chat: '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 1 1 21 11.5z"/>',
   box: '<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
-  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
-  book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M8 7h8M8 11h5"/>',
-  timer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/>',
   yen: '<circle cx="12" cy="12" r="10"/><path d="M8 7l4 5 4-5M8 12h8M8 15h8M12 12v6"/>',
   leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.5-7.5"/>',
   heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
   check: '<path d="M5 13l4 4L19 7"/>',
-  chevron: '<path d="M9 18l6-6-6-6"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
-  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
-  card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
-  gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/>',
 };
 
-const forYou = [
-  'やりたくないことを減らして、働き方を選び直したい人',
-  'モノを手放し、お金と時間の使い方まで見直したい人',
-  '会社員のまま、少しずつ選べる状態をつくりたい人',
-  'フリーランスとして独立したい人',
+const pillars = [
+  { t: '減らす力', d: 'モノ・支出・義務・情報を見直し、自分のための時間と余白をつくる。', icon: 'box', color: '#34D399' },
+  { t: '創る力', d: 'プログラミングやものづくりを通じて、自分の力で仕事と収入の選択肢をつくる。', icon: 'spark', color: '#10B981' },
+  { t: '蓄える力', d: '支出を最適化し、資産を育て、将来の選択肢を増やす。', icon: 'yen', color: '#0891B2' },
+  { t: '整える力', d: '運動・習慣・瞑想を通じて、心身の健康と集中できる状態を保つ。', icon: 'leaf', color: '#0D9488' },
 ];
 
 const sampleItems = [
@@ -77,47 +70,30 @@ const courseShowcase = [
   { id: 'breath', tag: 'ヘルスケア', title: '呼吸から整える、毎日のメンタル・メンテナンス' },
 ];
 
-const features = [
+const practiceTools = [
   {
-    id: 'skills', en: 'Course', jp: '選ぶ力を付ける', icon: 'play', color: '#10B981',
-    body: '動画形式でいつでも閲覧できる講座。見たその日からすぐに実践',
-    note: '※ 月1〜2回更新。Webのダッシュボードからも視聴できます。',
-  },
-  {
-    id: 'podcast', en: 'Podcast', jp: 'メンバー限定Podcast', icon: 'mic', color: '#34D399',
-    body: 'YouTubeでは語らない実践の思考や裏側を、声でお届けします',
-    note: '※ 週1回更新。',
-  },
-  {
-    id: 'items', en: 'Item List', jp: '自身を知る', icon: 'box', color: '#34D399',
+    id: 'items', en: 'Item List', jp: '持ち物リスト', icon: 'box', color: '#34D399',
     body: '本当に必要なものを可視化するツール',
   },
   {
-    id: 'meditation', en: 'Meditation Timer', jp: '頭の中を整える', icon: 'leaf', color: '#34D399',
+    id: 'meditation', en: 'Meditation Timer', jp: '瞑想タイマー', icon: 'leaf', color: '#34D399',
     body: '呼吸で精神を安定させる、現代の必須科目',
   },
   {
-    id: 'balance', en: 'Balance Sheet', jp: 'お金を見える化する', icon: 'yen', color: '#0891B2',
+    id: 'balance', en: 'Balance Sheet', jp: 'バランスシート', icon: 'yen', color: '#0891B2',
     body: '数字を把握し、不要を手放す',
   },
   {
-    id: 'health', en: 'Healthcare', jp: '体の状態を知る', icon: 'heart', color: '#0D9488',
+    id: 'health', en: 'Healthcare', jp: 'ヘルスケア', icon: 'heart', color: '#0D9488',
     body: '選び続けるための土台となる体を観察',
   },
-  {
-    id: 'community', en: 'Community', jp: '同じ方向を向く人と、比べずに話す', icon: 'chat', color: '#0D9488',
-    body: 'メンバーが一定数に達したら解放します',
-  },
-];
-
-const steps = [
-  { n: '01', icon: 'user', t: 'アカウントを作成', d: webOpen ? 'EssenceアプリまたはWebサイトで、アカウントを作成（またはログイン）します。' : 'EssenceアプリまたはWebサイトで、アカウントを作成（またはログイン）します。' },
-  { n: '02', icon: 'card', t: 'メンバーシップに登録', d: webOpen ? '月額1,500円のメンバーシップに登録します。アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお支払いいただけます。' : 'アプリまたはWebサイトから、月額1,500円のメンバーシップに登録します。' },
 ];
 
 const pricingPoints = [
-  'すべての機能が使える',
-  'いつでも解約可能',
+  'メンバー向け動画講座',
+  'メンバー限定Podcast',
+  '利用可能な実践ツール',
+  '新しいコンテンツへのアクセス',
 ];
 
 const footerLinks = [
@@ -129,14 +105,37 @@ const footerLinks = [
 ];
 
 const faq = [
-  { q: '料金と支払い方法を教えてください。', a: webOpen ? '月額1,500円（税込）のメンバーシップです。初回お申し込み時とその後1か月ごとに自動で決済されます。お支払いは、アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）またはApple Payです。どちらで登録しても、同じアカウントでアプリをご利用いただけます。' : '月額1,500円（税込）のメンバーシップです。アプリまたはWebサイトから登録でき、初回お申し込み時とその後1か月ごとに自動で決済されます。どちらで登録しても、同じアカウントでアプリをご利用いただけます。' },
-  { q: '解約するには？ 返金はできますか？', a: (webOpen ? 'いつでも解約できます。App Storeで登録した場合はアプリの「設定」→「サブスクリプションを管理」から、Webサイトで登録した場合は「設定」→「サブスクリプションを解約する」から手続きします。' : 'いつでも解約できます。アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から手続きします。') + '次回更新日の前日までに手続きすると、次回以降の請求は発生せず、お支払い済みの期間の終了までご利用いただけます。デジタルコンテンツの性質上、決済完了後のキャンセル・返金は行っておりません。詳細は<a href="/tokushoho" class="underline underline-offset-4 hover:text-white">特定商取引法に基づく表記</a>をご確認ください。' },
-  { q: 'バランスシートや瞑想の記録は、他の人に見えますか？', a: 'いいえ。記録はGoogleのクラウド（Firebase）に暗号化して保存され、あなたのアカウントでログインしたときだけ読み書きできる設定になっています。他のメンバーや第三者に見られることはありません。' },
-  { q: 'ヘルスケアのデータは、何を取得しますか？', a: '歩数・睡眠時間・ワークアウトのみを、あなたの許可のもとで「読み取り」ます。ヘルスケアへの書き込みは一切行いません。日ごとの記録はiPhone上で集計して表示し、週ごとの集計値のみをあなたのアカウントに保存します。連携はiPhoneの設定からいつでも変更できます。' },
-  { q: '対応端末を教えてください。', a: 'iOS 17以降を搭載したiPhoneに対応しています。Android版も今後リリースを予定しています。' },
-  { q: 'Courseはパソコンでも見られますか？', a: 'はい。Webサイトにログインすると、ダッシュボードからCourseを視聴できます。アプリと同じアカウントで利用でき、進み具合も共通です。' },
-  { q: '問い合わせ先はどこですか？', a: '<a href="mailto:hello@taroessence.com" class="underline underline-offset-4 hover:text-white">hello@taroessence.com</a> までご連絡ください（対応時間: 10:00〜18:00 土日祝日を除く）。' },
+  {
+    q: 'Essenceでは何ができますか？',
+    a: '動画講座、メンバー限定Podcast、実践ツール（持ち物リスト、瞑想タイマー、バランスシート、ヘルスケア）を通じて、時間・お金・働き方・習慣について学び、日常で実践できます。動画講座はiPhoneアプリとWebブラウザの両方で視聴できます。コミュニティは準備中です。',
+  },
+  {
+    q: 'どの端末で利用できますか？',
+    a: 'EssenceはiPhoneアプリ（iOS 17以降）を中心としたメンバーシップです。動画講座はWebブラウザからも視聴できます。現在、Androidアプリには対応していません。',
+  },
+  {
+    q: 'どのような人に向いていますか？',
+    a: '余計なものを減らし、本当に大切なことに集中したい人。今の働き方や習慣を見直し、自分の人生の選択肢を増やしたい人に向けたサービスです。',
+  },
+  {
+    q: 'コンテンツはどのくらいの頻度で追加されますか？',
+    a: '講座とPodcastは継続して追加しています。公開のタイミングはアプリ内の一覧でご確認ください。',
+  },
+  {
+    q: 'いつでも解約できますか？',
+    a: (webOpen
+      ? 'はい、いつでも解約できます。App Storeで登録した場合はアプリの「設定」→「サブスクリプションを管理」から、Webサイトで登録した場合は「設定」→「サブスクリプションを解約する」から手続きできます。'
+      : 'はい、いつでも解約できます。アプリの「設定」→「サブスクリプションを管理」（またはiPhoneの設定アプリ → Apple ID → サブスクリプション）から手続きできます。')
+      + '詳細は<a href="/essence/info#billing" class="underline underline-offset-4 hover:text-white">課金・解約・返金について</a>をご確認ください。',
+  },
+  {
+    q: '解約するとコンテンツはどうなりますか？',
+    a: '次回更新日の前日までに解約すると、それ以降の請求は発生しません。お支払い済みの期間が終わるまでは、これまでどおりご利用いただけます。期間終了後はメンバー向けコンテンツ・ツールをご利用いただけなくなります。',
+  },
 ];
+
+const pageDescription =
+  '余計なものを減らし、本当に大切なことに集中する。時間・お金・働き方・習慣を、自分の意思で選ぶための学びと実践のメンバーシップ。月額1,500円（税込）。';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -145,7 +144,7 @@ const jsonLd = {
   url: pageUrl,
   operatingSystem: 'iOS 17+',
   applicationCategory: 'LifestyleApplication',
-  description: 'Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額1,500円（税込）。',
+  description: pageDescription,
   image: `${siteUrl}/assets/essence/app-icon.png`,
   offers: {
     '@type': 'Offer',
@@ -153,14 +152,14 @@ const jsonLd = {
     priceCurrency: 'JPY',
     description: '月額メンバーシップ（税込・1か月ごとの自動更新）',
   },
-  publisher: { '@type': 'Person', name: 'Taro Essence', url: siteUrl },
+  publisher: { '@type': 'Person', name: 'taro essence', url: siteUrl },
 };
 ---
 
 <Layout
   title="Essence｜選べる人生を、創る。"
-  description="Essenceは、やりたくないことを減らし、自由な時間とお金を増やしていくための考え方と道具をまとめたメンバー向けアプリケーション。Podcast、スキル講座、記事、コミュニティ、持ち物リスト、お金と時間の記録ツール。月額1,500円（税込）。"
-  keywords="Essence, Taro Essence, ミニマリズム, 習慣, セルフマネジメント, Podcast, スキル, アプリケーション, 働き方, サイドFIRE"
+  description={pageDescription}
+  keywords="Essence, taro essence, ミニマリズム, メンバーシップ, Podcast, 講座, 働き方, 習慣"
   ogImage="/assets/essence/app-icon.png"
 >
   <script is:inline>document.documentElement.classList.add('js-reveal');</script>
@@ -172,7 +171,6 @@ const jsonLd = {
       <BackToHome />
     </div>
 
-    {/* ページ全体に敷く1枚のグラデーション。セクションごとに区切らず、全体を一体に見せる */}
     <div class="page-aurora" aria-hidden="true">
       <span class="pa" style="--pc:16,185,129;--w:760px;--o:.85;left:-24%;top:0%"></span>
       <span class="pa" style="--pc:8,145,178;--w:700px;--o:.75;right:-22%;top:2%;animation-delay:-6s"></span>
@@ -184,31 +182,21 @@ const jsonLd = {
       <span class="pa" style="--pc:8,145,178;--w:760px;--o:.55;right:-14%;top:91%;animation-delay:-13s"></span>
     </div>
 
-    {/* ───────────── Hero ───────────── */}
-    <section class="hero relative pt-28 md:pt-36 pb-20 md:pb-28">
-
-      <div class="max-w-6xl mx-auto px-5 md:px-8 grid grid-cols-[1.3fr_0.7fr] sm:grid-cols-[1.1fr_0.9fr] gap-3 sm:gap-8 items-center">
-        <div class="min-w-0">
-
-          <h1 class="reveal whitespace-nowrap text-xl min-[400px]:text-2xl sm:text-3xl lg:text-5xl font-bold tracking-tight leading-tight" style="--d:80ms">
+    {/* ───────────── HERO ───────────── */}
+    <section class="hero relative pt-16 md:pt-28 pb-5 md:pb-20">
+      <div class="hero-layout max-w-6xl mx-auto px-5 md:px-8">
+        <div class="hero-copy min-w-0">
+          <h1 class="reveal hero-title font-bold tracking-tight" style="--d:80ms">
             選べる人生を、<span class="gradient-text">創る</span>
           </h1>
 
-          <p class="reveal mt-4 sm:mt-7 text-[13px] leading-relaxed sm:text-sm md:text-base text-zinc-300 max-w-xl" style="--d:160ms">
-            やりたくないことを減らし、自由な時間とお金を増やしていく。
-            Essenceは、そのための考え方と道具をまとめた、メンバーのためのアプリケーションです。
+          <p class="reveal hero-lead mt-3 sm:mt-4 text-zinc-300 max-w-xl" style="--d:160ms">
+            余計なものを減らし、本当に大切なことに集中する。<br class="hidden sm:inline" />
+            人生の選択肢を増やすための、学びと実践のメンバーシップ。
           </p>
-
-          <div class="reveal mt-5 sm:mt-9 flex flex-wrap items-center gap-2 sm:gap-3" style="--d:240ms">
-            <EssenceDownloadButton href={joinHref} />
-            <a href="#features" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[13px] sm:px-7 sm:py-3.5 sm:text-sm font-bold text-white hover:bg-white/10 transition-colors">
-              機能を見る
-            </a>
-          </div>
         </div>
 
-        {/* Phone: Home screen */}
-        <div class="hero-phone reveal relative min-w-0 mx-auto lg:ml-auto" style="--d:200ms">
+        <div class="hero-phone reveal relative min-w-0 mx-auto" style="--d:200ms">
           <div class="phone-glow" aria-hidden="true"></div>
           <div class="phone float" role="img" aria-label="Essenceのホーム画面のイメージ">
             <img src="/assets/essence/home-device.png" alt="" class="phone-device" width="838" height="1698" loading="eager" decoding="async" />
@@ -217,230 +205,229 @@ const jsonLd = {
       </div>
     </section>
 
-    {/* ───────────── For You ───────────── */}
-    <section id="for-you" class="max-w-4xl mx-auto px-5 md:px-8 pb-14 md:pb-20">
-      <div class="reveal rounded-3xl border border-white/10 bg-white/[0.03] px-5 py-7 md:p-10">
-        <p class="eyebrow text-center">For You</p>
-        <h2 class="mt-3 text-center text-lg sm:text-xl md:text-2xl font-bold tracking-tight">こんな人のために</h2>
-        <ul class="mt-7 md:mt-8 space-y-3.5 md:space-y-4 max-w-xl mx-auto">
-          {forYou.map((item) => (
-            <li class="flex items-start gap-3 text-sm md:text-base text-zinc-200 leading-relaxed">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0 mt-0.5" set:html={icons.check} />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    {/* ───────────── Features ───────────── */}
-    <section id="features" class="max-w-4xl mx-auto px-5 md:px-8 py-14 md:py-32">
-      <div class="text-center mb-8 md:mb-14">
-        <p class="reveal eyebrow">Features</p>
-        <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">ひとつのアプリで、時間とお金を取り戻す</h2>
+    {/* ───────────── 01 THE ESSENCE ───────────── */}
+    <section id="essence" class="max-w-4xl mx-auto px-5 md:px-8 pb-14 md:pb-24">
+      <div class="text-center mb-8 md:mb-10">
+        <p class="reveal section-num">THE ESSENCE</p>
+        <h2 class="reveal section-heading mt-4 font-bold tracking-tight" style="--d:80ms">大切なことに、集中する。</h2>
+        <div class="reveal mt-4 md:mt-5 mx-auto max-w-xl space-y-3 text-[13px] sm:text-sm md:text-base leading-relaxed text-zinc-300" style="--d:100ms">
+          <p>すべてを手に入れる必要はない。</p>
+          <p>余計なものを減らし、本当に大切なことに時間とエネルギーを注ぐ。</p>
+        </div>
       </div>
 
-      <div class="grid gap-2 md:gap-4">
-        {features.map((f) => (
-          <article class="feature-card card reveal p-4 md:p-7 flex flex-col" style={`--c:${f.color}`}>
-            <div class="contents md:flex md:items-center md:gap-3 md:mb-5">
-              <span class="icon-chip" style={`--c:${f.color}`}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[f.icon]} />
-              </span>
-              <span class="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">{f.en}</span>
-            </div>
-            <h3 class="mt-0.5 md:mt-0 text-base md:text-lg font-bold tracking-tight leading-snug">{f.jp}</h3>
-            <p class="mt-1 md:mt-3 text-[13px] md:text-sm leading-[1.7] md:leading-[1.9] text-zinc-400 md:flex-1">{f.body}</p>
-            {f.note && <p class="mt-1.5 md:mt-2 text-xs font-bold text-emerald-300/80">{f.note}</p>}
-
-            {/* 各カードの高さを揃えるため、ミニUIは固定高さの枠に収める */}
-            <div class="feature-visual mt-4 md:mt-6" aria-hidden="true">
-              {f.id === 'podcast' && (
-                <div class="text-[10px]">
-                  <p class="font-bold tracking-[0.2em] text-emerald-400 text-[8px]">NOW PLAYING</p>
-                  <p class="mt-1 text-zinc-500">EP 2 ・ 10分</p>
-                  <p class="mt-0.5 text-sm font-bold text-zinc-100">30代の投資戦略</p>
-                  <div class="mt-3 flex items-center gap-[3px] h-9">
-                    {wave.map((h, k) => (
-                      <span class={`flex-1 min-w-[2px] rounded-full ${k < wave.length * 0.35 ? 'bg-emerald-400' : 'bg-white/15'}`} style={`height:${h}%`}></span>
-                    ))}
-                  </div>
-                  <div class="mt-1.5 flex justify-between text-zinc-500 tabular-nums"><span>03:12</span><span>10:00</span></div>
-                  <div class="mt-2 flex items-center justify-center gap-6 text-zinc-300">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" /></svg>
-                    <span class="w-9 h-9 rounded-full flex items-center justify-center bg-emerald-400 text-black">
-                      <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
-                    </span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" /></svg>
-                  </div>
-                </div>
-              )}
-
-              {f.id === 'skills' && (
-                <div class="course-carousel">
-                  <div class="course-marquee">
-                    <div class="course-track">
-                      {courseShowcase.map((c) => (
-                        <div class="course-slide">
-                          <img src={`/assets/essence/course-thumb-${c.id}.jpg`} alt="" width="640" height="360" loading="lazy" decoding="async" />
-                          <span class="course-tag">{c.tag}</span>
-                          <p class="course-title">{c.title}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {[-1, 1].map((dir) => (
-                    <button type="button" class={`course-arrow ${dir < 0 ? 'prev' : 'next'}`} data-dir={dir} tabindex="-1" disabled={dir < 0}>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d={dir < 0 ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'} /></svg>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {f.id === 'community' && (
-                <div class="text-xs">
-                  <div class="flex gap-3">
-                    <span class="w-7 h-7 shrink-0 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold">M</span>
-                    <div>
-                      <p class="font-bold text-zinc-200">mio <span class="ml-1 font-normal text-zinc-600">1時間前</span></p>
-                      <p class="mt-1 text-zinc-400 leading-relaxed">今日は使っていない服を3着手放しました。少し気持ちが軽い。</p>
-                    </div>
-                  </div>
-                  <div class="mt-3 ml-3.5 pl-6 border-l-2 border-white/10">
-                    <p class="font-bold text-zinc-200">ren <span class="ml-1 font-normal text-zinc-600">30分前</span></p>
-                    <p class="mt-1 text-zinc-400 leading-relaxed">わかります。手放すほど選ぶのも楽になりますよね。</p>
-                  </div>
-                </div>
-              )}
-
-              {f.id === 'items' && (
-                <div class="text-xs">
-                  <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-bold text-zinc-200">Portable</span>
-                    <span class="px-1.5 rounded-full text-[9px] font-bold text-black bg-emerald-400">6</span>
-                  </div>
-                  <div class="mt-2 space-y-1.5">
-                    {sampleItems.map((item) => (
-                      <div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.07]">
-                        <span class="w-7 h-7 shrink-0 rounded-md flex items-center justify-center" style="background:rgba(52,211,153,.16);color:#34D399">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" set:html={icons.box} />
-                        </span>
-                        <div class="min-w-0">
-                          <p class="font-bold text-[11px] text-zinc-100 truncate">{item.name}</p>
-                          <p class="text-[9px] text-zinc-500">{item.meta}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {f.id === 'balance' && (
-                <div class="text-[10px]">
-                  <div class="grid grid-cols-3 gap-1 p-1 rounded-full bg-white/[0.06] border border-white/[0.08] text-center font-bold">
-                    <span class="py-1 rounded-full text-white bg-gradient-to-r from-emerald-500 to-teal-500">純資産</span>
-                    <span class="py-1 text-zinc-400">固定費</span>
-                    <span class="py-1 text-zinc-400">資産配分</span>
-                  </div>
-                  <div class="mt-2.5 rounded-xl p-3 text-white bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 shadow-[0_10px_30px_-10px_rgba(16,185,129,0.6)]">
-                    <p class="text-[8px] font-bold tracking-[0.2em] text-white/80">NET WORTH<span class="ml-1.5 tracking-normal">純資産</span></p>
-                    <p class="mt-1 text-2xl font-black tracking-tight">¥32,400,000</p>
-                    <div class="mt-2 h-1 rounded-full bg-white/25 overflow-hidden"><div class="h-full w-[92%] rounded-full bg-white"></div></div>
-                    <div class="mt-1.5 flex justify-between text-[9px]">
-                      <span><span class="text-white/70">資産</span> <b>¥35,200,000</b></span>
-                      <span><span class="text-white/70">負債</span> <b>¥2,800,000</b></span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {f.id === 'meditation' && (
-                <div class="flex items-center gap-4">
-                  <div class="relative w-[88px] h-[88px] shrink-0">
-                    <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
-                      <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2" />
-                      <circle cx="18" cy="18" r="16" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="38" />
-                    </svg>
-                    <span class="absolute inset-0 flex flex-col items-center justify-center">
-                      <span class="text-base font-black text-zinc-100 tabular-nums">06:12</span>
-                      <span class="text-[9px] text-zinc-500">/ 10分</span>
-                    </span>
-                  </div>
-                  <div class="min-w-0 flex-1 text-[10px]">
-                    <p class="text-zinc-500">背景サウンド</p>
-                    <div class="mt-1.5 grid grid-cols-3 gap-1.5">
-                      {meditationSounds.map((m) => (
-                        <div class={`h-12 min-w-0 rounded-lg p-1.5 flex items-end text-[8px] font-bold text-white ${m.active ? 'ring-2 ring-white/80' : ''}`} style={`background:${m.bg}`}><span class="truncate">{m.name}</span></div>
-                      ))}
-                    </div>
-                    <p class="mt-2.5 text-zinc-500">ベル</p>
-                    <p class="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-emerald-300 bg-emerald-400/10 border border-emerald-400/30">ハーモニック</p>
-                  </div>
-                </div>
-              )}
-
-              {f.id === 'health' && (
-                <div class="text-[10px]">
-                  <p class="text-zinc-500">今週</p>
-                  <div class="mt-1.5 grid grid-cols-3 divide-x divide-white/10 text-center">
-                    {healthStats.map((h) => (
-                      <div>
-                        <p class="text-sm font-black text-zinc-100 tabular-nums">{h.value}</p>
-                        <p class="text-[9px] text-zinc-500">{h.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <p class="mt-3 text-zinc-500">日別の歩数</p>
-                  <div class="mt-1.5 grid grid-cols-7 gap-1.5 items-end h-14">
-                    {healthDaily.map((d) => (
-                      <div class="flex flex-col items-center gap-1">
-                        <span class={`w-2.5 rounded-full ${d.today ? 'bg-teal-400' : 'bg-teal-500/40'}`} style={`height:${d.h}px`}></span>
-                        <span class={`text-[8px] ${d.today ? 'text-teal-300' : 'text-zinc-500'}`}>{d.day}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
+      <div class="pillar-list">
+        {pillars.map((p, i) => (
+          <article class="pillar-item reveal" style={`--d:${i * 70}ms`}>
+            <span class="pillar-num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="pillar-title">{p.t}</h3>
+            <p class="pillar-body">{p.d}</p>
           </article>
         ))}
       </div>
-      <div class="reveal mt-8 md:mt-14 text-center">
-        <p class="text-xs md:text-sm font-bold text-zinc-300">7つの機能、月額1,500円ですべて使えます。</p>
-        <div class="mt-4 flex justify-center"><EssenceDownloadButton href={joinHref} /></div>
-      </div>
     </section>
 
-    {/* ───────────── Steps ───────────── */}
-    <section id="start" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32">
-      <div class="text-center mb-14">
-        <p class="reveal eyebrow">How it works</p>
-        <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">はじめかた</h2>
+    {/* ───────────── 02 CONTENTS ───────────── */}
+    <section id="contents" class="max-w-4xl mx-auto px-5 md:px-8 py-14 md:py-24">
+      <div class="text-center mb-8 md:mb-14">
+        <p class="reveal section-num">CONTENTS</p>
+        <h2 class="reveal section-heading mt-4 font-bold tracking-tight" style="--d:80ms">学ぶ。考える。実践する。</h2>
+        <p class="reveal mt-4 text-[13px] sm:text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed" style="--d:60ms">
+          知識を得るだけで終わらせない。<br />
+          自分の人生に取り入れ、少しずつ変えていくためのコンテンツとツールを届けます。
+        </p>
       </div>
-      <div class="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-        {steps.map((s, i) => (
-          <div class="card reveal p-8" style={`--c:#34D399;--d:${i * 90}ms`}>
-            <div class="flex items-center justify-between mb-8">
-              <span class="text-3xl font-bold tracking-tight gradient-text-static">{s.n}</span>
-              <span class="icon-chip" style="--c:#34D399">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[s.icon]} />
-              </span>
+
+      <div class="contents-stack flex flex-col gap-3 md:gap-4">
+      {/* 学ぶ */}
+      <article class="feature-card card reveal p-4 md:p-7 flex flex-col text-left" style="--c:#10B981">
+        <p class="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">Video Courses</p>
+        <h3 class="mt-1 text-base md:text-lg font-bold tracking-tight">学ぶ</h3>
+        <p class="mt-1 md:mt-3 text-[13px] md:text-sm leading-[1.7] md:leading-[1.9] text-zinc-300">
+          ミニマリズム、プログラミング、健康などをテーマに、本質的な知識と実践方法を体系的に学ぶ。動画講座は、iPhoneアプリでもWebブラウザでも視聴できます。
+        </p>
+        <p class="mt-1.5 md:mt-2 text-xs font-bold text-emerald-300/80">※ 月1〜2回更新。</p>
+        <div class="feature-visual mt-4 md:mt-6" aria-hidden="true">
+          <div class="course-carousel">
+            <div class="course-marquee">
+              <div class="course-track">
+                {courseShowcase.map((c) => (
+                  <div class="course-slide">
+                    <img src={`/assets/essence/course-thumb-${c.id}.jpg`} alt="" width="640" height="360" loading="lazy" decoding="async" />
+                    <span class="course-tag">{c.tag}</span>
+                    <p class="course-title">{c.title}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h3 class="text-base font-bold">{s.t}</h3>
-            <p class="mt-3 text-sm leading-[1.9] text-zinc-400">{s.d}</p>
+            {[-1, 1].map((dir) => (
+              <button type="button" class={`course-arrow ${dir < 0 ? 'prev' : 'next'}`} data-dir={dir} tabindex="-1" disabled={dir < 0}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d={dir < 0 ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'} /></svg>
+              </button>
+            ))}
           </div>
-        ))}
+        </div>
+      </article>
+
+      {/* 考える */}
+      <article class="feature-card card reveal p-4 md:p-7 flex flex-col text-left" style="--c:#34D399;--d:60ms">
+        <p class="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">Members Podcast</p>
+        <h3 class="mt-1 text-base md:text-lg font-bold tracking-tight">考える</h3>
+        <p class="mt-1 md:mt-3 text-[13px] md:text-sm leading-[1.7] md:leading-[1.9] text-zinc-300">
+          働き方、お金、習慣、生き方について、動画では語りきれない思考や経験を音声で共有する。
+        </p>
+        <p class="mt-1.5 md:mt-2 text-xs font-bold text-emerald-300/80">※ 週1回更新。</p>
+        <div class="feature-visual mt-4 md:mt-6" aria-hidden="true">
+          <div class="text-[10px]">
+            <p class="font-bold tracking-[0.2em] text-emerald-400 text-[8px]">NOW PLAYING</p>
+            <p class="mt-1 text-zinc-500">EP 2 ・ 10分</p>
+            <p class="mt-0.5 text-sm font-bold text-zinc-100">30代の投資戦略</p>
+            <div class="mt-3 flex items-center gap-[3px] h-9">
+              {wave.map((h, k) => (
+                <span class={`flex-1 min-w-[2px] rounded-full ${k < wave.length * 0.35 ? 'bg-emerald-400' : 'bg-white/15'}`} style={`height:${h}%`}></span>
+              ))}
+            </div>
+            <div class="mt-1.5 flex justify-between text-zinc-500 tabular-nums"><span>03:12</span><span>10:00</span></div>
+            <div class="mt-2 flex items-center justify-center gap-6 text-zinc-300">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" /></svg>
+              <span class="w-9 h-9 rounded-full flex items-center justify-center bg-emerald-400 text-black">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" /></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      {/* 実践する */}
+      <article class="feature-card card reveal p-4 md:p-7 flex flex-col text-left" style="--c:#0D9488;--d:120ms">
+        <p class="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">Practical Tools</p>
+        <h3 class="mt-1 text-base md:text-lg font-bold tracking-tight">実践する</h3>
+        <p class="mt-1 md:mt-3 text-[13px] md:text-sm leading-[1.7] md:leading-[1.9] text-zinc-300">
+          持ち物の見直し、瞑想、資産管理、健康管理など、学んだことを日常に取り入れるためのツール。
+        </p>
+        <div class="grid gap-2 md:gap-4 mt-4 md:mt-6 sm:grid-cols-2">
+          {practiceTools.map((f, i) => (
+            <div class="tool-card rounded-[2px] border border-white/10 bg-black/30 p-4 md:p-6 flex flex-col" style={`--c:${f.color}`}>
+              <div class="contents md:flex md:items-center md:gap-3 md:mb-3">
+                <span class="icon-chip" style={`--c:${f.color}`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons[f.icon]} />
+                </span>
+                <span class="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-zinc-400">{f.en}</span>
+              </div>
+              <h4 class="mt-0.5 md:mt-0 text-sm md:text-base font-bold tracking-tight">{f.jp}</h4>
+              <p class="mt-1 text-[13px] md:text-sm leading-relaxed text-zinc-300">{f.body}</p>
+
+              <div class="feature-visual mt-4" aria-hidden="true">
+                {f.id === 'items' && (
+                  <div class="text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="text-[11px] font-bold text-zinc-200">Portable</span>
+                      <span class="px-1.5 rounded-full text-[9px] font-bold text-black bg-emerald-400">6</span>
+                    </div>
+                    <div class="mt-2 space-y-1.5">
+                      {sampleItems.map((item) => (
+                        <div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.07]">
+                          <span class="w-7 h-7 shrink-0 rounded-md flex items-center justify-center" style="background:rgba(52,211,153,.16);color:#34D399">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" set:html={icons.box} />
+                          </span>
+                          <div class="min-w-0">
+                            <p class="font-bold text-[11px] text-zinc-100 truncate">{item.name}</p>
+                            <p class="text-[9px] text-zinc-500">{item.meta}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {f.id === 'balance' && (
+                  <div class="text-[10px]">
+                    <div class="rounded-xl p-3 text-white bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 shadow-[0_10px_30px_-10px_rgba(16,185,129,0.6)]">
+                      <p class="text-[8px] font-bold tracking-[0.2em] text-white/80">NET WORTH<span class="ml-1.5 tracking-normal">純資産</span></p>
+                      <p class="mt-1 text-2xl font-black tracking-tight">¥32,400,000</p>
+                    </div>
+                  </div>
+                )}
+                {f.id === 'meditation' && (
+                  <div class="flex items-center gap-4">
+                    <div class="relative w-[88px] h-[88px] shrink-0">
+                      <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
+                        <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2" />
+                        <circle cx="18" cy="18" r="16" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="38" />
+                      </svg>
+                      <span class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-base font-black text-zinc-100 tabular-nums">06:12</span>
+                        <span class="text-[9px] text-zinc-500">/ 10分</span>
+                      </span>
+                    </div>
+                    <div class="min-w-0 flex-1 text-[10px]">
+                      <p class="text-zinc-500">背景サウンド</p>
+                      <div class="mt-1.5 grid grid-cols-3 gap-1.5">
+                        {meditationSounds.map((m) => (
+                          <div class={`h-12 min-w-0 rounded-lg p-1.5 flex items-end text-[8px] font-bold text-white ${m.active ? 'ring-2 ring-white/80' : ''}`} style={`background:${m.bg}`}><span class="truncate">{m.name}</span></div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {f.id === 'health' && (
+                  <div class="text-[10px]">
+                    <div class="grid grid-cols-3 divide-x divide-white/10 text-center">
+                      {healthStats.map((h) => (
+                        <div>
+                          <p class="text-sm font-black text-zinc-100 tabular-nums">{h.value}</p>
+                          <p class="text-[9px] text-zinc-500">{h.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div class="mt-3 grid grid-cols-7 gap-1.5 items-end h-14">
+                      {healthDaily.map((d) => (
+                        <div class="flex flex-col items-center gap-1">
+                          <span class={`w-2.5 rounded-full ${d.today ? 'bg-teal-400' : 'bg-teal-500/40'}`} style={`height:${d.h}px`}></span>
+                          <span class={`text-[8px] ${d.today ? 'text-teal-300' : 'text-zinc-500'}`}>{d.day}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </article>
       </div>
-      <div class="reveal mt-8 md:mt-12 flex justify-center"><EssenceDownloadButton href={joinHref} /></div>
+
+      <div class="reveal mt-6 md:mt-8 rounded-[2px] border border-white/10 bg-white/[0.03] px-5 py-5 md:px-7 md:py-6 flex items-start gap-3">
+        <span class="icon-chip shrink-0" style="--c:#0D9488">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" set:html={icons.chat} />
+        </span>
+        <div>
+          <p class="text-sm font-bold">Community <span class="ml-2 text-[10px] font-bold tracking-wider uppercase text-emerald-300/80">準備中</span></p>
+          <p class="mt-1 text-[13px] text-zinc-400 leading-relaxed">メンバーが一定数に達したら解放します。現時点では加入特典に含めていません。</p>
+        </div>
+      </div>
     </section>
 
-    {/* ───────────── Pricing ───────────── */}
-    <section id="pricing" class="relative py-24 md:py-32">
+    {/* ───────────── 03 MY STORY ───────────── */}
+    <section id="story" class="max-w-4xl mx-auto px-5 md:px-8 py-14 md:py-24">
+      <div class="text-center mb-8 md:mb-12">
+        <p class="reveal section-num">MY STORY</p>
+        <h2 class="reveal section-heading mt-4 font-bold tracking-tight" style="--d:80ms">減らすことで、人生が動き出した。</h2>
+      </div>
+      <div class="reveal rounded-[2px] border border-white/10 bg-white/[0.03] px-5 py-7 md:p-10 max-w-2xl mx-auto space-y-5 text-[13px] sm:text-sm md:text-base leading-[1.9] text-zinc-300">
+        <p>かつて僕は、長時間労働に追われ、時間もお金も自由に使えない生活を送っていました。</p>
+        <p>その状況を変えたのが、ミニマリズムです。</p>
+        <p>余計なものを減らし、大切なことに集中する。その実践によって働き方を変え、今では自分のアプリやコンテンツを創っています。</p>
+        <p>Essenceでは、人生の選択肢を増やすために実践してきたことを共有します。</p>
+      </div>
+    </section>
+
+    {/* ───────────── 04 MEMBERSHIP ───────────── */}
+    <section id="pricing" class="relative py-14 md:py-24">
       <div class="max-w-5xl mx-auto px-5 md:px-8">
-        <div class="text-center mb-14">
-          <p class="reveal eyebrow">Pricing</p>
-          <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">シンプルな、ひとつのプラン</h2>
+        <div class="text-center mb-10 md:mb-14">
+          <p class="reveal section-num">MEMBERSHIP</p>
+          <h2 class="reveal section-heading mt-4 font-bold tracking-tight" style="--d:80ms">シンプルな、ひとつのプラン。</h2>
         </div>
 
         <div class="max-w-md mx-auto">
@@ -459,10 +446,17 @@ const jsonLd = {
                   </li>
                 ))}
               </ul>
+              <p class="mt-5 text-xs text-zinc-400 leading-relaxed">iPhoneアプリ対応 / 動画講座はWeb視聴にも対応</p>
+              <p class="mt-2 text-xs text-zinc-500 leading-relaxed">コミュニティは準備中のため、現時点の特典には含めていません。</p>
               <div class="mt-auto pt-8">
-                <EssenceDownloadButton href={joinHref} full />
+                <EssenceDownloadButton href={joinHref} full label="メンバーになる →" />
                 <p class="mt-4 text-xs leading-relaxed text-zinc-500">
-                  {webOpen ? 'アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお申し込みいただけます。どちらも同じアカウントでご利用いただけます。' : '登録・お支払いは、EssenceアプリまたはWebサイトから行えます。どちらも同じアカウントでご利用いただけます。'}
+                  {webOpen
+                    ? 'アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお申し込みいただけます。どちらも同じアカウントでご利用いただけます。'
+                    : '登録・お支払いは、EssenceアプリまたはWebサイトから行えます。どちらも同じアカウントでご利用いただけます。'}
+                </p>
+                <p class="mt-2 text-xs text-zinc-600">
+                  <a href="/essence/info#billing" class="underline underline-offset-4 hover:text-zinc-400">課金・解約・返金について</a>
                 </p>
               </div>
             </div>
@@ -471,11 +465,11 @@ const jsonLd = {
       </div>
     </section>
 
-    {/* ───────────── FAQ ───────────── */}
-    <section id="faq" class="max-w-3xl mx-auto px-5 md:px-8 py-24 md:py-32">
-      <div class="text-center mb-12">
-        <p class="reveal eyebrow">FAQ</p>
-        <h2 class="reveal mt-5 text-2xl md:text-3xl font-bold tracking-tight" style="--d:80ms">よくある質問</h2>
+    {/* ───────────── 05 FAQ ───────────── */}
+    <section id="faq" class="max-w-3xl mx-auto px-5 md:px-8 py-14 md:py-24">
+      <div class="text-center mb-10 md:mb-12">
+        <p class="reveal section-num">FAQ</p>
+        <h2 class="reveal section-heading mt-4 font-bold tracking-tight" style="--d:80ms">よくある質問</h2>
       </div>
       <div class="space-y-3">
         {faq.map((f, i) => (
@@ -492,17 +486,20 @@ const jsonLd = {
       </div>
     </section>
 
-    {/* ───────────── Operator + closing CTA ───────────── */}
+    {/* ───────────── FINAL CTA ───────────── */}
     <section id="final-cta" class="relative">
-      <div class="max-w-4xl mx-auto px-5 md:px-8 pt-24 md:pt-32 pb-16 text-center">
-        <img src="/assets/essence/app-icon.png" alt="Essence" width="72" height="72" class="reveal mx-auto w-[72px] h-[72px] rounded-[22%] shadow-[0_18px_60px_-12px_rgba(16,185,129,0.55)]" />
-        <h2 class="reveal mt-8 text-2xl md:text-4xl font-bold tracking-tight leading-[1.3]" style="--d:80ms">
-          選べる人生を、<span class="gradient-text">創ろう</span>
+      <div class="max-w-4xl mx-auto px-5 md:px-8 pt-16 md:pt-28 pb-16 text-center">
+        <p class="reveal section-num">JOIN ESSENCE</p>
+        <img src="/assets/essence/app-icon.png" alt="Essence" width="40" height="40" class="reveal mx-auto mt-5 w-10 h-10 rounded-[22%] shadow-[0_10px_32px_-8px_rgba(16,185,129,0.5)]" />
+        <h2 class="reveal section-heading section-heading-final mt-8 font-bold tracking-tight leading-[1.35]" style="--d:80ms">
+          自分の人生に、<span class="gradient-text">本当に必要なものを。</span>
         </h2>
+        <p class="reveal mt-4 text-[13px] sm:text-sm text-zinc-300 max-w-md mx-auto leading-relaxed" style="--d:120ms">
+          余計なものを減らし、大切なことに集中する。<br />
+          選べる人生を、ここから。
+        </p>
         <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3" style="--d:160ms">
-          <EssenceDownloadButton href={joinHref} size="lg" />
-          <a href="#pricing" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[11px] sm:px-7 sm:py-3.5 sm:text-sm font-bold text-white hover:bg-white/10 transition-colors">料金を見る</a>
-          <a href="/contact" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[11px] sm:px-7 sm:py-3.5 sm:text-sm font-bold text-white hover:bg-white/10 transition-colors">お問い合わせ</a>
+          <EssenceDownloadButton href={joinHref} size="lg" label="Essenceに参加する →" />
         </div>
       </div>
 
@@ -512,19 +509,18 @@ const jsonLd = {
             <a href={l.href} class="underline underline-offset-4 hover:text-white transition-colors">{l.label}</a>
           ))}
         </nav>
-        <p class="mt-8 text-center text-[11px] text-zinc-600">© taro. All rights reserved.</p>
+        <p class="mt-8 text-center text-[11px] text-zinc-600">© taro essence. All rights reserved.</p>
       </div>
     </section>
 
-    {/* スマホ: ヒーローを過ぎたら画面下に浮かべる。最下部のCTAが見えている間は隠す */}
     <div id="floating-cta" class="floating-cta md:hidden">
-      <EssenceDownloadButton href={joinHref} />
+      <EssenceDownloadButton href={joinHref} label="メンバーになる →" />
     </div>
   </main>
 </Layout>
 
 <style>
-  /* ページ内リンク(#features / #pricing)用。サイト全体に効かせるとスマホの遷移時に揺れるため、このページだけ */
+  /* ページ内リンク用。サイト全体に効かせるとスマホの遷移時に揺れるため、このページだけ */
   :global(html) {
     scroll-behavior: smooth;
   }
@@ -541,6 +537,44 @@ const jsonLd = {
   .essence-page h2,
   .essence-page h3 {
     text-wrap: balance;
+  }
+  .hero-title {
+    font-size: clamp(30px, 8vw, 38px);
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .hero-lead {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .section-heading {
+    font-size: 25px;
+    line-height: 1.35;
+  }
+  @media (min-width: 640px) {
+    .hero-title {
+      font-size: 2.25rem;
+      line-height: 1.15;
+    }
+    .hero-lead {
+      font-size: 0.875rem;
+    }
+    .section-heading {
+      font-size: 1.875rem;
+    }
+    .section-heading-final {
+      font-size: 2.25rem;
+    }
+  }
+  @media (min-width: 768px) {
+    .hero-lead {
+      font-size: 1rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .hero-title {
+      font-size: 3rem;
+    }
   }
   .eyebrow {
     font-size: 11px;
@@ -608,7 +642,7 @@ const jsonLd = {
   .card {
     position: relative;
     overflow: hidden;
-    border-radius: 1.5rem;
+    border-radius: 2px;
     border: 1px solid rgba(255, 255, 255, 0.09);
     background: rgba(255, 255, 255, 0.03);
     transition: border-color 0.3s ease, transform 0.3s ease, background 0.3s ease;
@@ -622,9 +656,11 @@ const jsonLd = {
     opacity: 0.75;
     transition: opacity 0.3s ease;
   }
-  .card:hover {
-    border-color: color-mix(in srgb, var(--c) 45%, transparent);
-    background: rgba(255, 255, 255, 0.045);
+  .card:hover,
+  .card:focus,
+  .card:focus-within,
+  .card:active {
+    border-color: rgba(255, 255, 255, 0.09);
   }
   .card > * { position: relative; }
   .icon-chip {
@@ -645,7 +681,7 @@ const jsonLd = {
     height: 200px;
     padding: 16px 18px;
     overflow: hidden;
-    border-radius: 1rem;
+    border-radius: 2px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.4);
   }
@@ -733,18 +769,18 @@ const jsonLd = {
   /* ── pricing ── */
   .gborder {
     padding: 1px;
-    border-radius: 1.75rem;
+    border-radius: 2px;
     background: linear-gradient(140deg, rgba(52, 211, 153, 0.75), rgba(255, 255, 255, 0.08) 42%, rgba(8, 145, 178, 0.75));
     box-shadow: 0 30px 90px -30px rgba(16, 185, 129, 0.45);
   }
   .gborder-inner {
-    border-radius: calc(1.75rem - 1px);
+    border-radius: 1px;
     background: #040807;
   }
 
   /* ── faq ── */
   .faq {
-    border-radius: 1.1rem;
+    border-radius: 2px;
     border: 1px solid rgba(255, 255, 255, 0.09);
     background: rgba(255, 255, 255, 0.03);
     transition: border-color 0.25s ease, background 0.25s ease;
@@ -785,7 +821,7 @@ const jsonLd = {
     padding: 0 22px 22px;
     font-size: 13px;
     line-height: 1.95;
-    color: #a1a1aa;
+    color: #d4d4d8;
   }
 
   /* ── phone mockup ── */
@@ -809,11 +845,50 @@ const jsonLd = {
     filter: drop-shadow(0 40px 60px rgba(16, 185, 129, 0.25));
   }
 
-  /* スマホでもPCと同じ「左に文章・右に画面」の並びにするため、ヒーローの端末モックだけ縮小する */
-  .hero-phone .phone { zoom: 0.4; }
-  @media (min-width: 400px) { .hero-phone .phone { zoom: 0.45; } }
-  @media (min-width: 640px) { .hero-phone .phone { zoom: 0.8; } }
-  @media (min-width: 1024px) { .hero-phone .phone { zoom: 1; } }
+  /* モバイル: コピー → 端末 → THE ESSENCE。PC: 左右並び */
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    justify-items: center;
+    text-align: left;
+  }
+  .hero-copy {
+    width: 100%;
+  }
+  .hero-phone {
+    width: min(118px, 32vw);
+    margin: 0;
+  }
+  .hero-phone .phone {
+    width: 100%;
+    zoom: 1;
+  }
+  /* モバイルでは上下余白を揃えるためフロートを止める */
+  .hero-phone .float {
+    animation: none;
+  }
+  @media (min-width: 640px) {
+    .hero-layout {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      align-items: center;
+      justify-items: stretch;
+    }
+    .hero-phone {
+      width: auto;
+      margin: 0 0 0 auto;
+      max-width: 280px;
+    }
+    .hero-phone .float {
+      animation: float 7s ease-in-out infinite;
+    }
+  }
+  @media (min-width: 1024px) {
+    .hero-phone {
+      max-width: 280px;
+    }
+  }
   @media (max-width: 767px) {
     .feature-card .icon-chip { display: none; }
   }
@@ -859,6 +934,79 @@ const jsonLd = {
   @media (prefers-reduced-motion: reduce) {
     .pa, .float, .float-slow, .gradient-text, .skeleton { animation: none !important; }
     :global(html.js-reveal) .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  .pillar-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+  .pillar-item {
+    padding: 1.25rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+  }
+  .pillar-item:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .pillar-num {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: rgba(110, 231, 183, 0.85);
+  }
+  .pillar-title {
+    margin-top: 0.45rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .pillar-body {
+    margin-top: 0.4rem;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #d4d4d8;
+  }
+  @media (min-width: 640px) {
+    .pillar-list {
+      grid-template-columns: 1fr 1fr;
+      max-width: none;
+      column-gap: 3.5rem;
+    }
+    .pillar-item {
+      padding: 2rem 0;
+    }
+    .pillar-item:nth-child(odd) {
+      padding-right: 0.5rem;
+    }
+    .pillar-item:nth-child(even) {
+      padding-left: 0.5rem;
+    }
+    .pillar-item:nth-last-child(-n + 2) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .pillar-num {
+      font-size: 11px;
+    }
+    .pillar-title {
+      margin-top: 0.65rem;
+      font-size: 1.125rem;
+    }
+    .pillar-body {
+      margin-top: 0.55rem;
+      font-size: 0.875rem;
+      line-height: 1.8;
+    }
+  }
+  .section-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(110, 231, 183, 0.85);
   }
 </style>
 
