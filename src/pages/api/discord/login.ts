@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 
 import { adminAuth, adminDb } from "../../../lib/firebase/server";
+import { isActiveMember } from "../../../lib/courses";
 
 export const GET: APIRoute = async ({ cookies, redirect }) => {
   const sessionCookie = cookies.get("session")?.value;
@@ -10,7 +11,7 @@ export const GET: APIRoute = async ({ cookies, redirect }) => {
     try {
       const decodedToken = await adminAuth.verifySessionCookie(sessionCookie);
       const doc = await adminDb.collection("users").doc(decodedToken.uid).get();
-      if (doc.exists && doc.data()?.stripe_status === "active") {
+      if (doc.exists && isActiveMember(doc.data())) {
         isPremium = true;
       }
     } catch (e) {

@@ -1,12 +1,14 @@
 import type { APIRoute } from "astro";
 import { adminAuth, adminDb } from "../../../../lib/firebase/server";
 import { getBlogDetail, getBlogs, FILTER_EXCLUDE_GEARLIST } from "../../../../lib/cms";
+import { isActiveMember } from "../../../../lib/courses";
 
 /**
  * ネイティブアプリ(Essence)向けブログ詳細エンドポイント。taroessence.com/blog/[slug] と同じ
  * データ・同じ有料会員ゲート([[more]]マーカーでの分割)を使う。
- * 有料記事の全文は、Authorizationヘッダー(Firebase IDトークン)で会員(stripe_status=active)
- * と確認できた場合のみ返す。それ以外は無料部分のみ返し、サーバー側で完全に隠す
+ * 有料記事の全文は、Authorizationヘッダー(Firebase IDトークン)で会員
+ * (stripe_status / apple_status のどちらかが active)と確認できた場合のみ返す。
+ * それ以外は無料部分のみ返し、サーバー側で完全に隠す
  * (Web版はブラー表示で本文をクライアントに送ってしまっているが、こちらはより安全に振る舞う)。
  */
 const PAYWALL_MARKER = /<p>\s*\[\[more\]\]\s*<\/p>|\[\[more\]\]/g;
@@ -21,7 +23,7 @@ async function resolveHasAccess(request: Request, isPremium: boolean): Promise<b
     try {
         const decoded = await adminAuth.verifyIdToken(idToken);
         const userDoc = await adminDb.collection("users").doc(decoded.uid).get();
-        return userDoc.data()?.stripe_status === "active";
+        return isActiveMember(userDoc.data());
     } catch {
         return false;
     }

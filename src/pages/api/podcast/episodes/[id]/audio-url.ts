@@ -3,10 +3,11 @@ import { adminAuth, adminDb } from "../../../../../lib/firebase/server";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { r2Client, R2_BUCKET_NAME, podcastAudioKey } from "../../../../../lib/r2";
+import { isActiveMember } from "../../../../../lib/courses";
 
 /**
  * ネイティブアプリ(Essence)向けPodcast音声URL発行エンドポイント。
- * 音声本体はCloudflare R2に置き(転送量無料)、会員(stripe_status=active)にのみ
+ * 音声本体はCloudflare R2に置き(転送量無料)、会員(Stripe・App Storeのどちらか)にのみ
  * 期限付きの署名URLを発行する。他のapp向けエンドポイントと同様、Firebase IDトークンで認証する。
  */
 
@@ -38,7 +39,7 @@ export const GET: APIRoute = async ({ request, params }) => {
     ]);
 
     const userData = userDoc.data();
-    if (userData?.stripe_status !== "active" && userData?.apple_status !== "active") {
+    if (!isActiveMember(userData)) {
         return new Response(JSON.stringify({ error: "Subscription required" }), { status: 403 });
     }
     if (!episodeDoc.exists) {
