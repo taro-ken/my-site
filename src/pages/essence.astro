@@ -196,11 +196,16 @@ const jsonLd = {
           </p>
         </div>
 
-        <div class="hero-phone reveal relative min-w-0 mx-auto" style="--d:200ms">
-          <div class="phone-glow" aria-hidden="true"></div>
-          <div class="phone float" role="img" aria-label="Essenceのホーム画面のイメージ">
-            <img src="/assets/essence/home-device.png" alt="" class="phone-device" width="838" height="1698" loading="eager" decoding="async" />
+        <div class="hero-visual reveal" style="--d:200ms">
+          <div class="hero-phone relative min-w-0 mx-auto">
+            <div class="phone-glow" aria-hidden="true"></div>
+            <div class="phone float" role="img" aria-label="Essenceのホーム画面のイメージ">
+              <img src="/assets/essence/home-device.png" alt="" class="phone-device" width="838" height="1698" loading="eager" decoding="async" />
+            </div>
           </div>
+          <a href="#essence" class="hero-cta">
+            Essenceを知る <span aria-hidden="true">↓</span>
+          </a>
         </div>
       </div>
     </section>
@@ -845,48 +850,76 @@ const jsonLd = {
     filter: drop-shadow(0 40px 60px rgba(16, 185, 129, 0.25));
   }
 
-  /* モバイル: コピー → 端末 → THE ESSENCE。PC: 左右並び */
+  /* コピー → 端末 → CTA を中央寄せで縦積み（モバイル・PC共通） */
   .hero-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-    justify-items: center;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
   }
   .hero-copy {
     width: 100%;
+    max-width: 36rem;
+  }
+  .hero-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
   }
   .hero-phone {
-    width: min(118px, 32vw);
+    width: min(112px, 30vw);
     margin: 0;
   }
   .hero-phone .phone {
     width: 100%;
     zoom: 1;
   }
-  /* モバイルでは上下余白を揃えるためフロートを止める */
   .hero-phone .float {
     animation: none;
   }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.55rem 1.15rem;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.03);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .hero-cta:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
   @media (min-width: 640px) {
     .hero-layout {
-      grid-template-columns: 1.1fr 0.9fr;
       gap: 2rem;
-      align-items: center;
-      justify-items: stretch;
+    }
+    .hero-visual {
+      gap: 1.5rem;
     }
     .hero-phone {
-      width: auto;
-      margin: 0 0 0 auto;
-      max-width: 280px;
+      width: min(220px, 28vw);
     }
     .hero-phone .float {
       animation: float 7s ease-in-out infinite;
     }
+    .hero-cta {
+      font-size: 13px;
+      padding: 0.65rem 1.4rem;
+    }
   }
   @media (min-width: 1024px) {
     .hero-phone {
-      max-width: 280px;
+      width: 240px;
     }
   }
   @media (max-width: 767px) {
