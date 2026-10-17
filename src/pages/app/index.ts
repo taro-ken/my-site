@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { ESSENCE_APP_STORE_URL } from '../../lib/essence';
 
 // アプリが入っている端末ではユニバーサルリンクでアプリが開く。ここには届かない。
-export const GET: APIRoute = ({ redirect }) => redirect(ESSENCE_APP_STORE_URL, 302);
+// ブラウザでは紹介LPへ案内する（ストア直飛ばしより文脈が伝わる）。
+export const GET: APIRoute = ({ redirect }) => redirect('/essence', 302);
