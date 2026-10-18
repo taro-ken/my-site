@@ -116,7 +116,7 @@
 
 ### ニュースレター(Kit → Substack に一本化)
 - [x] Substack のウェルカムメールに E-Book(`https://taroessence.com/minimalplan`)のボタンを設定
-- [x] `/send` とポップアップの登録フォームを Substack(`kentarokk.substack.com/embed`)に変更(2026-10-09)
+- [x] `/send` とポップアップの登録フォームを Substack(`taroessence.substack.com/embed`)に変更(2026-10-09、旧 kentarokk は 404 のため 2026-10-18 に差し替え)
 - [x] Kit の購読者を CSV で書き出し、Substack にインポート(2026-10-09、審査待ち)
 - [ ] インポート完了と人数を確認
 - [ ] Kit のフォーム 2 つを停止(アカウントはしばらく残す)

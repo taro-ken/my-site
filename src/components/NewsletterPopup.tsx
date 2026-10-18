@@ -70,7 +70,7 @@ export default function NewsletterPopup() {
                             </p>
 
                             <iframe
-                                src="https://kentarokk.substack.com/embed"
+                                src="https://taroessence.substack.com/embed"
                                 title="ニュースレターを購読"
                                 className="block w-full h-[150px] mt-4 border-0 bg-transparent"
                                 scrolling="no"
