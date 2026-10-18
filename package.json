@@ -31,6 +31,7 @@
     "microcms-js-sdk": "^3.3.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "resend": "^6.34.1",
     "stripe": "^20.4.0",
     "tailwind-merge": "^3.4.0"
   },

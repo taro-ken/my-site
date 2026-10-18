@@ -118,6 +118,14 @@ const categories = [...new Set(courses.map((course) => course.category).filter(B
               </form>
             </div>
             <div class="shrink-0 flex flex-col items-end gap-2">
+              <button
+                type="button"
+                data-notify-id={course.id}
+                data-notify-title={course.title}
+                class="notify-course-btn px-3 py-1.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 text-xs font-bold transition-colors"
+              >
+                会員にメール
+              </button>
               <button class="edit-toggle-btn px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors">
                 編集
               </button>
@@ -414,6 +422,33 @@ const categories = [...new Set(courses.map((course) => course.category).filter(B
       } catch (error) {
         statusEl.textContent = error instanceof Error ? error.message : '保存に失敗しました';
         saveBtn.disabled = false;
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.notify-course-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.notifyId!;
+      const title = btn.dataset.notifyTitle;
+      if (!confirm(`講座「${title}」を会員へメール通知します。よろしいですか?`)) return;
+
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '送信中…';
+      try {
+        const res = await fetch('/api/admin/notify-members', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kind: 'course', id }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || '送信に失敗しました');
+        alert(`送信しました（宛先 ${data.recipientCount} 件 / 成功 ${data.sentCount} 件）`);
+      } catch (error) {
+        alert(error instanceof Error ? error.message : '送信に失敗しました');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = original;
       }
     });
   });
