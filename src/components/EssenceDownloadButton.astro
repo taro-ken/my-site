@@ -28,7 +28,6 @@ const isPreparing = !ESSENCE_JOIN_OPEN;
   </span>
 ) : (
   <a href={href} class:list={['dl-btn', size, { full }, className]}>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
     {label}
   </a>
 )}
@@ -40,21 +39,20 @@ const isPreparing = !ESSENCE_JOIN_OPEN;
     justify-content: center;
     gap: 0.45rem;
     padding: 0.55rem 1rem;
-    border-radius: 9999px;
+    border-radius: 2px;
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.02em;
-    color: #04130d;
-    background: linear-gradient(100deg, #6ee7b7, #22d3ee);
-    box-shadow: 0 10px 40px -10px rgba(52, 211, 153, 0.7);
+    color: #02110c;
+    background: linear-gradient(100deg, #7ccaae, #66b4c6);
+    box-shadow: 0 6px 18px -12px rgba(79, 152, 168, 0.3);
     transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
     white-space: nowrap;
   }
-  .dl-btn svg { width: 1.05em; height: 1.05em; }
   a.dl-btn:hover {
     transform: translateY(-2px);
     filter: brightness(1.06);
-    box-shadow: 0 16px 50px -10px rgba(52, 211, 153, 0.85);
+    box-shadow: 0 8px 20px -12px rgba(79, 152, 168, 0.4);
   }
   .dl-btn.is-disabled {
     color: #a1a1aa;

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import EssenceDownloadButton from '../components/EssenceDownloadButton.astro';
+import AppStoreButton from '../components/AppStoreButton.astro';
 import BackToHome from '../components/BackToHome.astro';
 import { ESSENCE_JOIN_OPEN } from '../lib/essence';
 
@@ -468,7 +469,8 @@ const jsonLd = {
               <p class="mt-5 text-xs text-zinc-400 leading-relaxed">iPhoneアプリ対応 / 動画講座はWeb視聴にも対応</p>
               <p class="mt-2 text-xs text-zinc-500 leading-relaxed">コミュニティは準備中のため、現時点の特典には含めていません。</p>
               <div class="mt-auto pt-8">
-                <EssenceDownloadButton href={joinHref} full label="メンバーになる →" />
+                <EssenceDownloadButton href={joinHref} full label="Essenceに参加する" />
+                <div class="mt-3"><AppStoreButton full /></div>
                 <p class="mt-4 text-xs leading-relaxed text-zinc-500">
                   {webOpen
                     ? 'アプリ内ではApp Store、Webサイトではクレジットカード（Stripe）でお申し込みいただけます。どちらも同じアカウントでご利用いただけます。'
@@ -517,8 +519,11 @@ const jsonLd = {
           余計なものを減らし、大切なことに集中する。<br />
           選べる人生を、ここから。
         </p>
-        <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3" style="--d:160ms">
-          <EssenceDownloadButton href={joinHref} size="lg" label="Essenceに参加する →" />
+        <div class="reveal mt-10 flex justify-center" style="--d:160ms">
+          <div class="flex flex-col gap-3">
+            <EssenceDownloadButton href={joinHref} size="lg" label="Essenceに参加する" />
+            <AppStoreButton size="lg" />
+          </div>
         </div>
       </div>
 
@@ -533,7 +538,7 @@ const jsonLd = {
     </section>
 
     <div id="floating-cta" class="floating-cta md:hidden">
-      <EssenceDownloadButton href={joinHref} label="メンバーになる →" />
+      <EssenceDownloadButton href={joinHref} label="Essenceに参加する" />
     </div>
   </main>
 </Layout>

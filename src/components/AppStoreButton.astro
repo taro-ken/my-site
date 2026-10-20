@@ -1,0 +1,42 @@
+---
+// App Storeからダウンロードするボタン(白枠)。参加ボタンの下に並べて使う。
+interface Props {
+  size?: 'md' | 'lg';
+  full?: boolean;
+}
+
+import { ESSENCE_APP_STORE_URL } from '../lib/essence';
+
+const { size = 'md', full = false } = Astro.props;
+---
+
+<a href={ESSENCE_APP_STORE_URL} class:list={['as-btn', size, { full }]}>
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.02-1.5-2.62-1.7-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.1 8.79.73 1.06 1.6 2.25 2.74 2.21 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.7.71 2.87.69 1.19-.02 1.94-1.08 2.66-2.15.84-1.23 1.19-2.42 1.2-2.48-.03-.01-2.3-.88-2.28-3.54zM14.2 6.1c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.65-1.05 1.68-.92 2.67.97.07 1.96-.49 2.56-1.22z" /></svg>
+  App Storeでダウンロード
+</a>
+
+<style>
+  .as-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1rem;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: #fff;
+    background: transparent;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+    white-space: nowrap;
+  }
+  .as-btn svg { width: 1.15em; height: 1.15em; }
+  .as-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: #fff; }
+  .as-btn.full { display: flex; width: 100%; }
+  @media (min-width: 640px) {
+    .as-btn { padding: 0.8rem 1.75rem; font-size: 0.75rem; }
+    .as-btn.lg { padding: 0.95rem 2.25rem; font-size: 0.8125rem; }
+  }
+</style>
