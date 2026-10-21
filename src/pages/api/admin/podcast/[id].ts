@@ -1,8 +1,9 @@
 import type { APIRoute } from "astro";
 import { adminDb } from "../../../../lib/firebase/server";
 import { requireAdmin } from "../../../../lib/admin";
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { r2Client, R2_BUCKET_NAME, podcastAudioKey } from "../../../../lib/r2";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { r2Client, R2_BUCKET_NAME, PODCAST_AUDIO_CONTENT_TYPE, podcastAudioKey } from "../../../../lib/r2";
 
 /**
  * 管理者専用: Podcastエピソードを削除する。
@@ -37,7 +38,10 @@ export const DELETE: APIRoute = async ({ params, cookies }) => {
 };
 
 /**
- * 管理者専用: タイトル・概要など、音声を含まないメタデータのみを編集する。
+ * 管理者専用: タイトル・概要・公開日時・再生時間を編集する。
+ * 音声の差し替えは、replaceAudio: true を送ると同じキーへPUTするための署名付きURLを返す
+ * (ファイル本体はブラウザからR2へ直接アップロードする)。
+ * アップロード成功後に durationSeconds だけを送り直して、再生時間を更新する。
  */
 export const PATCH: APIRoute = async ({ params, request, cookies }) => {
     const admin = await requireAdmin(cookies);
@@ -50,14 +54,26 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
         return new Response(JSON.stringify({ error: "Missing episode id" }), { status: 400 });
     }
 
-    let body: { title?: string; subtitle?: string; publishedAt?: string };
+    let body: { title?: string; subtitle?: string; publishedAt?: string; durationSeconds?: number; replaceAudio?: boolean };
     try {
         body = await request.json();
     } catch {
         return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
     }
 
-    const { title, subtitle, publishedAt } = body;
+    const { title, subtitle, publishedAt, durationSeconds, replaceAudio } = body;
+
+    // 音声差し替え後の再生時間だけを更新する呼び出し
+    if (durationSeconds && !title) {
+        await adminDb.collection("podcastEpisodes").doc(episodeId).update({
+            durationSeconds: Math.round(durationSeconds),
+        });
+        return new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
+
     if (!title) {
         return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
     }
@@ -75,7 +91,17 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
 
     await adminDb.collection("podcastEpisodes").doc(episodeId).update(update);
 
-    return new Response(JSON.stringify({ ok: true }), {
+    let uploadUrl: string | undefined;
+    if (replaceAudio) {
+        const command = new PutObjectCommand({
+            Bucket: R2_BUCKET_NAME,
+            Key: podcastAudioKey(episodeId),
+            ContentType: PODCAST_AUDIO_CONTENT_TYPE,
+        });
+        uploadUrl = await getSignedUrl(r2Client, command, { expiresIn: 600 });
+    }
+
+    return new Response(JSON.stringify({ ok: true, uploadUrl }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
     });

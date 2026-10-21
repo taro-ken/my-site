@@ -155,6 +155,15 @@ const episodes = snapshot.docs.map((doc) => {
                 value={ep.publishedAtLocal}
               />
             </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">音声ファイルを差し替える(任意)</label>
+              <input
+                type="file"
+                accept="audio/*"
+                class="edit-audio w-full text-sm text-zinc-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-white/10 file:text-white file:text-xs file:font-bold file:uppercase file:tracking-wider"
+              />
+              <p class="text-xs text-zinc-500 mt-1">選ばなければ今の音声のままです。再生時間はファイルから自動で更新します。</p>
+            </div>
             <div class="flex gap-2">
               <button class="save-btn px-4 py-2 rounded-md bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors">
                 保存
@@ -300,6 +309,7 @@ const episodes = snapshot.docs.map((doc) => {
     const titleInput = card.querySelector<HTMLInputElement>('.edit-title')!;
     const subtitleInput = card.querySelector<HTMLTextAreaElement>('.edit-subtitle')!;
     const publishedAtInput = card.querySelector<HTMLInputElement>('.edit-published-at')!;
+    const audioInput = card.querySelector<HTMLInputElement>('.edit-audio')!;
     const editStatus = card.querySelector<HTMLElement>('.edit-status')!;
     const titleDisplay = card.querySelector<HTMLElement>('.episode-title-display')!;
     const subtitleDisplay = card.querySelector<HTMLElement>('.episode-subtitle-display');
@@ -313,6 +323,7 @@ const episodes = snapshot.docs.map((doc) => {
       titleInput.value = titleDisplay.textContent ?? '';
       subtitleInput.value = subtitleDisplay?.textContent ?? '';
       publishedAtInput.value = publishedAtInput.defaultValue;
+      audioInput.value = '';
       editStatus.textContent = '';
       editMode.classList.add('hidden');
       viewMode.classList.remove('hidden');
@@ -331,15 +342,43 @@ const episodes = snapshot.docs.map((doc) => {
       }
       const publishedAt = new Date(publishedAtInput.value).toISOString();
 
+      const audioFile = audioInput.files?.[0];
+
       saveBtn.disabled = true;
       editStatus.textContent = '';
+      editStatus.classList.remove('text-emerald-400');
+      editStatus.classList.add('text-red-400');
       try {
+        let durationSeconds = 0;
+        if (audioFile) {
+          editStatus.textContent = '音声の長さを確認中...';
+          durationSeconds = await readAudioDuration(audioFile);
+        }
+
         const res = await fetch(`/api/admin/podcast/${episodeId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, subtitle, publishedAt }),
+          body: JSON.stringify({ title, subtitle, publishedAt, replaceAudio: !!audioFile }),
         });
         if (!res.ok) throw new Error('更新に失敗しました');
+
+        if (audioFile) {
+          const { uploadUrl } = await res.json();
+          editStatus.textContent = '音声をアップロード中...';
+          const uploadRes = await fetch(uploadUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'audio/mp4' },
+            body: audioFile,
+          });
+          if (!uploadRes.ok) throw new Error('音声のアップロードに失敗しました(タイトル等は保存済みです)');
+
+          const durationRes = await fetch(`/api/admin/podcast/${episodeId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ durationSeconds }),
+          });
+          if (!durationRes.ok) throw new Error('再生時間の更新に失敗しました(音声は差し替え済みです)');
+        }
         window.location.reload();
       } catch (error) {
         editStatus.textContent = error instanceof Error ? error.message : '更新に失敗しました';
