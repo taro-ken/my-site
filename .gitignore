@@ -26,3 +26,8 @@ pnpm-debug.log*
 .idea/
 .vercel
 .env*.local
+
+# Stripe CLI のログ(署名シークレットが入るためコミットしない)
+stripe_listen.log
+trigger.log
+*.log
