@@ -25,7 +25,11 @@ export const ALL: APIRoute = async ({ request, cookies, redirect }) => {
     try {
         const res = await fetch(firebaseRestUrl, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                // APIキーをウェブサイト(HTTPリファラー)に制限しているため、サーバーからの呼び出しにも付ける。
+                Referer: "https://taroessence.com/",
+            },
             body: JSON.stringify({ email, password, returnSecureToken: true }),
         });
 
